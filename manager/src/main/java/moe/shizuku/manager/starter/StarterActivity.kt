@@ -72,9 +72,9 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private val appContext = getApplication<Application>().applicationContext
 
     private val sb = StringBuilder()
-    private val _output = MutableLiveData<Resource<StringBuilder>>()
+    private val _output = MutableLiveData<Resource<String>>()
 
-    val output = _output as LiveData<Resource<StringBuilder>>
+    val output = _output as LiveData<Resource<String>>
 
     private val handler = CoroutineExceptionHandler { _, throwable ->
         ShizukuStateMachine.update()
@@ -98,8 +98,9 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         line?.let { sb.appendLine(it) }
         error?.let { sb.appendLine().appendLine(Log.getStackTraceString(it)) }
 
-        if (error == null) _output.postValue(Resource.success(sb))
-        else _output.postValue(Resource.error(error, sb))
+        val output = sb.toString()
+        if (error == null) _output.postValue(Resource.success(output))
+        else _output.postValue(Resource.error(error, output))
     }
 
     private suspend fun startRoot() {
