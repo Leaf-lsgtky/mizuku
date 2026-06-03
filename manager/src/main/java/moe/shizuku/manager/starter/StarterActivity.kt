@@ -11,10 +11,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topjohnwu.superuser.CallbackList
 import com.topjohnwu.superuser.Shell
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import moe.shizuku.manager.AppConstants.EXTRA
 import moe.shizuku.manager.R
@@ -115,13 +118,18 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             ShizukuStateMachine.set(ShizukuStateMachine.State.STARTING)
-            Shell.cmd(Starter.internalCommand).to(object : CallbackList<String?>() {
-                override fun onAddElement(s: String?) {
-                    s?.let { log(it) }
-                }
-            }).submit {
-                if (!it.isSuccess) {
-                    log("\nSend this to developer may help solve the problem.")
+            suspendCancellableCoroutine { cont ->
+                Shell.cmd(Starter.internalCommand).to(object : CallbackList<String?>() {
+                    override fun onAddElement(s: String?) {
+                        s?.let { log(it) }
+                    }
+                }).submit {
+                    if (it.isSuccess) {
+                        cont.resume(Unit)
+                    } else {
+                        log("\nSend this to developer may help solve the problem.")
+                        cont.resumeWithException(Exception("Failed to start with root"))
+                    }
                 }
             }
         }
