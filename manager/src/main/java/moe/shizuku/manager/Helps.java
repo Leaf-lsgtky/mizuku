@@ -12,6 +12,7 @@ public class Helps {
     public static final MultiLocaleEntity SUI = new MultiLocaleEntity();
     public static final MultiLocaleEntity RISH = new MultiLocaleEntity();
     public static final MultiLocaleEntity ADB_PERMISSION = new MultiLocaleEntity();
+    public static final MultiLocaleEntity DEVELOPER = new MultiLocaleEntity();
 
     static {
         ADB.put("zh-CN", "https://shizuku.rikka.app/zh-hans/guide/setup/");
@@ -39,5 +40,7 @@ public class Helps {
         SUI.put("en", "https://github.com/RikkaApps/Sui");
 
         RISH.put("en", "https://github.com/RikkaApps/Shizuku-API/tree/master/rish");
+
+        DEVELOPER.put("en", "https://shizuku.rikka.app/guide/development/");
     }
 }

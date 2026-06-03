@@ -121,9 +121,9 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
                     })
                     .submit {
                         if (it.isSuccess) {
-                            cont.resume(Unit)
+                            cont.resume(Unit) {}
                         } else {
-                            cont.resumeWithException(Exception("Failed to start with root"))
+                            cont.resumeWith(Result.failure(Exception("Failed to start with root")))
                         }
                     }
             }

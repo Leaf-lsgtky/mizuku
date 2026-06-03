@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import moe.shizuku.manager.adb.AdbPairingService
+import moe.shizuku.manager.adb.AdbPairingTutorialActivity
 import moe.shizuku.manager.adb.AdbStarter
 import moe.shizuku.manager.app.AppActivity
 import moe.shizuku.manager.compose.screens.HomeScreen
@@ -68,9 +69,9 @@ class HomeActivity : AppActivity() {
         ShizukuStateMachine.addListener(stateListener)
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        intent?.let {
+        intent.let {
             val showDialog = it.getBooleanExtra(EXTRA_SHOW_PAIRING_DIALOG, false)
             if (showDialog) showAccessibilityDialog()
 

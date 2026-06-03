@@ -1,5 +1,7 @@
 package moe.shizuku.manager.starter
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.asFlow
 import java.io.File
 import java.util.concurrent.TimeoutException
@@ -20,6 +22,19 @@ object Starter {
     val internalCommand = "$userCommand --apk=${application.applicationInfo.sourceDir}"
 
     val serviceStartedMessage = "Service started, this window will be automatically closed in 3 seconds"
+
+    fun copyAssetToUri(context: Context, uri: Uri, assetName: String, displayName: String): Boolean {
+        return try {
+            context.assets.open(assetName).use { input ->
+                context.contentResolver.openOutputStream(uri)?.use { output ->
+                    input.copyTo(output)
+                }
+            }
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
 
     suspend fun waitForBinder(log: ((String) -> Unit)? = null) {
         try {

@@ -881,7 +881,7 @@ private fun AboutDialog(onDismiss: () -> Unit) {
 private fun StopShizukuDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        message = { Text(stringResource(R.string.dialog_stop_message)) },
+        text = { Text(stringResource(R.string.dialog_stop_message)) },
         confirmButton = {
             TextButton(onClick = {
                 onConfirm()
@@ -1367,7 +1367,7 @@ private fun AdbPairDialog(
 private fun WadbNotEnabledDialog(onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        message = { Text(stringResource(R.string.dialog_wireless_adb_not_enabled)) },
+        text = { Text(stringResource(R.string.dialog_wireless_adb_not_enabled)) },
         confirmButton = {
             TextButton(onClick = onDismiss) {
                 Text(stringResource(android.R.string.ok))
@@ -1384,7 +1384,7 @@ private fun UsbDebuggingNotEnabledDialog(onDismiss: () -> Unit) {
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        message = { Text(stringResource(R.string.dialog_usb_debugging_not_enabled)) },
+        text = { Text(stringResource(R.string.dialog_usb_debugging_not_enabled)) },
         confirmButton = {
             TextButton(onClick = {
                 onDismiss()
@@ -1425,7 +1425,7 @@ private fun AccessibilityDialog(
             AlertDialog(
                 onDismissRequest = onDismiss,
                 title = { Text(stringResource(R.string.dialog_adb_pairing_title)) },
-                message = { Text(stringResource(R.string.dialog_adb_pairing_accessibility_navigate)) },
+                text = { Text(stringResource(R.string.dialog_adb_pairing_accessibility_navigate)) },
                 confirmButton = {
                     TextButton(onClick = {
                         onDismiss()
@@ -1449,7 +1449,7 @@ private fun AccessibilityDialog(
                 AlertDialog(
                     onDismissRequest = onDismiss,
                     title = { Text(stringResource(R.string.dialog_adb_pairing_title)) },
-                    message = { Text(stringResource(R.string.dialog_adb_pairing_accessibility_navigate)) },
+                    text = { Text(stringResource(R.string.dialog_adb_pairing_accessibility_navigate)) },
                     confirmButton = {
                         TextButton(onClick = {
                             onDismiss()
@@ -1482,7 +1482,7 @@ private fun AccessibilityDialog(
             AlertDialog(
                 onDismissRequest = onDismiss,
                 title = { Text(stringResource(R.string.dialog_adb_pairing_title)) },
-                message = { Text(stringResource(R.string.dialog_adb_pairing_accessibility_enable)) },
+                text = { Text(stringResource(R.string.dialog_adb_pairing_accessibility_enable)) },
                 confirmButton = {
                     TextButton(onClick = {
                         onDismiss()
@@ -1513,7 +1513,7 @@ private fun ShowPermissionDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(android.R.string.dialog_alert_title)) },
-        message = {
+        text = {
             Column {
                 Text(
                     text = stringResource(R.string.dialog_adb_pairing_accessibility_permission, permissionName, permissionCommand),
