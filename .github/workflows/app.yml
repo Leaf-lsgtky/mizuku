@@ -74,6 +74,7 @@ jobs:
       - name: Build with Gradle
         id: buildWithGradle
         run: |
+          chmod +x gradlew
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null || true
           echo 'org.gradle.caching=true' >> gradle.properties
           echo 'org.gradle.parallel=true' >> gradle.properties
