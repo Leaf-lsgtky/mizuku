@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import moe.shizuku.manager.adb.AdbPairingService
 import moe.shizuku.manager.adb.AdbPairingTutorialActivity
 import moe.shizuku.manager.adb.AdbStarter

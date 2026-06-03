@@ -48,7 +48,7 @@ fun StarterScreen(
     onNavigateBack: () -> Unit,
 ) {
     val outputResource by viewModel.output.observeAsState()
-    val output = outputResource?.data?.trim() ?: ""
+    val output = outputResource?.data?.trim()?.toString() ?: ""
     val isError = outputResource?.status == Status.ERROR
 
     var errorMessageRes by remember { mutableStateOf<Int?>(null) }
