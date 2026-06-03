@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -42,13 +41,11 @@ import androidx.compose.ui.viewinterop.AndroidView
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import kotlinx.coroutines.launch
 import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.Helps
@@ -57,7 +54,6 @@ import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.adb.AdbKey
 import moe.shizuku.manager.adb.AdbMdns
 import moe.shizuku.manager.adb.AdbPairingClient
-import moe.shizuku.manager.adb.AdbStarter
 import moe.shizuku.manager.adb.PreferenceAdbKeyStore
 import moe.shizuku.manager.ktx.toHtml
 import moe.shizuku.manager.model.ServiceStatus
@@ -68,10 +64,8 @@ import moe.shizuku.manager.utils.SettingsPage
 import moe.shizuku.manager.utils.ShizukuStateMachine
 import moe.shizuku.manager.utils.UserHandleCompat
 import rikka.html.text.HtmlCompat
-import rikka.lifecycle.Status
 import rikka.shizuku.Shizuku
 import rikka.shizuku.ShizukuApiConstants
-import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.CircularProgressIndicator
@@ -80,10 +74,8 @@ import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.RadioButton
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
-import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.CardDefaults
 import top.yukonga.miuix.kmp.icon.MiuixIcons
-import top.yukonga.miuix.kmp.icon.extended.All
 import top.yukonga.miuix.kmp.icon.extended.Help
 import top.yukonga.miuix.kmp.icon.extended.Info
 import top.yukonga.miuix.kmp.icon.extended.Ok
@@ -200,15 +192,14 @@ fun MiuixHomeScreen(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         item {
-            MiuixServerStatusCard(status = status)
+            MiuixServerStatusCard(
+                status = status,
+                grantedCount = grantedCount,
+                onGrantedClick = { /* navigate to apps tab */ }
+            )
         }
 
         if (adbPermission) {
-            item {
-                MiuixManageAppsCard(
-                    grantedCount = grantedCount,
-                )
-            }
             item {
                 MiuixTerminalCard(onClick = onNavigateToShellTutorial)
             }
@@ -277,7 +268,11 @@ fun MiuixHomeScreen(
 // --- Cards ---
 
 @Composable
-private fun MiuixServerStatusCard(status: ServiceStatus) {
+private fun MiuixServerStatusCard(
+    status: ServiceStatus,
+    grantedCount: Int,
+    onGrantedClick: () -> Unit,
+) {
     val isRunning = status.isRunning
     val isRoot = status.uid == 0
     val user = if (isRoot) "root" else "adb"
@@ -286,101 +281,134 @@ private fun MiuixServerStatusCard(status: ServiceStatus) {
     val latestPatchVersion = ShizukuApiConstants.SERVER_PATCH_VERSION
     val hasUpdate = isRunning && (status.apiVersion != latestApiVersion || status.patchVersion != latestPatchVersion)
 
-    Card(
+    val containerColor = if (isRunning) MiuixTheme.colorScheme.primaryContainer
+    else MiuixTheme.colorScheme.errorContainer
+    val textContentColor = if (isRunning) MiuixTheme.colorScheme.onPrimaryContainer
+    else MiuixTheme.colorScheme.onErrorContainer
+    val descTextColor = textContentColor.copy(alpha = 0.8f)
+
+    Column(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.defaultColors(
-            color = if (isRunning) MiuixTheme.colorScheme.primaryContainer
-            else MiuixTheme.colorScheme.errorContainer,
-        ),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        androidx.compose.foundation.layout.Box(modifier = Modifier.fillMaxWidth()) {
-            androidx.compose.foundation.layout.Box(
-                modifier = Modifier.matchParentSize().offset(50.dp, 38.dp),
-                contentAlignment = Alignment.BottomEnd
-            ) {
-                Icon(
-                    imageVector = if (isRunning) MiuixIcons.Ok else MiuixIcons.Info,
-                    contentDescription = null,
-                    modifier = Modifier.size(170.dp),
-                    tint = if (isRunning) MiuixTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.5f)
-                    else MiuixTheme.colorScheme.onErrorContainer.copy(alpha = 0.5f),
-                )
-            }
-            Column(
-                modifier = Modifier.fillMaxWidth().padding(all = 16.dp)
-            ) {
-                val title = if (isRunning) {
-                    stringResource(R.string.home_status_service_is_running, stringResource(R.string.app_name))
-                } else {
-                    stringResource(R.string.home_status_service_not_running, stringResource(R.string.app_name))
-                }
-                Text(
-                    text = title,
-                    style = MiuixTheme.textStyles.title2,
-                    fontWeight = FontWeight.Bold,
-                    color = if (isRunning) MiuixTheme.colorScheme.onPrimaryContainer else MiuixTheme.colorScheme.onErrorContainer
-                )
-                Spacer(modifier = Modifier.height(2.dp))
-                if (isRunning) {
-                    val versionText = if (hasUpdate) {
-                        stringResource(
-                            R.string.home_status_service_version_update,
-                            user,
-                            "${status.apiVersion}.${status.patchVersion}",
-                            "${latestApiVersion}.${latestPatchVersion}",
-                        )
-                    } else {
-                        stringResource(
-                            R.string.home_status_service_version,
-                            user,
-                            "${status.apiVersion}.${status.patchVersion}",
-                        )
-                    }
-                    Text(
-                        text = versionText,
-                        style = MiuixTheme.textStyles.body2,
-                        color = MiuixTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.defaultColors(color = containerColor),
+        ) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .offset(50.dp, 38.dp),
+                    contentAlignment = Alignment.BottomEnd
+                ) {
+                    Icon(
+                        modifier = Modifier.size(170.dp),
+                        imageVector = if (isRunning) MiuixIcons.Ok else MiuixIcons.Info,
+                        tint = textContentColor.copy(alpha = 0.5f),
+                        contentDescription = null
                     )
                 }
-                Spacer(modifier = Modifier.height(36.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(all = 16.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = if (isRunning) {
+                            stringResource(R.string.home_status_service_is_running, stringResource(R.string.app_name))
+                        } else {
+                            stringResource(R.string.home_status_service_not_running, stringResource(R.string.app_name))
+                        },
+                        style = MiuixTheme.textStyles.title2,
+                        fontWeight = FontWeight.SemiBold,
+                        color = textContentColor
+                    )
+                    Spacer(Modifier.height(2.dp))
+                    if (isRunning) {
+                        val versionText = if (hasUpdate) {
+                            stringResource(
+                                R.string.home_status_service_version_update,
+                                user,
+                                "${status.apiVersion}.${status.patchVersion}",
+                                "${latestApiVersion}.${latestPatchVersion}",
+                            )
+                        } else {
+                            stringResource(
+                                R.string.home_status_service_version,
+                                user,
+                                "${status.apiVersion}.${status.patchVersion}",
+                            )
+                        }
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = versionText,
+                            style = MiuixTheme.textStyles.body2,
+                            color = descTextColor,
+                        )
+                    }
+                    Spacer(Modifier.height(36.dp))
+                }
+            }
+        }
+
+        if (isRunning) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                MiuixStatCard(
+                    modifier = Modifier.weight(1f),
+                    title = stringResource(R.string.home_app_management_title),
+                    value = grantedCount.toString(),
+                    onClick = onGrantedClick
+                )
+                MiuixStatCard(
+                    modifier = Modifier.weight(1f),
+                    title = "API",
+                    value = "${status.apiVersion}.${status.patchVersion}",
+                    onClick = {}
+                )
             }
         }
     }
 }
 
 @Composable
-private fun MiuixManageAppsCard(grantedCount: Int) {
+private fun MiuixStatCard(
+    modifier: Modifier = Modifier,
+    title: String,
+    value: String,
+    onClick: () -> Unit
+) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
+        insideMargin = PaddingValues(16.dp),
+        onClick = onClick,
+        showIndication = true,
+        pressFeedbackType = PressFeedbackType.Tilt
     ) {
-        Row(
-            modifier = Modifier.padding(24.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                imageVector = MiuixIcons.All,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape),
-                tint = MiuixTheme.colorScheme.onPrimaryContainer,
+        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = title,
+                style = MiuixTheme.textStyles.body2,
+                color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
             )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = stringResource(R.string.home_app_management_title),
-                    style = MiuixTheme.textStyles.title2,
-                    fontWeight = FontWeight.Bold,
-                )
-                Text(
-                    text = pluralStringResource(R.plurals.home_app_management_authorized_apps_count, grantedCount, grantedCount),
-                    style = MiuixTheme.textStyles.body2,
-                    color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
-                )
-            }
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = value,
+                style = MiuixTheme.textStyles.title2,
+                fontWeight = FontWeight.SemiBold,
+                color = MiuixTheme.colorScheme.onSurface,
+            )
         }
     }
 }
+
+
 
 @Composable
 private fun MiuixTerminalCard(onClick: () -> Unit) {

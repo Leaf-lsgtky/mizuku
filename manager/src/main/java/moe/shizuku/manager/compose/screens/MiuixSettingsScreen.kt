@@ -81,9 +81,6 @@ fun MiuixSettingsScreen(
     var blackNightTheme by remember {
         mutableStateOf(ThemeHelper.isBlackNightTheme(context))
     }
-    var useSystemColor by remember {
-        mutableStateOf(ThemeHelper.isUsingSystemColor())
-    }
     var legacyPairing by remember {
         mutableStateOf(ShizukuSettings.getLegacyPairing())
     }
@@ -526,23 +523,6 @@ fun MiuixSettingsScreen(
                     },
                 )
             }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-    
-
-                SwitchPreference(
-                    title = stringResource(R.string.settings_use_system_color),
-                    checked = useSystemColor,
-                    onCheckedChange = { newValue ->
-                        ShizukuSettings.getPreferences().edit()
-                            .putBoolean(ShizukuSettings.Keys.KEY_USE_SYSTEM_COLOR, newValue)
-                            .apply()
-                        useSystemColor = newValue
-                    },
-                )
-            }
-
-
 
             // Language
             val localeTags = ShizukuLocales.LOCALES
