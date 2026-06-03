@@ -15,7 +15,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import moe.shizuku.manager.AppConstants.EXTRA
 import moe.shizuku.manager.R
@@ -103,29 +102,27 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private suspend fun startRoot() {
         log("Starting with root…\n")
 
-        return withContext(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             if (!Shell.getShell().isRoot) {
                 Shell.getCachedShell()?.close()
+                log("Can't open root shell, try again…")
 
                 if (!Shell.getShell().isRoot) {
                     Shell.getCachedShell()?.close()
+                    log("Still not :(")
                     throw NotRootedException()
                 }
             }
 
             ShizukuStateMachine.set(ShizukuStateMachine.State.STARTING)
-            suspendCancellableCoroutine { cont ->
-                Shell.cmd(Starter.internalCommand)
-                    .to(object : CallbackList<String?>() {
-                        override fun onAddElement(s: String?) { s?.let { log(it) } }
-                    })
-                    .submit {
-                        if (it.isSuccess) {
-                            cont.resume(Unit) {}
-                        } else {
-                            cont.resumeWith(Result.failure(Exception("Failed to start with root")))
-                        }
-                    }
+            Shell.cmd(Starter.internalCommand).to(object : CallbackList<String?>() {
+                override fun onAddElement(s: String?) {
+                    s?.let { log(it) }
+                }
+            }).submit {
+                if (!it.isSuccess) {
+                    log("\nSend this to developer may help solve the problem.")
+                }
             }
         }
     }
