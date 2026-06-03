@@ -1216,16 +1216,9 @@ private fun MiuixAdbPairDialog(
                             }
                         },
                         enabled = !isPairing,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        if (isPairing) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(18.dp),
-                            )
-                        } else {
-                            Text(stringResource(android.R.string.ok))
-                        }
-                    }
+                        modifier = Modifier.weight(1f),
+                        text = if (isPairing) "" else stringResource(android.R.string.ok)
+                    )
                 }
             }
         }
