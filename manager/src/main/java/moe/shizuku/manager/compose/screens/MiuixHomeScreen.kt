@@ -11,6 +11,7 @@ import android.text.method.LinkMovementMethod
 import android.widget.TextView
 import android.widget.Toast
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.CheckCircleOutline
+import androidx.compose.material.icons.rounded.ErrorOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -47,6 +51,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.Helps
@@ -83,6 +88,7 @@ import top.yukonga.miuix.kmp.icon.extended.Ok
 import top.yukonga.miuix.kmp.icon.extended.Refresh
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.window.WindowDialog
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 import top.yukonga.miuix.kmp.utils.overScrollVertical
@@ -282,10 +288,26 @@ private fun MiuixServerStatusCard(
     val latestPatchVersion = ShizukuApiConstants.SERVER_PATCH_VERSION
     val hasUpdate = isRunning && (status.apiVersion != latestApiVersion || status.patchVersion != latestPatchVersion)
 
-    val containerColor = if (isRunning) MiuixTheme.colorScheme.primaryContainer
-    else MiuixTheme.colorScheme.errorContainer
-    val textContentColor = if (isRunning) MiuixTheme.colorScheme.onPrimaryContainer
-    else MiuixTheme.colorScheme.onErrorContainer
+    val containerColor = if (isRunning) {
+        when {
+            MiuixTheme.isDynamicColor -> MiuixTheme.colorScheme.secondaryContainer
+            isSystemInDarkTheme() -> Color(0xFF1A3825)
+            else -> Color(0xFFDFFAE4)
+        }
+    } else {
+        when {
+            MiuixTheme.isDynamicColor -> MiuixTheme.colorScheme.errorContainer
+            isSystemInDarkTheme() -> Color(0xFF381A1A)
+            else -> Color(0xFFFAEEEE)
+        }
+    }
+
+    val textContentColor = if (isRunning) {
+        if (MiuixTheme.isDynamicColor) MiuixTheme.colorScheme.onSecondaryContainer else MiuixTheme.colorScheme.onSurface
+    } else {
+        if (MiuixTheme.isDynamicColor) MiuixTheme.colorScheme.onErrorContainer else MiuixTheme.colorScheme.onSurface
+    }
+
     val descTextColor = textContentColor.copy(alpha = 0.8f)
 
     Column(
@@ -305,8 +327,12 @@ private fun MiuixServerStatusCard(
                 ) {
                     Icon(
                         modifier = Modifier.size(170.dp),
-                        imageVector = if (isRunning) MiuixIcons.Ok else MiuixIcons.Info,
-                        tint = textContentColor.copy(alpha = 0.5f),
+                        imageVector = if (isRunning) Icons.Rounded.CheckCircleOutline else Icons.Rounded.ErrorOutline,
+                        tint = if (isRunning) {
+                            if (MiuixTheme.isDynamicColor) MiuixTheme.colorScheme.primary.copy(alpha = 0.8f) else Color(0xFF36D167)
+                        } else {
+                            if (MiuixTheme.isDynamicColor) MiuixTheme.colorScheme.error.copy(alpha = 0.8f) else Color(0xFFD13636)
+                        },
                         contentDescription = null
                     )
                 }
@@ -322,7 +348,7 @@ private fun MiuixServerStatusCard(
                         } else {
                             stringResource(R.string.home_status_service_not_running, stringResource(R.string.app_name))
                         },
-                        style = MiuixTheme.textStyles.title2,
+                        fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = textContentColor
                     )
@@ -345,7 +371,8 @@ private fun MiuixServerStatusCard(
                         Text(
                             modifier = Modifier.fillMaxWidth(),
                             text = versionText,
-                            style = MiuixTheme.textStyles.body2,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
                             color = descTextColor,
                         )
                     }
@@ -395,13 +422,14 @@ private fun MiuixStatCard(
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = title,
-                style = MiuixTheme.textStyles.body2,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Medium,
                 color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
             )
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = value,
-                style = MiuixTheme.textStyles.title2,
+                fontSize = 26.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = MiuixTheme.colorScheme.onSurface,
             )
