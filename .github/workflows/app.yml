@@ -1,6 +1,8 @@
 name: Build App
 
 on:
+  push:
+    branches: ['**']
   workflow_dispatch:
     inputs:
       debug:
@@ -35,7 +37,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          ref: ${{ inputs.prerelease && 'beta' || 'master' }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && (inputs.prerelease && 'beta' || 'master') || '' }}
           submodules: 'recursive'
           fetch-depth: 0
 
@@ -46,14 +48,15 @@ jobs:
           java-version: '21'
 
       - name: Validate Signing Config
+        if: ${{ github.event_name == 'workflow_dispatch' && !inputs.debug }}
         run: |
-          if [ "${{ inputs.debug }}" = "false" ] && [ "$KEYSTORE" = "" ]; then
+          if [ "$KEYSTORE" = "" ]; then
             echo "::error::Signing secrets not configured. Signing secrets are required for release builds."
             exit 1
           fi
 
       - name: Create signing.properties
-        if: ${{ !inputs.debug && env.KEYSTORE != '' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && !inputs.debug && env.KEYSTORE != '' }}
         run: |
           echo KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} > signing.properties
           echo KEYSTORE_ALIAS=${{ secrets.KEYSTORE_ALIAS }} >> signing.properties
@@ -75,7 +78,7 @@ jobs:
           echo 'org.gradle.caching=true' >> gradle.properties
           echo 'org.gradle.parallel=true' >> gradle.properties
 
-          if [ "${{ inputs.debug }}" = "true" ]; then
+          if [ "${{ inputs.debug }}" = "true" ] || [ "${{ github.event_name }}" = "push" ]; then
             CMD="./gradlew :manager:assembleDebug"
             APK_DIR="manager/build/outputs/apk/debug"
           else
@@ -91,7 +94,9 @@ jobs:
           VERSION=$(echo "$(basename "$FILE")" | sed -E 's/^shizuku-(.*)-(debug|release)\.apk/\1/')
 
           ARTIFACT_NAME="shizuku-$VERSION"
-          [ "${{ inputs.debug }}" = "true" ] && ARTIFACT_NAME="${ARTIFACT_NAME}-debug"
+          if [ "${{ inputs.debug }}" = "true" ] || [ "${{ github.event_name }}" = "push" ]; then
+            ARTIFACT_NAME="${ARTIFACT_NAME}-debug"
+          fi
           ARTIFACT_NAME="${ARTIFACT_NAME}.apk"
 
           RENAMED="$FILE"
@@ -111,13 +116,13 @@ jobs:
           path: ${{ steps.buildWithGradle.outputs.filePath }}
 
       - name: Attest Build Provenance
-        if: ${{ success() && !inputs.debug }}
+        if: ${{ success() && github.event_name == 'workflow_dispatch' && !inputs.debug }}
         uses: actions/attest-build-provenance@v3
         with:
           subject-path: manager/build/outputs/apk/release/*.apk
 
   release:
-    if: ${{ !inputs.debug }}
+    if: ${{ github.event_name == 'workflow_dispatch' && !inputs.debug }}
     needs: [build]
     runs-on: ubuntu-latest
     permissions:
