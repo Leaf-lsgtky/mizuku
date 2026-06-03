@@ -36,9 +36,8 @@ import top.yukonga.miuix.kmp.icon.extended.MoreCircle
 import top.yukonga.miuix.kmp.icon.extended.Settings
 import top.yukonga.miuix.kmp.icon.extended.VerticalSplit
 import top.yukonga.miuix.kmp.overlay.OverlayListPopup
-import top.yukonga.miuix.kmp.popup.ListPopupColumn
-import top.yukonga.miuix.kmp.popup.ListPopupDefaults
-import top.yukonga.miuix.kmp.popup.DropdownImpl
+import top.yukonga.miuix.kmp.basic.DropdownImpl
+import top.yukonga.miuix.kmp.basic.ListPopupColumn
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.window.WindowDialog
 
@@ -116,7 +115,6 @@ fun MiuixMainScreen(
                             }
                             OverlayListPopup(
                                 show = showTopPopup.value,
-                                popupPositionProvider = ListPopupDefaults.MenuPositionProvider,
                                 onDismissRequest = { showTopPopup.value = false },
                                 content = {
                                     ListPopupColumn {
