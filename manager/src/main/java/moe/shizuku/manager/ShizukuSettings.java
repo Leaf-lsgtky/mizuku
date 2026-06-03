@@ -40,6 +40,18 @@ public class ShizukuSettings {
         public static final String KEY_REPORT_BUG = "report_bug";
         public static final String KEY_LEGACY_PAIRING = "legacy_pairing";
         public static final String KEY_CATEGORY_ADVANCED = "category_advanced";
+        public static final String KEY_THEME_MODE = "theme_mode";
+    }
+
+    public static final int THEME_MATERIAL = 0;
+    public static final int THEME_MIUIX = 1;
+
+    public static int getThemeMode() {
+        return getPreferences().getInt(Keys.KEY_THEME_MODE, THEME_MIUIX);
+    }
+
+    public static void setThemeMode(int mode) {
+        getPreferences().edit().putInt(Keys.KEY_THEME_MODE, mode).apply();
     }
 
     private static SharedPreferences sPreferences;

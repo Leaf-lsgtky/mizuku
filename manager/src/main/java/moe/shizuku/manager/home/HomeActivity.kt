@@ -8,17 +8,17 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.adb.AdbPairingService
-import moe.shizuku.manager.adb.AdbPairingTutorialActivity
 import moe.shizuku.manager.adb.AdbStarter
 import moe.shizuku.manager.app.AppActivity
 import moe.shizuku.manager.compose.screens.HomeScreen
+import moe.shizuku.manager.compose.screens.MiuixMainScreen
+import moe.shizuku.manager.compose.theme.ShizukuMiuixTheme
 import moe.shizuku.manager.compose.theme.ShizukuTheme
 import moe.shizuku.manager.management.AppsViewModel
-import moe.shizuku.manager.management.ApplicationManagementActivity
 import moe.shizuku.manager.receiver.NotifCancelReceiver
 import moe.shizuku.manager.settings.SettingsActivity
-import moe.shizuku.manager.shell.ShellTutorialActivity
 import moe.shizuku.manager.starter.StarterActivity
 import moe.shizuku.manager.utils.EnvironmentUtils
 import moe.shizuku.manager.utils.ShizukuStateMachine
@@ -41,29 +41,52 @@ open class HomeActivity : AppActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            ShizukuTheme {
-                HomeScreen(
-                    homeViewModel = homeModel,
-                    appsViewModel = appsModel,
-                    onNavigateToSettings = {
-                        startActivity(Intent(this, SettingsActivity::class.java))
-                    },
-                    onNavigateToAppManagement = {
-                        startActivity(Intent(this, ApplicationManagementActivity::class.java))
-                    },
-                    onNavigateToStarter = { isRoot, port ->
-                        startActivity(Intent(this, StarterActivity::class.java).apply {
-                            putExtra(StarterActivity.EXTRA_IS_ROOT, isRoot)
-                            putExtra(StarterActivity.EXTRA_PORT, port)
-                        })
-                    },
-                    onNavigateToShellTutorial = {
-                        startActivity(Intent(this, ShellTutorialActivity::class.java))
-                    },
-                    onNavigateToAdbPairingTutorial = {
-                        startActivity(Intent(this, AdbPairingTutorialActivity::class.java))
-                    },
-                )
+            val themeMode = ShizukuSettings.getThemeMode()
+
+            if (themeMode == ShizukuSettings.THEME_MIUIX) {
+                ShizukuMiuixTheme {
+                    MiuixMainScreen(
+                        homeViewModel = homeModel,
+                        appsViewModel = appsModel,
+                        onNavigateToStarter = { isRoot, port ->
+                            startActivity(Intent(this, StarterActivity::class.java).apply {
+                                putExtra(StarterActivity.EXTRA_IS_ROOT, isRoot)
+                                putExtra(StarterActivity.EXTRA_PORT, port)
+                            })
+                        },
+                        onNavigateToShellTutorial = {
+                            startActivity(Intent(this, moe.shizuku.manager.shell.ShellTutorialActivity::class.java))
+                        },
+                        onNavigateToAdbPairingTutorial = {
+                            startActivity(Intent(this, moe.shizuku.manager.adb.AdbPairingTutorialActivity::class.java))
+                        },
+                    )
+                }
+            } else {
+                ShizukuTheme {
+                    HomeScreen(
+                        homeViewModel = homeModel,
+                        appsViewModel = appsModel,
+                        onNavigateToSettings = {
+                            startActivity(Intent(this, SettingsActivity::class.java))
+                        },
+                        onNavigateToAppManagement = {
+                            startActivity(Intent(this, moe.shizuku.manager.management.ApplicationManagementActivity::class.java))
+                        },
+                        onNavigateToStarter = { isRoot, port ->
+                            startActivity(Intent(this, StarterActivity::class.java).apply {
+                                putExtra(StarterActivity.EXTRA_IS_ROOT, isRoot)
+                                putExtra(StarterActivity.EXTRA_PORT, port)
+                            })
+                        },
+                        onNavigateToShellTutorial = {
+                            startActivity(Intent(this, moe.shizuku.manager.shell.ShellTutorialActivity::class.java))
+                        },
+                        onNavigateToAdbPairingTutorial = {
+                            startActivity(Intent(this, moe.shizuku.manager.adb.AdbPairingTutorialActivity::class.java))
+                        },
+                    )
+                }
             }
         }
 

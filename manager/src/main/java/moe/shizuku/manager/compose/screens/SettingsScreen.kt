@@ -396,6 +396,22 @@ fun SettingsScreen(
 
             // Appearance
             PreferenceCategory(title = stringResource(R.string.settings_user_interface)) {
+                val themeEntries = arrayOf("Material", "Miuix")
+                val themeMode = remember { mutableStateOf(ShizukuSettings.getThemeMode()) }
+                SimpleMenuPreference(
+                    title = "UI Theme",
+                    entries = themeEntries,
+                    entryValues = arrayOf("0", "1"),
+                    value = themeMode.value.toString(),
+                    onValueChange = { newValue ->
+                        val mode = newValue.toInt()
+                        if (themeMode.value != mode) {
+                            ShizukuSettings.setThemeMode(mode)
+                            themeMode.value = mode
+                        }
+                    },
+                )
+
                 val nightModeEntries = arrayOf(
                     stringResource(R.string.follow_system),
                     stringResource(R.string.dark_theme_off),
