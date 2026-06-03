@@ -360,7 +360,7 @@ fun HomeScreen(
 }
 
 // --- Helper object for wireless ADB start ---
-private object StartWirelessAdbHelper {
+internal object StartWirelessAdbHelper {
     fun start(
         context: Context,
         scope: kotlinx.coroutines.CoroutineScope,
