@@ -86,8 +86,6 @@ import top.yukonga.miuix.kmp.icon.extended.Help
 import top.yukonga.miuix.kmp.icon.extended.Info
 import top.yukonga.miuix.kmp.icon.extended.Ok
 import top.yukonga.miuix.kmp.icon.extended.Refresh
-import top.yukonga.miuix.kmp.icon.extended.Terminal
-import top.yukonga.miuix.kmp.icon.extended.Warning
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.window.WindowDialog
 
@@ -289,7 +287,7 @@ private fun MiuixServerStatusCard(status: ServiceStatus) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                imageVector = if (isRunning) MiuixIcons.Ok else MiuixIcons.Warning,
+                imageVector = if (isRunning) MiuixIcons.Ok else MiuixIcons.Info,
                 contentDescription = null,
                 modifier = Modifier
                     .size(48.dp)
@@ -381,7 +379,7 @@ private fun MiuixTerminalCard(onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                imageVector = MiuixIcons.Terminal,
+                imageVector = MiuixIcons.Help,
                 contentDescription = null,
                 modifier = Modifier
                     .size(48.dp)
@@ -527,7 +525,7 @@ private fun MiuixStartAdbCard(onClick: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    imageVector = MiuixIcons.Terminal,
+                    imageVector = MiuixIcons.Help,
                     contentDescription = null,
                     modifier = Modifier
                         .size(48.dp)
@@ -588,7 +586,7 @@ private fun MiuixAutomationCard(onClick: () -> Unit) {
         Column(modifier = Modifier.padding(24.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    imageVector = MiuixIcons.Terminal,
+                    imageVector = MiuixIcons.Help,
                     contentDescription = null,
                     modifier = Modifier
                         .size(48.dp)
