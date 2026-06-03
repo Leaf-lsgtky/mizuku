@@ -13,14 +13,16 @@ import androidx.compose.ui.res.stringResource
 import moe.shizuku.manager.R
 import moe.shizuku.manager.home.HomeViewModel
 import moe.shizuku.manager.management.AppsViewModel
+import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.NavigationBar
 import top.yukonga.miuix.kmp.basic.NavigationBarItem
 import top.yukonga.miuix.kmp.basic.Scaffold
-import top.yukonga.miuix.kmp.basic.SmallTopAppBar
+import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.All
 import top.yukonga.miuix.kmp.icon.extended.Settings
 import top.yukonga.miuix.kmp.icon.extended.VerticalSplit
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
 fun MiuixMainScreen(
@@ -31,6 +33,7 @@ fun MiuixMainScreen(
     onNavigateToAdbPairingTutorial: () -> Unit,
 ) {
     var selectedIndex by remember { mutableIntStateOf(0) }
+    val scrollBehavior = MiuixScrollBehavior()
 
     val pages = listOf(
         stringResource(R.string.app_name),
@@ -40,8 +43,9 @@ fun MiuixMainScreen(
 
     Scaffold(
         topBar = {
-            SmallTopAppBar(
-                title = pages[selectedIndex]
+            TopAppBar(
+                title = pages[selectedIndex],
+                scrollBehavior = scrollBehavior
             )
         },
         bottomBar = {
@@ -79,11 +83,15 @@ fun MiuixMainScreen(
                     onNavigateToStarter = onNavigateToStarter,
                     onNavigateToShellTutorial = onNavigateToShellTutorial,
                     onNavigateToAdbPairingTutorial = onNavigateToAdbPairingTutorial,
+                    scrollBehavior = scrollBehavior
                 )
                 1 -> MiuixAppManagementScreen(
                     viewModel = appsViewModel,
+                    scrollBehavior = scrollBehavior
                 )
-                2 -> MiuixSettingsScreen()
+                2 -> MiuixSettingsScreen(
+                    scrollBehavior = scrollBehavior
+                )
             }
         }
     }

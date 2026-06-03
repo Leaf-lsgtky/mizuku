@@ -23,8 +23,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -45,8 +45,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import androidx.compose.ui.window.Dialog
 import kotlinx.coroutines.launch
 import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.Helps
@@ -88,6 +87,10 @@ import top.yukonga.miuix.kmp.icon.extended.Ok
 import top.yukonga.miuix.kmp.icon.extended.Refresh
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.window.WindowDialog
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import top.yukonga.miuix.kmp.utils.scrollEndHaptic
+import top.yukonga.miuix.kmp.utils.overScrollVertical
+import top.yukonga.miuix.kmp.utils.PressFeedbackType
 
 @Composable
 fun MiuixHomeScreen(
@@ -96,6 +99,7 @@ fun MiuixHomeScreen(
     onNavigateToStarter: (isRoot: Boolean, port: Int) -> Unit,
     onNavigateToShellTutorial: () -> Unit,
     onNavigateToAdbPairingTutorial: () -> Unit,
+    scrollBehavior: top.yukonga.miuix.kmp.basic.MiuixScrollBehavior,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -184,7 +188,11 @@ fun MiuixHomeScreen(
     }
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .scrollEndHaptic()
+            .overScrollVertical(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
@@ -282,21 +290,22 @@ private fun MiuixServerStatusCard(status: ServiceStatus) {
             else MiuixTheme.colorScheme.errorContainer,
         ),
     ) {
-        Row(
-            modifier = Modifier.padding(24.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                imageVector = if (isRunning) MiuixIcons.Ok else MiuixIcons.Info,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape),
-                tint = if (isRunning) MiuixTheme.colorScheme.onPrimaryContainer
-                else MiuixTheme.colorScheme.onErrorContainer,
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column {
+        androidx.compose.foundation.layout.Box(modifier = Modifier.fillMaxWidth()) {
+            androidx.compose.foundation.layout.Box(
+                modifier = Modifier.matchParentSize().androidx.compose.foundation.layout.offset(50.dp, 38.dp),
+                contentAlignment = Alignment.BottomEnd
+            ) {
+                Icon(
+                    imageVector = if (isRunning) MiuixIcons.Ok else MiuixIcons.Info,
+                    contentDescription = null,
+                    modifier = Modifier.size(170.dp),
+                    tint = if (isRunning) MiuixTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.5f)
+                    else MiuixTheme.colorScheme.onErrorContainer.copy(alpha = 0.5f),
+                )
+            }
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(all = 16.dp)
+            ) {
                 val title = if (isRunning) {
                     stringResource(R.string.home_status_service_is_running, stringResource(R.string.app_name))
                 } else {
@@ -306,7 +315,9 @@ private fun MiuixServerStatusCard(status: ServiceStatus) {
                     text = title,
                     style = MiuixTheme.textStyles.title2,
                     fontWeight = FontWeight.Bold,
+                    color = if (isRunning) MiuixTheme.colorScheme.onPrimaryContainer else MiuixTheme.colorScheme.onErrorContainer
                 )
+                Spacer(modifier = Modifier.height(2.dp))
                 if (isRunning) {
                     val versionText = if (hasUpdate) {
                         stringResource(
@@ -325,9 +336,10 @@ private fun MiuixServerStatusCard(status: ServiceStatus) {
                     Text(
                         text = versionText,
                         style = MiuixTheme.textStyles.body2,
-                        color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+                        color = MiuixTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
                     )
                 }
+                Spacer(modifier = Modifier.height(36.dp))
             }
         }
     }
@@ -370,9 +382,10 @@ private fun MiuixManageAppsCard(grantedCount: Int) {
 @Composable
 private fun MiuixTerminalCard(onClick: () -> Unit) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
+        modifier = Modifier.fillMaxWidth(),
+        onClick = onClick,
+        showIndication = true,
+        pressFeedbackType = PressFeedbackType.Tilt
     ) {
         Row(
             modifier = Modifier.padding(24.dp),
@@ -576,12 +589,13 @@ private fun MiuixAutomationCard(onClick: () -> Unit) {
             !EnvironmentUtils.isRooted()
 
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
+        modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.defaultColors(
             color = MiuixTheme.colorScheme.surfaceVariant,
         ),
+        onClick = onClick,
+        showIndication = true,
+        pressFeedbackType = PressFeedbackType.Tilt
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -669,14 +683,15 @@ private fun MiuixAdbPermissionLimitedCard() {
 private fun MiuixLearnMoreCard() {
     val context = LocalContext.current
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                CustomTabsHelper.launchUrlOrCopy(context, Helps.DEVELOPER.get())
-            },
+        modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.defaultColors(
             color = MiuixTheme.colorScheme.surfaceVariant,
         ),
+        onClick = {
+            CustomTabsHelper.launchUrlOrCopy(context, Helps.DEVELOPER.get())
+        },
+        showIndication = true,
+        pressFeedbackType = PressFeedbackType.Tilt
     ) {
         Row(
             modifier = Modifier.padding(24.dp),
@@ -822,6 +837,7 @@ private fun MiuixAutomationBottomSheet(onDismiss: () -> Unit) {
     val context = LocalContext.current
     var authToken by remember { mutableStateOf(ShizukuSettings.getAuthToken()) }
     var selectedAction by remember { mutableIntStateOf(0) }
+    var showRegenerateDialog by remember { mutableStateOf(false) }
     val startAction = "${BuildConfig.APPLICATION_ID}.START"
     val stopAction = "${BuildConfig.APPLICATION_ID}.STOP"
     val currentAction = if (selectedAction == 0) startAction else stopAction
@@ -917,14 +933,7 @@ private fun MiuixAutomationBottomSheet(onDismiss: () -> Unit) {
                     )
                     IconButton(
                         onClick = {
-                            MaterialAlertDialogBuilder(context)
-                                .setTitle(R.string.home_automation_regenerate_token)
-                                .setMessage(R.string.home_automation_regenerate_token_message)
-                                .setNegativeButton(android.R.string.cancel, null)
-                                .setPositiveButton(android.R.string.ok) { _, _ ->
-                                    authToken = ShizukuSettings.generateAuthToken()
-                                }
-                                .show()
+                            showRegenerateDialog = true
                         },
                     ) {
                         Icon(
@@ -940,6 +949,40 @@ private fun MiuixAutomationBottomSheet(onDismiss: () -> Unit) {
                 onClick = onDismiss,
                 modifier = Modifier.fillMaxWidth()
             )
+        }
+    }
+
+    if (showRegenerateDialog) {
+        WindowDialog(
+            show = true,
+            onDismissRequest = { showRegenerateDialog = false },
+            title = stringResource(R.string.home_automation_regenerate_token),
+        ) {
+            Column {
+                Text(
+                    text = stringResource(R.string.home_automation_regenerate_token_message),
+                    style = MiuixTheme.textStyles.body2,
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    TextButton(
+                        text = stringResource(android.R.string.cancel),
+                        onClick = { showRegenerateDialog = false },
+                        modifier = Modifier.weight(1f)
+                    )
+                    TextButton(
+                        text = stringResource(android.R.string.ok),
+                        onClick = {
+                            authToken = ShizukuSettings.generateAuthToken()
+                            showRegenerateDialog = false
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
         }
     }
 }
@@ -1126,32 +1169,50 @@ private fun MiuixAdbPairDialog(
                     text = stringResource(R.string.dialog_adb_pairing_message),
                     style = MiuixTheme.textStyles.body2,
                 )
+                Spacer(modifier = Modifier.height(8.dp))
 
-                OutlinedTextField(
+                Text(
+                    text = stringResource(R.string.dialog_adb_port),
+                    style = MiuixTheme.textStyles.body2,
+                    color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+                )
+                top.yukonga.miuix.kmp.basic.TextField(
                     value = port,
                     onValueChange = {
                         port = it
                         portError = null
                     },
-                    label = { Text(stringResource(R.string.dialog_adb_port)) },
-                    isError = portError != null,
-                    supportingText = portError?.let { { Text(it) } },
-                    singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
+                if (portError != null) {
+                    Text(
+                        text = portError!!,
+                        style = MiuixTheme.textStyles.body2,
+                        color = MiuixTheme.colorScheme.error,
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
 
-                OutlinedTextField(
+                Text(
+                    text = stringResource(R.string.dialog_adb_pairing_paring_code),
+                    style = MiuixTheme.textStyles.body2,
+                    color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+                )
+                top.yukonga.miuix.kmp.basic.TextField(
                     value = pairingCode,
                     onValueChange = {
                         pairingCode = it
                         codeError = null
                     },
-                    label = { Text(stringResource(R.string.dialog_adb_pairing_paring_code)) },
-                    isError = codeError != null,
-                    supportingText = codeError?.let { { Text(it) } },
-                    singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
+                if (codeError != null) {
+                    Text(
+                        text = codeError!!,
+                        style = MiuixTheme.textStyles.body2,
+                        color = MiuixTheme.colorScheme.error,
+                    )
+                }
             }
 
             Row(

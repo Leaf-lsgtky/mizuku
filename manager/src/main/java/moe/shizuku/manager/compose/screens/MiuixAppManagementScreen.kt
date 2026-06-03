@@ -54,10 +54,14 @@ import top.yukonga.miuix.kmp.basic.Switch
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.window.WindowDialog
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import top.yukonga.miuix.kmp.utils.scrollEndHaptic
+import top.yukonga.miuix.kmp.utils.overScrollVertical
 
 @Composable
 fun MiuixAppManagementScreen(
     viewModel: moe.shizuku.manager.management.AppsViewModel,
+    scrollBehavior: top.yukonga.miuix.kmp.basic.MiuixScrollBehavior,
 ) {
     val packagesResource by viewModel.packages.observeAsState()
     val context = LocalContext.current
@@ -104,7 +108,11 @@ fun MiuixAppManagementScreen(
         }
     } else {
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
+                .scrollEndHaptic()
+                .overScrollVertical(),
             contentPadding = PaddingValues(vertical = 8.dp),
         ) {
             item {

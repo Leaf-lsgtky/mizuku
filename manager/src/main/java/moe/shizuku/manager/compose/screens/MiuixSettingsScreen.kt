@@ -40,7 +40,6 @@ import moe.shizuku.manager.utils.ShizukuStateMachine
 import rikka.material.app.LocaleDelegate
 import rikka.shizuku.manager.ShizukuLocales
 import top.yukonga.miuix.kmp.basic.Card
-import top.yukonga.miuix.kmp.basic.HorizontalDivider
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
@@ -51,10 +50,15 @@ import top.yukonga.miuix.kmp.preference.ArrowPreference
 import top.yukonga.miuix.kmp.preference.SwitchPreference
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.window.WindowDialog
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import top.yukonga.miuix.kmp.utils.scrollEndHaptic
+import top.yukonga.miuix.kmp.utils.overScrollVertical
 import java.util.Locale
 
 @Composable
-fun MiuixSettingsScreen() {
+fun MiuixSettingsScreen(
+    scrollBehavior: top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -362,6 +366,9 @@ fun MiuixSettingsScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .scrollEndHaptic()
+            .overScrollVertical()
             .verticalScroll(rememberScrollState()),
     ) {
         // Behavior
@@ -397,7 +404,7 @@ fun MiuixSettingsScreen() {
                 },
             )
 
-            HorizontalDivider()
+
 
             SwitchPreference(
                 title = stringResource(R.string.settings_watchdog),
@@ -414,7 +421,7 @@ fun MiuixSettingsScreen() {
             )
 
             if (EnvironmentUtils.isTlsSupported() || EnvironmentUtils.isTelevision()) {
-                HorizontalDivider()
+    
 
                 val tcpNeedsRestart = needsRestart(ShizukuSettings.Keys.KEY_TCP_MODE)
                 SwitchPreference(
@@ -445,7 +452,7 @@ fun MiuixSettingsScreen() {
                 )
 
                 if (tcpMode) {
-                    HorizontalDivider()
+        
 
                     val portText = if (tcpPort == 5555) stringResource(R.string.settings_tcp_port_default)
                     else tcpPort.toString()
@@ -485,7 +492,7 @@ fun MiuixSettingsScreen() {
                 onClick = { showThemeModeDialog = true }
             )
 
-            HorizontalDivider()
+
 
             val nightModeEntries = listOf(
                 stringResource(R.string.follow_system),
@@ -504,7 +511,7 @@ fun MiuixSettingsScreen() {
             )
 
             if (nightMode != AppCompatDelegate.MODE_NIGHT_NO) {
-                HorizontalDivider()
+    
 
                 SwitchPreference(
                     title = stringResource(R.string.settings_black_night_theme),
@@ -520,7 +527,7 @@ fun MiuixSettingsScreen() {
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                HorizontalDivider()
+    
 
                 SwitchPreference(
                     title = stringResource(R.string.settings_use_system_color),
@@ -534,7 +541,7 @@ fun MiuixSettingsScreen() {
                 )
             }
 
-            HorizontalDivider()
+
 
             // Language
             val localeTags = ShizukuLocales.LOCALES
@@ -572,7 +579,7 @@ fun MiuixSettingsScreen() {
                 },
             )
 
-            HorizontalDivider()
+
 
             ArrowPreference(
                 title = stringResource(R.string.settings_report_bug),
@@ -581,7 +588,7 @@ fun MiuixSettingsScreen() {
                 },
             )
 
-            HorizontalDivider()
+
 
             ArrowPreference(
                 title = stringResource(R.string.settings_translation),
@@ -593,7 +600,7 @@ fun MiuixSettingsScreen() {
 
             val contributors = stringResource(R.string.translation_contributors).toHtml().toString()
             if (contributors.isNotBlank()) {
-                HorizontalDivider()
+    
 
                 ArrowPreference(
                     title = stringResource(R.string.settings_translation_contributors),
