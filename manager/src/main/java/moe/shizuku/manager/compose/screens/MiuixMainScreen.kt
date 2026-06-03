@@ -14,6 +14,7 @@ import moe.shizuku.manager.R
 import moe.shizuku.manager.home.HomeViewModel
 import moe.shizuku.manager.management.AppsViewModel
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.NavigationBar
 import top.yukonga.miuix.kmp.basic.NavigationBarItem
 import top.yukonga.miuix.kmp.basic.Scaffold

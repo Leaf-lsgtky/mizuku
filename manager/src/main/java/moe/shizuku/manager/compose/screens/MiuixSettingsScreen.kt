@@ -38,7 +38,7 @@ import moe.shizuku.manager.utils.EnvironmentUtils
 import moe.shizuku.manager.utils.SettingsHelper
 import moe.shizuku.manager.utils.ShizukuStateMachine
 import rikka.material.app.LocaleDelegate
-import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import rikka.shizuku.manager.ShizukuLocales
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Icon
@@ -58,7 +58,7 @@ import java.util.Locale
 
 @Composable
 fun MiuixSettingsScreen(
-    scrollBehavior: top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+    scrollBehavior: top.yukonga.miuix.kmp.basic.ScrollBehavior
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()

@@ -38,7 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import moe.shizuku.manager.Helps
 import moe.shizuku.manager.R
 import moe.shizuku.manager.authorization.AuthorizationManager
@@ -62,7 +62,7 @@ import top.yukonga.miuix.kmp.utils.overScrollVertical
 @Composable
 fun MiuixAppManagementScreen(
     viewModel: moe.shizuku.manager.management.AppsViewModel,
-    scrollBehavior: top.yukonga.miuix.kmp.basic.MiuixScrollBehavior,
+    scrollBehavior: top.yukonga.miuix.kmp.basic.ScrollBehavior,
 ) {
     val packagesResource by viewModel.packages.observeAsState()
     val context = LocalContext.current

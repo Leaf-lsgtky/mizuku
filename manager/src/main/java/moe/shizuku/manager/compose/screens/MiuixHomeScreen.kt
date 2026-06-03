@@ -39,7 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.offset
 import androidx.compose.ui.viewinterop.AndroidView
-import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
@@ -102,7 +102,7 @@ fun MiuixHomeScreen(
     onNavigateToStarter: (isRoot: Boolean, port: Int) -> Unit,
     onNavigateToShellTutorial: () -> Unit,
     onNavigateToAdbPairingTutorial: () -> Unit,
-    scrollBehavior: top.yukonga.miuix.kmp.basic.MiuixScrollBehavior,
+    scrollBehavior: top.yukonga.miuix.kmp.basic.ScrollBehavior,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
