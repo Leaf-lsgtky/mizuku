@@ -37,6 +37,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.offset
+import androidx.compose.ui.viewinterop.AndroidView
+import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
@@ -292,7 +295,7 @@ private fun MiuixServerStatusCard(status: ServiceStatus) {
     ) {
         androidx.compose.foundation.layout.Box(modifier = Modifier.fillMaxWidth()) {
             androidx.compose.foundation.layout.Box(
-                modifier = Modifier.matchParentSize().androidx.compose.foundation.layout.offset(50.dp, 38.dp),
+                modifier = Modifier.matchParentSize().offset(50.dp, 38.dp),
                 contentAlignment = Alignment.BottomEnd
             ) {
                 Icon(

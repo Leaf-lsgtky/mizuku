@@ -38,6 +38,7 @@ import moe.shizuku.manager.utils.EnvironmentUtils
 import moe.shizuku.manager.utils.SettingsHelper
 import moe.shizuku.manager.utils.ShizukuStateMachine
 import rikka.material.app.LocaleDelegate
+import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import rikka.shizuku.manager.ShizukuLocales
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Icon
