@@ -1,5 +1,5 @@
 [versions]
-agp = "9.2.1"
+agp = "8.13.2"
 androidx-annotation = "1.10.0"
 androidx-core = "1.18.0"
 hidden-api = "4.4.0"
