@@ -4,7 +4,6 @@ import com.android.build.gradle.internal.tasks.CompileArtProfileTask
 
 plugins {
     id "com.android.application"
-    id "org.jetbrains.kotlin.android"
     id "org.jetbrains.kotlin.plugin.compose"
     id "dev.rikka.tools.refine"
     id "dev.rikka.tools.autoresconfig"
