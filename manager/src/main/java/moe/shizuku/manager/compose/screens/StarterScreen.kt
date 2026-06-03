@@ -78,7 +78,7 @@ fun StarterScreen(
     if (errorMessageRes != null) {
         AlertDialog(
             onDismissRequest = { errorMessageRes = null },
-            message = { Text(stringResource(errorMessageRes!!)) },
+            text = { Text(stringResource(errorMessageRes!!)) },
             confirmButton = {
                 TextButton(onClick = { errorMessageRes = null }) {
                     Text(stringResource(android.R.string.ok))
