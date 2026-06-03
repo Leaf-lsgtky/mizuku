@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -74,22 +75,17 @@ import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.CircularProgressIndicator
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
-import top.yukonga.miuix.kmp.basic.OutlinedTextField
 import top.yukonga.miuix.kmp.basic.RadioButton
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.CardDefaults
 import top.yukonga.miuix.kmp.icon.MiuixIcons
-import top.yukonga.miuix.kmp.icon.extended.Add
-import top.yukonga.miuix.kmp.icon.extended.Apps
-import top.yukonga.miuix.kmp.icon.extended.Code
-import top.yukonga.miuix.kmp.icon.extended.Copy
-import top.yukonga.miuix.kmp.icon.extended.Devices
+import top.yukonga.miuix.kmp.icon.extended.All
 import top.yukonga.miuix.kmp.icon.extended.Help
+import top.yukonga.miuix.kmp.icon.extended.Info
 import top.yukonga.miuix.kmp.icon.extended.Ok
 import top.yukonga.miuix.kmp.icon.extended.Refresh
-import top.yukonga.miuix.kmp.icon.extended.Security
 import top.yukonga.miuix.kmp.icon.extended.Terminal
 import top.yukonga.miuix.kmp.icon.extended.Warning
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -269,44 +265,6 @@ fun MiuixHomeScreen(
     }
 }
 
-// --- Helper object for wireless ADB start ---
-private object StartWirelessAdbHelper {
-    fun start(
-        context: Context,
-        scope: kotlinx.coroutines.CoroutineScope,
-        onNavigateToStarter: (Boolean, Int) -> Unit,
-        onShowWadbNotEnabled: () -> Unit = {},
-        onShowUsbDebuggingNotEnabled: () -> Unit = {},
-    ) {
-        if (ShizukuStateMachine.get() == ShizukuStateMachine.State.STARTING) {
-            Toast.makeText(context, context.getString(R.string.toast_shizuku_already_starting), Toast.LENGTH_SHORT).show()
-            return
-        }
-        val cr = context.contentResolver
-        if (context.checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
-            Settings.Global.putInt(cr, Settings.Global.ADB_ENABLED, 1)
-            Settings.Global.putLong(cr, "adb_allowed_connection_time", 0L)
-        }
-        val adbEnabled = Settings.Global.getInt(cr, Settings.Global.ADB_ENABLED, 0)
-        if (adbEnabled == 0) {
-            onShowUsbDebuggingNotEnabled()
-            return
-        }
-        val tcpPort = EnvironmentUtils.getAdbTcpPort()
-        val tcpMode = ShizukuSettings.getTcpMode()
-        if (tcpPort <= 0 && !EnvironmentUtils.isTlsSupported()) {
-            onShowWadbNotEnabled()
-        } else if (tcpPort <= 0) {
-            onNavigateToStarter(false, 0)
-        } else if (!tcpMode) {
-            scope.launch { AdbStarter.stopTcp(context, tcpPort) }
-            onNavigateToStarter(false, 0)
-        } else {
-            onNavigateToStarter(false, tcpPort)
-        }
-    }
-}
-
 // --- Cards ---
 
 @Composable
@@ -387,7 +345,7 @@ private fun MiuixManageAppsCard(grantedCount: Int) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                imageVector = MiuixIcons.Apps,
+                imageVector = MiuixIcons.All,
                 contentDescription = null,
                 modifier = Modifier
                     .size(48.dp)
@@ -459,7 +417,7 @@ private fun MiuixStartRootCard(isRestart: Boolean, onClick: () -> Unit) {
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Icon(
-                imageVector = MiuixIcons.Security,
+                imageVector = MiuixIcons.Ok,
                 contentDescription = null,
                 modifier = Modifier
                     .size(48.dp)
@@ -519,7 +477,7 @@ private fun MiuixStartWirelessAdbCard(
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Icon(
-                imageVector = MiuixIcons.Devices,
+                imageVector = MiuixIcons.Info,
                 contentDescription = null,
                 modifier = Modifier
                     .size(48.dp)
@@ -574,7 +532,7 @@ private fun MiuixStartAdbCard(onClick: () -> Unit) {
                     modifier = Modifier
                         .size(48.dp)
                         .clip(CircleShape),
-                    tint = MiuixTheme.colorScheme.onSurfaceVariant,
+                    tint = MiuixTheme.colorScheme.onSurfaceVariantSummary,
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
@@ -630,12 +588,12 @@ private fun MiuixAutomationCard(onClick: () -> Unit) {
         Column(modifier = Modifier.padding(24.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    imageVector = MiuixIcons.Code,
+                    imageVector = MiuixIcons.Terminal,
                     contentDescription = null,
                     modifier = Modifier
                         .size(48.dp)
                         .clip(CircleShape),
-                    tint = MiuixTheme.colorScheme.onSurfaceVariant,
+                    tint = MiuixTheme.colorScheme.onSurfaceVariantSummary,
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column(modifier = Modifier.weight(1f)) {
@@ -732,7 +690,7 @@ private fun MiuixLearnMoreCard() {
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape),
-                tint = MiuixTheme.colorScheme.onSurfaceVariant,
+                tint = MiuixTheme.colorScheme.onSurfaceVariantSummary,
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
@@ -1177,9 +1135,9 @@ private fun MiuixAdbPairDialog(
                         port = it
                         portError = null
                     },
-                    label = stringResource(R.string.dialog_adb_port),
+                    label = { Text(stringResource(R.string.dialog_adb_port)) },
                     isError = portError != null,
-                    supportingText = portError,
+                    supportingText = portError?.let { { Text(it) } },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -1190,9 +1148,9 @@ private fun MiuixAdbPairDialog(
                         pairingCode = it
                         codeError = null
                     },
-                    label = stringResource(R.string.dialog_adb_pairing_paring_code),
+                    label = { Text(stringResource(R.string.dialog_adb_pairing_paring_code)) },
                     isError = codeError != null,
-                    supportingText = codeError,
+                    supportingText = codeError?.let { { Text(it) } },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )

@@ -18,7 +18,7 @@ import top.yukonga.miuix.kmp.basic.NavigationBarItem
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTopAppBar
 import top.yukonga.miuix.kmp.icon.MiuixIcons
-import top.yukonga.miuix.kmp.icon.extended.Apps
+import top.yukonga.miuix.kmp.icon.extended.All
 import top.yukonga.miuix.kmp.icon.extended.Settings
 import top.yukonga.miuix.kmp.icon.extended.VerticalSplit
 
@@ -55,7 +55,7 @@ fun MiuixMainScreen(
                 NavigationBarItem(
                     selected = selectedIndex == 1,
                     onClick = { selectedIndex = 1 },
-                    icon = MiuixIcons.Apps,
+                    icon = MiuixIcons.All,
                     label = stringResource(R.string.home_app_management_title)
                 )
                 NavigationBarItem(

@@ -172,6 +172,7 @@ dependencies {
     // Miuix
     implementation "top.yukonga.miuix.kmp:miuix-ui:0.9.1"
     implementation "top.yukonga.miuix.kmp:miuix-icons:0.9.1"
+    implementation "top.yukonga.miuix.kmp:miuix-preference:0.9.1"
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2"
