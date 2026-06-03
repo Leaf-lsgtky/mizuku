@@ -23,7 +23,7 @@ import moe.shizuku.manager.starter.StarterActivity
 import moe.shizuku.manager.utils.EnvironmentUtils
 import moe.shizuku.manager.utils.ShizukuStateMachine
 
-class HomeActivity : AppActivity() {
+open class HomeActivity : AppActivity() {
 
     private val homeModel: HomeViewModel by viewModels()
     private val appsModel: AppsViewModel by viewModels()
