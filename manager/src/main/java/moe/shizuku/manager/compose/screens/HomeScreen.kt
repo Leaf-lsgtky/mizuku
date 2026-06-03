@@ -307,7 +307,7 @@ fun HomeScreen(
             if (isPrimaryUser) {
                 val rootRestart = isRunning && isRoot
                 if (EnvironmentUtils.isRooted()) {
-                    item {
+                    item(span = StaggeredGridItemSpan.FullLine) {
                         StartRootCard(
                             isRestart = rootRestart,
                             onClick = { onNavigateToStarter(true, 0) },
@@ -319,7 +319,7 @@ fun HomeScreen(
                     EnvironmentUtils.isTelevision() ||
                     EnvironmentUtils.getAdbTcpPort() > 0
                 ) {
-                    item {
+                    item(span = StaggeredGridItemSpan.FullLine) {
                         StartWirelessAdbCard(
                             onStartWadb = {
                                 StartWirelessAdbHelper.start(
@@ -343,12 +343,12 @@ fun HomeScreen(
                     }
                 }
 
-                item {
+                item(span = StaggeredGridItemSpan.FullLine) {
                     StartAdbCard(onClick = { showAdbCommandDialog = true })
                 }
             }
 
-            item {
+            item(span = StaggeredGridItemSpan.FullLine) {
                 AutomationCard(onClick = { showAutomationSheet = true })
             }
 
