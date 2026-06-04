@@ -467,35 +467,35 @@ private fun MiuixTerminalCard(onClick: () -> Unit) {
 @Composable
 private fun MiuixStartRootCard(isRestart: Boolean, onClick: () -> Unit) {
     val context = LocalContext.current
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Card(modifier = Modifier.fillMaxWidth()) {
-            BasicComponent(
-                title = stringResource(R.string.home_root_title),
-                summary = stringResource(R.string.home_root_description, "Sui", "Sui"),
-                endActions = {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_root_24dp),
-                        modifier = Modifier.size(24.dp),
-                        tint = MiuixTheme.colorScheme.onSurface,
-                        contentDescription = null,
-                    )
-                },
-            )
-        }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(onClick = onClick) {
-                Text(
-                    text = stringResource(
-                        if (isRestart) R.string.home_root_button_restart
-                        else R.string.home_root_button_start
-                    ),
+    Card(modifier = Modifier.fillMaxWidth()) {
+        BasicComponent(
+            title = stringResource(R.string.home_root_title),
+            summary = stringResource(R.string.home_root_description, "Sui", "Sui"),
+            endActions = {
+                Icon(
+                    painter = painterResource(R.drawable.ic_root_24dp),
+                    modifier = Modifier.size(24.dp),
+                    tint = MiuixTheme.colorScheme.onSurface,
+                    contentDescription = null,
                 )
-            }
-            TextButton(
-                text = "Sui",
-                onClick = { CustomTabsHelper.launchUrlOrCopy(context, Helps.SUI.get()) },
-            )
-        }
+            },
+            bottomAction = {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = onClick) {
+                        Text(
+                            text = stringResource(
+                                if (isRestart) R.string.home_root_button_restart
+                                else R.string.home_root_button_start
+                            ),
+                        )
+                    }
+                    TextButton(
+                        text = "Sui",
+                        onClick = { CustomTabsHelper.launchUrlOrCopy(context, Helps.SUI.get()) },
+                    )
+                }
+            },
+        )
     }
 }
 
@@ -505,67 +505,67 @@ private fun MiuixStartWirelessAdbCard(
     onPair: () -> Unit,
     onViewGuide: () -> Unit,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Card(modifier = Modifier.fillMaxWidth()) {
-            BasicComponent(
-                title = stringResource(R.string.home_wireless_adb_title),
-                summary = stringResource(R.string.home_wireless_adb_description_plain),
-                endActions = {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_wadb_24),
-                        modifier = Modifier.size(24.dp),
-                        tint = MiuixTheme.colorScheme.onSurface,
-                        contentDescription = null,
-                    )
-                },
-            )
-        }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(onClick = onStartWadb) {
-                Text(stringResource(R.string.start))
-            }
-            if (EnvironmentUtils.isTlsSupported()) {
-                TextButton(
-                    text = stringResource(R.string.adb_pairing),
-                    onClick = onPair,
+    Card(modifier = Modifier.fillMaxWidth()) {
+        BasicComponent(
+            title = stringResource(R.string.home_wireless_adb_title),
+            summary = stringResource(R.string.home_wireless_adb_description_plain),
+            endActions = {
+                Icon(
+                    painter = painterResource(R.drawable.ic_wadb_24),
+                    modifier = Modifier.size(24.dp),
+                    tint = MiuixTheme.colorScheme.onSurface,
+                    contentDescription = null,
                 )
-                TextButton(
-                    text = stringResource(R.string.home_wireless_adb_view_guide_button),
-                    onClick = onViewGuide,
-                )
-            }
-        }
+            },
+            bottomAction = {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = onStartWadb) {
+                        Text(stringResource(R.string.start))
+                    }
+                    if (EnvironmentUtils.isTlsSupported()) {
+                        TextButton(
+                            text = stringResource(R.string.adb_pairing),
+                            onClick = onPair,
+                        )
+                        TextButton(
+                            text = stringResource(R.string.home_wireless_adb_view_guide_button),
+                            onClick = onViewGuide,
+                        )
+                    }
+                }
+            },
+        )
     }
 }
 
 @Composable
 private fun MiuixStartAdbCard(onClick: () -> Unit) {
     val context = LocalContext.current
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Card(modifier = Modifier.fillMaxWidth()) {
-            BasicComponent(
-                title = stringResource(R.string.home_adb_title),
-                summary = stringResource(R.string.home_adb_description_plain, Helps.ADB.get()),
-                endActions = {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_adb_24dp),
-                        modifier = Modifier.size(24.dp),
-                        tint = MiuixTheme.colorScheme.onSurface,
-                        contentDescription = null,
+    Card(modifier = Modifier.fillMaxWidth()) {
+        BasicComponent(
+            title = stringResource(R.string.home_adb_title),
+            summary = stringResource(R.string.home_adb_description_plain, Helps.ADB.get()),
+            endActions = {
+                Icon(
+                    painter = painterResource(R.drawable.ic_adb_24dp),
+                    modifier = Modifier.size(24.dp),
+                    tint = MiuixTheme.colorScheme.onSurface,
+                    contentDescription = null,
+                )
+            },
+            bottomAction = {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    TextButton(
+                        text = stringResource(R.string.home_adb_button_view_command),
+                        onClick = onClick,
                     )
-                },
-            )
-        }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            TextButton(
-                text = stringResource(R.string.home_adb_button_view_command),
-                onClick = onClick,
-            )
-            TextButton(
-                text = stringResource(R.string.home_adb_button_view_help),
-                onClick = { CustomTabsHelper.launchUrlOrCopy(context, Helps.ADB.get()) },
-            )
-        }
+                    TextButton(
+                        text = stringResource(R.string.home_adb_button_view_help),
+                        onClick = { CustomTabsHelper.launchUrlOrCopy(context, Helps.ADB.get()) },
+                    )
+                }
+            },
+        )
     }
 }
 
