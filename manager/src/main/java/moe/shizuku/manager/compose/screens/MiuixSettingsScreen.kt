@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -87,6 +88,12 @@ fun MiuixSettingsScreen(
     }
     var enableBlur by remember {
         mutableStateOf(ShizukuSettings.getEnableBlur())
+    }
+    var enableFloatingBottomBar by remember {
+        mutableStateOf(ShizukuSettings.getEnableFloatingBottomBar())
+    }
+    var enableFloatingBottomBarBlur by remember {
+        mutableStateOf(ShizukuSettings.getEnableFloatingBottomBarBlur())
     }
 
     // Dialog states
@@ -496,6 +503,31 @@ fun MiuixSettingsScreen(
                             enableBlur = newValue
                         },
                     )
+
+                    SwitchPreference(
+                        title = stringResource(R.string.settings_floating_bottom_bar),
+                        summary = stringResource(R.string.settings_floating_bottom_bar_summary),
+                        checked = enableFloatingBottomBar,
+                        onCheckedChange = { newValue ->
+                            ShizukuSettings.setEnableFloatingBottomBar(newValue)
+                            enableFloatingBottomBar = newValue
+                        },
+                    )
+
+                    AnimatedVisibility(
+                        visible = enableFloatingBottomBar
+                            && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    ) {
+                        SwitchPreference(
+                            title = stringResource(R.string.settings_floating_bottom_bar_blur),
+                            summary = stringResource(R.string.settings_floating_bottom_bar_blur_summary),
+                            checked = enableFloatingBottomBarBlur,
+                            onCheckedChange = { newValue ->
+                                ShizukuSettings.setEnableFloatingBottomBarBlur(newValue)
+                                enableFloatingBottomBarBlur = newValue
+                            },
+                        )
+                    }
                 }
             }
 

@@ -13,7 +13,10 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,8 +41,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.style.TextOverflow
+import android.os.Build
 import moe.shizuku.manager.R
 import moe.shizuku.manager.ShizukuSettings
+import moe.shizuku.manager.compose.components.FloatingBottomBar
+import moe.shizuku.manager.compose.components.FloatingBottomBarItem
 import moe.shizuku.manager.compose.components.SearchBarFake
 import moe.shizuku.manager.compose.components.SearchPager
 import moe.shizuku.manager.compose.components.SearchStatus
@@ -49,7 +57,10 @@ import moe.shizuku.manager.compose.utils.rememberBlurBackdrop
 import moe.shizuku.manager.home.HomeViewModel
 import moe.shizuku.manager.management.AppsViewModel
 import moe.shizuku.manager.utils.ShizukuStateMachine
+import top.yukonga.miuix.kmp.blur.Backdrop
+import top.yukonga.miuix.kmp.blur.isRenderEffectSupported
 import top.yukonga.miuix.kmp.blur.layerBackdrop
+import top.yukonga.miuix.kmp.blur.rememberLayerBackdrop
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.DropdownImpl
 import top.yukonga.miuix.kmp.basic.Icon
@@ -113,6 +124,19 @@ fun MiuixMainScreen(
     val bottomBarBlurActive = bottomBarBackdrop != null
     val bottomBarColor = if (bottomBarBlurActive) Color.Transparent else MiuixTheme.colorScheme.surface
 
+    // 悬浮底栏
+    val enableFloatingBottomBar = ShizukuSettings.getEnableFloatingBottomBar()
+    val enableFloatingBottomBarBlur = enableFloatingBottomBar
+        && enableBlur
+        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+    val floatingBackdrop = if (enableFloatingBottomBar && enableFloatingBottomBarBlur) {
+        val surfaceColor = MiuixTheme.colorScheme.surface
+        rememberLayerBackdrop {
+            drawRect(surfaceColor)
+            drawContent()
+        }
+    } else null
+
     // 返回按钮处理：取消搜索或返回首页
     BackHandler(enabled = !searchStatus.isCollapsed() || mainPagerState.selectedPage != 0) {
         if (!searchStatus.isCollapsed()) {
@@ -171,29 +195,100 @@ fun MiuixMainScreen(
     Scaffold {
         Scaffold(
             bottomBar = {
-                BlurredBar(bottomBarBackdrop) {
-                    NavigationBar(
-                        modifier = Modifier.fillMaxWidth(),
-                        color = bottomBarColor
-                    ) {
-                        NavigationBarItem(
-                            selected = mainPagerState.selectedPage == 0,
-                            onClick = { mainPagerState.animateToPage(0) },
-                            icon = MiuixIcons.VerticalSplit,
-                            label = stringResource(R.string.app_name)
-                        )
-                        NavigationBarItem(
-                            selected = mainPagerState.selectedPage == 1,
-                            onClick = { mainPagerState.animateToPage(1) },
-                            icon = MiuixIcons.All,
-                            label = stringResource(R.string.home_app_management_title)
-                        )
-                        NavigationBarItem(
-                            selected = mainPagerState.selectedPage == 2,
-                            onClick = { mainPagerState.animateToPage(2) },
-                            icon = MiuixIcons.Settings,
-                            label = stringResource(R.string.settings_title)
-                        )
+                if (enableFloatingBottomBar) {
+                    val fbBackdrop = floatingBackdrop
+                    if (fbBackdrop != null) {
+                        FloatingBottomBar(
+                            modifier = Modifier
+                                .padding(bottom = 12.dp + WindowInsets.navigationBars
+                                    .asPaddingValues().calculateBottomPadding()),
+                            selectedIndex = { mainPagerState.selectedPage },
+                            onSelected = { mainPagerState.animateToPage(it) },
+                            backdrop = fbBackdrop,
+                            tabsCount = 3,
+                            isBlurEnabled = enableFloatingBottomBarBlur,
+                        ) {
+                            FloatingBottomBarItem(
+                                onClick = { mainPagerState.animateToPage(0) },
+                            ) {
+                                Icon(
+                                    imageVector = MiuixIcons.VerticalSplit,
+                                    contentDescription = stringResource(R.string.app_name),
+                                    tint = MiuixTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = stringResource(R.string.app_name),
+                                    fontSize = 11.sp,
+                                    lineHeight = 14.sp,
+                                    color = MiuixTheme.colorScheme.onSurface,
+                                    maxLines = 1,
+                                    softWrap = false,
+                                    overflow = TextOverflow.Visible
+                                )
+                            }
+                            FloatingBottomBarItem(
+                                onClick = { mainPagerState.animateToPage(1) },
+                            ) {
+                                Icon(
+                                    imageVector = MiuixIcons.All,
+                                    contentDescription = stringResource(R.string.home_app_management_title),
+                                    tint = MiuixTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = stringResource(R.string.home_app_management_title),
+                                    fontSize = 11.sp,
+                                    lineHeight = 14.sp,
+                                    color = MiuixTheme.colorScheme.onSurface,
+                                    maxLines = 1,
+                                    softWrap = false,
+                                    overflow = TextOverflow.Visible
+                                )
+                            }
+                            FloatingBottomBarItem(
+                                onClick = { mainPagerState.animateToPage(2) },
+                            ) {
+                                Icon(
+                                    imageVector = MiuixIcons.Settings,
+                                    contentDescription = stringResource(R.string.settings_title),
+                                    tint = MiuixTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = stringResource(R.string.settings_title),
+                                    fontSize = 11.sp,
+                                    lineHeight = 14.sp,
+                                    color = MiuixTheme.colorScheme.onSurface,
+                                    maxLines = 1,
+                                    softWrap = false,
+                                    overflow = TextOverflow.Visible
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    BlurredBar(bottomBarBackdrop) {
+                        NavigationBar(
+                            modifier = Modifier.fillMaxWidth(),
+                            color = bottomBarColor
+                        ) {
+                            NavigationBarItem(
+                                selected = mainPagerState.selectedPage == 0,
+                                onClick = { mainPagerState.animateToPage(0) },
+                                icon = MiuixIcons.VerticalSplit,
+                                label = stringResource(R.string.app_name)
+                            )
+                            NavigationBarItem(
+                                selected = mainPagerState.selectedPage == 1,
+                                onClick = { mainPagerState.animateToPage(1) },
+                                icon = MiuixIcons.All,
+                                label = stringResource(R.string.home_app_management_title)
+                            )
+                            NavigationBarItem(
+                                selected = mainPagerState.selectedPage == 2,
+                                onClick = { mainPagerState.animateToPage(2) },
+                                icon = MiuixIcons.Settings,
+                                label = stringResource(R.string.settings_title)
+                            )
+                        }
                     }
                 }
             },
@@ -205,6 +300,10 @@ fun MiuixMainScreen(
                     .fillMaxSize()
                     .then(
                         if (bottomBarBlurActive) Modifier.layerBackdrop(bottomBarBackdrop)
+                        else Modifier
+                    )
+                    .then(
+                        if (floatingBackdrop != null) Modifier.layerBackdrop(floatingBackdrop)
                         else Modifier
                     )
             ) {

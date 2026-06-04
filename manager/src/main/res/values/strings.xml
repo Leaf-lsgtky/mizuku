@@ -158,6 +158,10 @@ Wi-Fi is required. Shizuku will continue running and wait for a Wi-Fi connection
     <string name="settings_user_interface">Appearance</string>
     <string name="settings_enable_blur">Enable blur effects</string>
     <string name="settings_enable_blur_summary">Apply blur to top and bottom bars (requires Android 12+)</string>
+    <string name="settings_floating_bottom_bar">Floating bottom bar</string>
+    <string name="settings_floating_bottom_bar_summary">Display a floating style navigation bar at the bottom</string>
+    <string name="settings_floating_bottom_bar_blur">Glass effect</string>
+    <string name="settings_floating_bottom_bar_blur_summary">Apply liquid glass blur to the floating bar</string>
     <string name="settings_black_night_theme">Black night theme</string>
     <string name="settings_black_night_theme_summary">Use the pure black theme if night mode is enabled</string>
     <string name="settings_support">Support</string>

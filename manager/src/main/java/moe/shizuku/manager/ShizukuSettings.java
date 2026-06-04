@@ -42,6 +42,8 @@ public class ShizukuSettings {
         public static final String KEY_CATEGORY_ADVANCED = "category_advanced";
         public static final String KEY_THEME_MODE = "theme_mode";
         public static final String KEY_ENABLE_BLUR = "enable_blur";
+        public static final String KEY_ENABLE_FLOATING_BOTTOM_BAR = "enable_floating_bottom_bar";
+        public static final String KEY_ENABLE_FLOATING_BOTTOM_BAR_BLUR = "enable_floating_bottom_bar_blur";
     }
 
     public static final int THEME_MATERIAL = 0;
@@ -217,5 +219,21 @@ public class ShizukuSettings {
 
     public static void setEnableBlur(boolean enable) {
         getPreferences().edit().putBoolean(Keys.KEY_ENABLE_BLUR, enable).apply();
+    }
+
+    public static boolean getEnableFloatingBottomBar() {
+        return getPreferences().getBoolean(Keys.KEY_ENABLE_FLOATING_BOTTOM_BAR, false);
+    }
+
+    public static void setEnableFloatingBottomBar(boolean enable) {
+        getPreferences().edit().putBoolean(Keys.KEY_ENABLE_FLOATING_BOTTOM_BAR, enable).apply();
+    }
+
+    public static boolean getEnableFloatingBottomBarBlur() {
+        return getPreferences().getBoolean(Keys.KEY_ENABLE_FLOATING_BOTTOM_BAR_BLUR, false);
+    }
+
+    public static void setEnableFloatingBottomBarBlur(boolean enable) {
+        getPreferences().edit().putBoolean(Keys.KEY_ENABLE_FLOATING_BOTTOM_BAR_BLUR, enable).apply();
     }
 }
