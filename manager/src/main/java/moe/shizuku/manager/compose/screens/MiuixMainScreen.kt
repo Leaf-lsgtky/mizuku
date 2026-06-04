@@ -42,6 +42,8 @@ import top.yukonga.miuix.kmp.basic.NavigationBarItem
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
+import androidx.compose.foundation.layout.width
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.All
@@ -95,22 +97,24 @@ fun MiuixMainScreen(
         WindowDialog(
             show = true,
             onDismissRequest = { showStopDialog = false },
+            title = stringResource(R.string.app_name),
         ) {
             Column {
                 Text(
                     text = stringResource(R.string.dialog_stop_message),
                     style = MiuixTheme.textStyles.body2,
+                    color = MiuixTheme.colorScheme.onSurface,
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
                 androidx.compose.foundation.layout.Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp),
                 ) {
                     TextButton(
                         text = stringResource(android.R.string.cancel),
                         onClick = { showStopDialog = false },
                         modifier = Modifier.weight(1f)
                     )
+                    Spacer(modifier = Modifier.width(20.dp))
                     TextButton(
                         text = stringResource(android.R.string.ok),
                         onClick = {
@@ -118,7 +122,8 @@ fun MiuixMainScreen(
                             runCatching { rikka.shizuku.Shizuku.exit() }
                             showStopDialog = false
                         },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.textButtonColorsPrimary(),
                     )
                 }
             }

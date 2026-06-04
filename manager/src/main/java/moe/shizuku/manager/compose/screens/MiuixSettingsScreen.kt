@@ -486,7 +486,7 @@ fun MiuixSettingsScreen(
         ) {
             val themeEntries = listOf("Material", "Miuix")
             ArrowPreference(
-                title = "UI Theme",
+            title = stringResource(R.string.settings_theme_mode),
                 summary = themeEntries[themeMode],
                 onClick = { showThemeModeDialog = true }
             )

@@ -182,6 +182,7 @@
     <string name="dark_theme_off">Always light</string>
     <string name="dark_theme_on">Always dark</string>
     <string name="follow_system">Follow system</string>
+    <string name="settings_theme_mode">UI Theme</string>
 
     <!-- About -->
     <string name="action_about">About</string>

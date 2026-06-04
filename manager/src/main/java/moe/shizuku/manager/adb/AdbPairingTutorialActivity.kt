@@ -7,7 +7,7 @@ import androidx.activity.compose.setContent
 import moe.shizuku.manager.AppConstants
 import moe.shizuku.manager.app.AppActivity
 import moe.shizuku.manager.compose.screens.AdbPairingTutorialScreen
-import moe.shizuku.manager.compose.theme.ShizukuTheme
+import moe.shizuku.manager.compose.theme.ShizukuAppTheme
 
 class AdbPairingTutorialActivity : AppActivity() {
 
@@ -19,7 +19,7 @@ class AdbPairingTutorialActivity : AppActivity() {
         }
 
         setContent {
-            ShizukuTheme {
+            ShizukuAppTheme {
                 AdbPairingTutorialScreen(
                     onNavigateBack = { finish() },
                 )

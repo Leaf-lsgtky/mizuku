@@ -3,6 +3,7 @@ package moe.shizuku.manager.compose.screens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -15,8 +16,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,17 +25,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import moe.shizuku.manager.R
 import moe.shizuku.manager.adb.AdbKeyException
+import moe.shizuku.manager.compose.theme.LocalIsMiuix
 import moe.shizuku.manager.starter.NotRootedException
 import moe.shizuku.manager.starter.Starter
 import moe.shizuku.manager.starter.ViewModel
 import rikka.lifecycle.Status
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
+import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.basic.TextButton
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.window.WindowDialog
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import javax.net.ssl.SSLProtocolException
@@ -76,21 +80,47 @@ fun StarterScreen(
     }
 
     if (errorMessageRes != null) {
-        AlertDialog(
-            onDismissRequest = { errorMessageRes = null },
-            text = { Text(stringResource(errorMessageRes!!)) },
-            confirmButton = {
-                TextButton(onClick = { errorMessageRes = null }) {
-                    Text(stringResource(android.R.string.ok))
+        val message = stringResource(errorMessageRes!!)
+        val okText = stringResource(android.R.string.ok)
+
+        if (LocalIsMiuix.current) {
+            WindowDialog(
+                show = true,
+                onDismissRequest = { errorMessageRes = null },
+                title = stringResource(R.string.starter),
+                content = {
+                    Column {
+                        Text(
+                            text = message,
+                            color = MiuixTheme.colorScheme.onSurface,
+                        )
+                        Spacer(modifier = Modifier.height(24.dp))
+                        TextButton(
+                            text = okText,
+                            onClick = { errorMessageRes = null },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.textButtonColorsPrimary(),
+                        )
+                    }
                 }
-            },
-        )
+            )
+        } else {
+            AlertDialog(
+                onDismissRequest = { errorMessageRes = null },
+                text = { androidx.compose.material3.Text(message) },
+                confirmButton = {
+                    androidx.compose.material3.TextButton(onClick = { errorMessageRes = null }) {
+                        androidx.compose.material3.Text(okText)
+                    }
+                },
+            )
+        }
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.starter)) },
+                title = { androidx.compose.material3.Text(stringResource(R.string.starter)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.Default.Close, contentDescription = "Close")
@@ -106,7 +136,7 @@ fun StarterScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
-            Text(
+            androidx.compose.material3.Text(
                 text = output.ifEmpty { stringResource(R.string.starting_root_shell) },
                 style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily.Monospace),
                 color = if (isError) MaterialTheme.colorScheme.error

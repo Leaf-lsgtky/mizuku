@@ -8,14 +8,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.adb.AdbPairingService
 import moe.shizuku.manager.adb.AdbStarter
 import moe.shizuku.manager.app.AppActivity
 import moe.shizuku.manager.compose.screens.HomeScreen
 import moe.shizuku.manager.compose.screens.MiuixMainScreen
-import moe.shizuku.manager.compose.theme.ShizukuMiuixTheme
-import moe.shizuku.manager.compose.theme.ShizukuTheme
+import moe.shizuku.manager.compose.theme.LocalIsMiuix
+import moe.shizuku.manager.compose.theme.ShizukuAppTheme
 import moe.shizuku.manager.management.AppsViewModel
 import moe.shizuku.manager.receiver.NotifCancelReceiver
 import moe.shizuku.manager.settings.SettingsActivity
@@ -41,10 +40,8 @@ open class HomeActivity : AppActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val themeMode = ShizukuSettings.getThemeMode()
-
-            if (themeMode == ShizukuSettings.THEME_MIUIX) {
-                ShizukuMiuixTheme {
+            ShizukuAppTheme {
+                if (LocalIsMiuix.current) {
                     MiuixMainScreen(
                         homeViewModel = homeModel,
                         appsViewModel = appsModel,
@@ -61,9 +58,7 @@ open class HomeActivity : AppActivity() {
                             startActivity(Intent(this, moe.shizuku.manager.adb.AdbPairingTutorialActivity::class.java))
                         },
                     )
-                }
-            } else {
-                ShizukuTheme {
+                } else {
                     HomeScreen(
                         homeViewModel = homeModel,
                         appsViewModel = appsModel,

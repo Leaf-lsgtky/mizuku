@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import moe.shizuku.manager.app.AppActivity
 import moe.shizuku.manager.compose.screens.AppManagementScreen
-import moe.shizuku.manager.compose.theme.ShizukuTheme
+import moe.shizuku.manager.compose.theme.ShizukuAppTheme
 import moe.shizuku.manager.utils.ShizukuStateMachine
 import rikka.lifecycle.Status
 import java.util.Objects
@@ -29,7 +29,7 @@ class ApplicationManagementActivity : AppActivity() {
         }
 
         setContent {
-            ShizukuTheme {
+            ShizukuAppTheme {
                 AppManagementScreen(
                     viewModel = viewModel,
                     onNavigateBack = { finish() },

@@ -25,7 +25,7 @@ import moe.shizuku.manager.adb.AdbKeyException
 import moe.shizuku.manager.adb.AdbStarter
 import moe.shizuku.manager.app.AppActivity
 import moe.shizuku.manager.compose.screens.StarterScreen
-import moe.shizuku.manager.compose.theme.ShizukuTheme
+import moe.shizuku.manager.compose.theme.ShizukuAppTheme
 import moe.shizuku.manager.utils.ShizukuStateMachine
 import rikka.lifecycle.Resource
 
@@ -39,7 +39,7 @@ class StarterActivity : AppActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            ShizukuTheme {
+            ShizukuAppTheme {
                 StarterScreen(
                     viewModel = viewModel,
                     onNavigateBack = { finish() },

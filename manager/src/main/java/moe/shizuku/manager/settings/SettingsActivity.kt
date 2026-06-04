@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import moe.shizuku.manager.app.AppActivity
 import moe.shizuku.manager.compose.screens.SettingsScreen
-import moe.shizuku.manager.compose.theme.ShizukuTheme
+import moe.shizuku.manager.compose.theme.ShizukuAppTheme
 
 class SettingsActivity : AppActivity() {
 
@@ -12,7 +12,7 @@ class SettingsActivity : AppActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            ShizukuTheme {
+            ShizukuAppTheme {
                 SettingsScreen(
                     onNavigateBack = { finish() },
                 )

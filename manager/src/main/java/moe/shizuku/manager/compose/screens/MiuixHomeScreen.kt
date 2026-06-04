@@ -77,7 +77,9 @@ import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.RadioButton
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.CardDefaults
+import androidx.compose.foundation.layout.width
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.Help
 import top.yukonga.miuix.kmp.icon.extended.Info
@@ -663,29 +665,32 @@ private fun MiuixStopShizukuDialog(onDismiss: () -> Unit, onConfirm: () -> Unit)
     WindowDialog(
         show = true,
         onDismissRequest = onDismiss,
+        title = stringResource(R.string.app_name),
     ) {
         Column {
             Text(
                 text = stringResource(R.string.dialog_stop_message),
                 style = MiuixTheme.textStyles.body2,
+                color = MiuixTheme.colorScheme.onSurface,
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 TextButton(
                     text = stringResource(android.R.string.cancel),
                     onClick = onDismiss,
                     modifier = Modifier.weight(1f)
                 )
+                Spacer(modifier = Modifier.width(20.dp))
                 TextButton(
                     text = stringResource(android.R.string.ok),
                     onClick = {
                         onConfirm()
                         onDismiss()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.textButtonColorsPrimary(),
                 )
             }
         }
@@ -707,18 +712,19 @@ private fun MiuixAdbCommandDialog(onDismiss: () -> Unit) {
                 text = stringResource(R.string.home_adb_dialog_view_command_message, command)
                     .replace(Regex("<[^>]*>"), ""),
                 style = MiuixTheme.textStyles.body2,
+                color = MiuixTheme.colorScheme.onSurface,
                 fontFamily = FontFamily.Monospace,
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 TextButton(
                     text = stringResource(android.R.string.cancel),
                     onClick = onDismiss,
                     modifier = Modifier.weight(1f)
                 )
+                Spacer(modifier = Modifier.width(20.dp))
                 TextButton(
                     text = stringResource(R.string.home_adb_dialog_view_command_copy_button),
                     onClick = {
@@ -729,7 +735,8 @@ private fun MiuixAdbCommandDialog(onDismiss: () -> Unit) {
                         }
                         onDismiss()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.textButtonColorsPrimary(),
                 )
             }
         }
@@ -866,24 +873,26 @@ private fun MiuixAutomationBottomSheet(onDismiss: () -> Unit) {
                 Text(
                     text = stringResource(R.string.home_automation_regenerate_token_message),
                     style = MiuixTheme.textStyles.body2,
+                    color = MiuixTheme.colorScheme.onSurface,
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     TextButton(
                         text = stringResource(android.R.string.cancel),
                         onClick = { showRegenerateDialog = false },
                         modifier = Modifier.weight(1f)
                     )
+                    Spacer(modifier = Modifier.width(20.dp))
                     TextButton(
                         text = stringResource(android.R.string.ok),
                         onClick = {
                             authToken = ShizukuSettings.generateAuthToken()
                             showRegenerateDialog = false
                         },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.textButtonColorsPrimary(),
                     )
                 }
             }
@@ -978,7 +987,6 @@ private fun MiuixAdbDiscoveryDialog(
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 TextButton(
                     text = stringResource(android.R.string.cancel),
@@ -988,6 +996,7 @@ private fun MiuixAdbDiscoveryDialog(
                     },
                     modifier = Modifier.weight(1f)
                 )
+                Spacer(modifier = Modifier.width(20.dp))
                 TextButton(
                     text = stringResource(R.string.development_settings),
                     onClick = {
@@ -995,7 +1004,8 @@ private fun MiuixAdbDiscoveryDialog(
                         onDismiss()
                         SettingsPage.Developer.HighlightWirelessDebugging.launch(context)
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.textButtonColorsPrimary(),
                 )
             }
         }
@@ -1121,7 +1131,6 @@ private fun MiuixAdbPairDialog(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 TextButton(
                     text = stringResource(android.R.string.cancel),
@@ -1132,6 +1141,7 @@ private fun MiuixAdbPairDialog(
                     modifier = Modifier.weight(1f)
                 )
                 if (!isDiscovering || !inMultiScreenOrDisplay) {
+                    Spacer(modifier = Modifier.width(20.dp))
                     TextButton(
                         text = if (isPairing) "" else stringResource(android.R.string.ok),
                         onClick = {
@@ -1181,7 +1191,8 @@ private fun MiuixAdbPairDialog(
                             }
                         },
                         enabled = !isPairing,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.textButtonColorsPrimary(),
                     )
                 }
             }
@@ -1196,17 +1207,20 @@ private fun MiuixWadbNotEnabledDialog(onDismiss: () -> Unit) {
     WindowDialog(
         show = true,
         onDismissRequest = onDismiss,
+        title = stringResource(R.string.app_name),
     ) {
         Column {
             Text(
                 text = stringResource(R.string.dialog_wireless_adb_not_enabled),
                 style = MiuixTheme.textStyles.body2,
+                color = MiuixTheme.colorScheme.onSurface,
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             TextButton(
                 text = stringResource(android.R.string.ok),
                 onClick = onDismiss,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.textButtonColorsPrimary(),
             )
         }
     }
@@ -1221,29 +1235,32 @@ private fun MiuixUsbDebuggingNotEnabledDialog(onDismiss: () -> Unit) {
     WindowDialog(
         show = true,
         onDismissRequest = onDismiss,
+        title = stringResource(R.string.app_name),
     ) {
         Column {
             Text(
                 text = stringResource(R.string.dialog_usb_debugging_not_enabled),
                 style = MiuixTheme.textStyles.body2,
+                color = MiuixTheme.colorScheme.onSurface,
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 TextButton(
                     text = stringResource(android.R.string.cancel),
                     onClick = onDismiss,
                     modifier = Modifier.weight(1f)
                 )
+                Spacer(modifier = Modifier.width(20.dp))
                 TextButton(
                     text = stringResource(R.string.development_settings),
                     onClick = {
                         onDismiss()
                         SettingsPage.Developer.HighlightUsbDebugging.launch(context)
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.textButtonColorsPrimary(),
                 )
             }
         }
@@ -1279,24 +1296,26 @@ private fun MiuixAccessibilityDialog(
                     Text(
                         text = stringResource(R.string.dialog_adb_pairing_accessibility_navigate),
                         style = MiuixTheme.textStyles.body2,
+                        color = MiuixTheme.colorScheme.onSurface,
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         TextButton(
                             text = stringResource(android.R.string.cancel),
                             onClick = onDismiss,
                             modifier = Modifier.weight(1f)
                         )
+                        Spacer(modifier = Modifier.width(20.dp))
                         TextButton(
                             text = stringResource(R.string.development_settings),
                             onClick = {
                                 onDismiss()
                                 SettingsPage.Developer.HighlightWirelessDebugging.launch(context)
                             },
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.textButtonColorsPrimary(),
                         )
                     }
                 }
@@ -1314,24 +1333,26 @@ private fun MiuixAccessibilityDialog(
                         Text(
                             text = stringResource(R.string.dialog_adb_pairing_accessibility_navigate),
                             style = MiuixTheme.textStyles.body2,
+                            color = MiuixTheme.colorScheme.onSurface,
                         )
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(24.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             TextButton(
                                 text = stringResource(android.R.string.cancel),
                                 onClick = onDismiss,
                                 modifier = Modifier.weight(1f)
                             )
+                            Spacer(modifier = Modifier.width(20.dp))
                             TextButton(
                                 text = stringResource(R.string.development_settings),
                                 onClick = {
                                     onDismiss()
                                     SettingsPage.Developer.HighlightWirelessDebugging.launch(context)
                                 },
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f),
+                                colors = ButtonDefaults.textButtonColorsPrimary(),
                             )
                         }
                     }
@@ -1357,24 +1378,26 @@ private fun MiuixAccessibilityDialog(
                     Text(
                         text = stringResource(R.string.dialog_adb_pairing_accessibility_enable),
                         style = MiuixTheme.textStyles.body2,
+                        color = MiuixTheme.colorScheme.onSurface,
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         TextButton(
                             text = stringResource(android.R.string.cancel),
                             onClick = onDismiss,
                             modifier = Modifier.weight(1f)
                         )
+                        Spacer(modifier = Modifier.width(20.dp))
                         TextButton(
                             text = stringResource(R.string.enable),
                             onClick = {
                                 onDismiss()
                                 SettingsPage.Accessibility.launch(context)
                             },
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.textButtonColorsPrimary(),
                         )
                     }
                 }
@@ -1401,24 +1424,26 @@ private fun MiuixShowPermissionDialog(
             Text(
                 text = stringResource(R.string.dialog_adb_pairing_accessibility_permission, permissionName, permissionCommand),
                 style = MiuixTheme.textStyles.body2,
+                color = MiuixTheme.colorScheme.onSurface,
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 TextButton(
                     text = stringResource(android.R.string.cancel),
                     onClick = onDismiss,
                     modifier = Modifier.weight(1f)
                 )
+                Spacer(modifier = Modifier.width(20.dp))
                 TextButton(
-                    text = "Continue",
+                    text = stringResource(R.string.enable),
                     onClick = {
                         onDismiss()
                         onContinue()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.textButtonColorsPrimary(),
                 )
             }
         }

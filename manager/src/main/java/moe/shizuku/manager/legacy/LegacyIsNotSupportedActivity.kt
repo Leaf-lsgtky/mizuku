@@ -5,16 +5,28 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import moe.shizuku.manager.MainActivity
 import moe.shizuku.manager.R
 import moe.shizuku.manager.app.AppActivity
-import moe.shizuku.manager.compose.theme.ShizukuTheme
+import moe.shizuku.manager.compose.theme.LocalIsMiuix
+import moe.shizuku.manager.compose.theme.ShizukuAppTheme
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
+import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.basic.TextButton
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.window.WindowDialog
 
 class LegacyIsNotSupportedActivity : AppActivity() {
 
@@ -48,7 +60,7 @@ class LegacyIsNotSupportedActivity : AppActivity() {
         val v3Support = ai.metaData?.getBoolean("moe.shizuku.client.V3_SUPPORT") == true
 
         setContent {
-            ShizukuTheme {
+            ShizukuAppTheme {
                 if (v3Support) {
                     LegacyV3SupportDialog(
                         label = label.toString(),
@@ -83,31 +95,72 @@ private fun LegacyV3SupportDialog(
     onDismiss: () -> Unit,
     onOpenShizuku: () -> Unit,
 ) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(text = stringResource(R.string.dialog_requesting_legacy_title, label))
-        },
-        text = {
-            Text(
-                text = stringResource(R.string.dialog_requesting_legacy_message, label),
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        },
-        confirmButton = {
-            TextButton(onClick = {
-                onOpenShizuku()
-                onDismiss()
-            }) {
-                Text(stringResource(R.string.dialog_requesting_legacy_button_open_shizuku))
+    val title = stringResource(R.string.dialog_requesting_legacy_title, label)
+    val message = stringResource(R.string.dialog_requesting_legacy_message, label)
+    val openShizukuText = stringResource(R.string.dialog_requesting_legacy_button_open_shizuku)
+    val okText = stringResource(android.R.string.ok)
+
+    if (LocalIsMiuix.current) {
+        WindowDialog(
+            show = true,
+            onDismissRequest = onDismiss,
+            title = title,
+            content = {
+                Column {
+                    Text(
+                        text = message,
+                        color = MiuixTheme.colorScheme.onSurface,
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        TextButton(
+                            text = okText,
+                            onClick = onDismiss,
+                            modifier = Modifier.weight(1f),
+                        )
+                        TextButton(
+                            text = openShizukuText,
+                            onClick = {
+                                onOpenShizuku()
+                                onDismiss()
+                            },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.textButtonColorsPrimary(),
+                        )
+                    }
+                }
             }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(android.R.string.ok))
-            }
-        },
-    )
+        )
+    } else {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = {
+                androidx.compose.material3.Text(text = title)
+            },
+            text = {
+                androidx.compose.material3.Text(
+                    text = message,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            },
+            confirmButton = {
+                androidx.compose.material3.TextButton(onClick = {
+                    onOpenShizuku()
+                    onDismiss()
+                }) {
+                    androidx.compose.material3.Text(openShizukuText)
+                }
+            },
+            dismissButton = {
+                androidx.compose.material3.TextButton(onClick = onDismiss) {
+                    androidx.compose.material3.Text(okText)
+                }
+            },
+        )
+    }
 }
 
 @Composable
@@ -115,21 +168,48 @@ private fun LegacyNotSupportedDialog(
     label: String,
     onDismiss: () -> Unit,
 ) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(text = stringResource(R.string.dialog_legacy_not_support_title, label))
-        },
-        text = {
-            Text(
-                text = stringResource(R.string.dialog_legacy_not_support_message, label),
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        },
-        confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(android.R.string.ok))
+    val title = stringResource(R.string.dialog_legacy_not_support_title, label)
+    val message = stringResource(R.string.dialog_legacy_not_support_message, label)
+    val okText = stringResource(android.R.string.ok)
+
+    if (LocalIsMiuix.current) {
+        WindowDialog(
+            show = true,
+            onDismissRequest = onDismiss,
+            title = title,
+            content = {
+                Column {
+                    Text(
+                        text = message,
+                        color = MiuixTheme.colorScheme.onSurface,
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    TextButton(
+                        text = okText,
+                        onClick = onDismiss,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.textButtonColorsPrimary(),
+                    )
+                }
             }
-        },
-    )
+        )
+    } else {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = {
+                androidx.compose.material3.Text(text = title)
+            },
+            text = {
+                androidx.compose.material3.Text(
+                    text = message,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            },
+            confirmButton = {
+                androidx.compose.material3.TextButton(onClick = onDismiss) {
+                    androidx.compose.material3.Text(okText)
+                }
+            },
+        )
+    }
 }
