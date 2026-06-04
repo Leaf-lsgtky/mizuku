@@ -104,7 +104,8 @@ fun MiuixAppManagementScreen(
     val density = LocalDensity.current
     val grantedStates = remember { mutableStateMapOf<String, Boolean>() }
     var isRefreshing by remember { mutableStateOf(false) }
-    var searchStatus by remember { mutableStateOf(SearchStatus(stringResource(R.string.search_apps))) }
+    val searchLabel = stringResource(R.string.search_apps)
+    var searchStatus by remember { mutableStateOf(SearchStatus(searchLabel)) }
 
     val dynamicTopPadding = 12.dp
 
