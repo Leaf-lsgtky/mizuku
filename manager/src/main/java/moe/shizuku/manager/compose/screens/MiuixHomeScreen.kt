@@ -68,7 +68,6 @@ import moe.shizuku.manager.utils.ShizukuStateMachine
 import moe.shizuku.manager.utils.UserHandleCompat
 import rikka.shizuku.Shizuku
 import rikka.shizuku.ShizukuApiConstants
-import rikka.html.text.HtmlCompat
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Card
@@ -461,47 +460,33 @@ private fun MiuixTerminalCard(onClick: () -> Unit) {
 
 @Composable
 private fun MiuixStartRootCard(isRestart: Boolean, onClick: () -> Unit) {
+    val context = LocalContext.current
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Card(modifier = Modifier.fillMaxWidth()) {
-            Column {
-                BasicComponent(
-                    title = stringResource(R.string.home_root_title),
-                    endActions = {
-                        Icon(
-                            imageVector = MiuixIcons.Ok,
-                            tint = MiuixTheme.colorScheme.onSurface,
-                            contentDescription = null,
-                        )
-                    },
-                )
-                AndroidView(
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                    factory = { ctx ->
-                        TextView(ctx).apply {
-                            movementMethod = LinkMovementMethod.getInstance()
-                            text = ctx.getString(
-                                R.string.home_root_description,
-                                "<b><a href=\"${Helps.SUI.get()}\">Sui</a></b>",
-                                "Sui"
-                            ).toHtml(rikka.html.text.HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
-                        }
-                    },
-                    update = { tv ->
-                        tv.text = tv.context.getString(
-                            R.string.home_root_description,
-                            "<b><a href=\"${Helps.SUI.get()}\">Sui</a></b>",
-                            "Sui"
-                        ).toHtml(rikka.html.text.HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
-                    },
+            BasicComponent(
+                title = stringResource(R.string.home_root_title),
+                summary = stringResource(R.string.home_root_description, "Sui", "Sui"),
+                endActions = {
+                    Icon(
+                        imageVector = MiuixIcons.Ok,
+                        tint = MiuixTheme.colorScheme.onSurface,
+                        contentDescription = null,
+                    )
+                },
+            )
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(onClick = onClick) {
+                Text(
+                    text = stringResource(
+                        if (isRestart) R.string.home_root_button_restart
+                        else R.string.home_root_button_start
+                    ),
                 )
             }
-        }
-        Button(onClick = onClick) {
-            Text(
-                text = stringResource(
-                    if (isRestart) R.string.home_root_button_restart
-                    else R.string.home_root_button_start
-                ),
+            TextButton(
+                text = "Sui",
+                onClick = { CustomTabsHelper.launchUrlOrCopy(context, Helps.SUI.get()) },
             )
         }
     }
@@ -528,12 +513,6 @@ private fun MiuixStartWirelessAdbCard(
                 },
             )
         }
-        if (EnvironmentUtils.isTlsSupported()) {
-            TextButton(
-                text = stringResource(R.string.home_wireless_adb_view_guide_button),
-                onClick = onViewGuide,
-            )
-        }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(onClick = onStartWadb) {
                 Text(stringResource(R.string.start))
@@ -543,6 +522,10 @@ private fun MiuixStartWirelessAdbCard(
                     text = stringResource(R.string.adb_pairing),
                     onClick = onPair,
                 )
+                TextButton(
+                    text = stringResource(R.string.home_wireless_adb_view_guide_button),
+                    onClick = onViewGuide,
+                )
             }
         }
     }
@@ -550,11 +533,13 @@ private fun MiuixStartWirelessAdbCard(
 
 @Composable
 private fun MiuixStartAdbCard(onClick: () -> Unit) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column {
+    val context = LocalContext.current
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Card(modifier = Modifier.fillMaxWidth()) {
             BasicComponent(
                 title = stringResource(R.string.home_adb_title),
-                summary = stringResource(R.string.home_adb_button_view_command),
+                summary = stringResource(R.string.home_adb_description, Helps.ADB.get())
+                    .replace(Regex("<[^>]*>"), ""),
                 endActions = {
                     Icon(
                         imageVector = MiuixIcons.Help,
@@ -564,21 +549,11 @@ private fun MiuixStartAdbCard(onClick: () -> Unit) {
                 },
                 onClick = onClick,
             )
-            AndroidView(
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                factory = { ctx ->
-                    TextView(ctx).apply {
-                        movementMethod = LinkMovementMethod.getInstance()
-                        text = ctx.getString(R.string.home_adb_description, Helps.ADB.get())
-                            .toHtml(rikka.html.text.HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
-                    }
-                },
-                update = { tv ->
-                    tv.text = tv.context.getString(R.string.home_adb_description, Helps.ADB.get())
-                        .toHtml(rikka.html.text.HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
-                },
-            )
         }
+        TextButton(
+            text = stringResource(R.string.home_adb_button_view_help),
+            onClick = { CustomTabsHelper.launchUrlOrCopy(context, Helps.ADB.get()) },
+        )
     }
 }
 
