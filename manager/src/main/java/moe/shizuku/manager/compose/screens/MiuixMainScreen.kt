@@ -155,7 +155,7 @@ fun MiuixMainScreen(
                                     }
                                 )
                             }
-                        } else if (selectedIndex == 1) {
+                        } else if (selectedIndex == 1 && searchStatus.isCollapsed()) {
                             // 应用管理页面的排序按钮
                             Box {
                                 val showSortPopup = remember { mutableStateOf(false) }
@@ -279,6 +279,15 @@ fun MiuixMainScreen(
                     icon = MiuixIcons.Settings,
                     label = stringResource(R.string.settings_title)
                 )
+            }
+        },
+        popupHost = {
+            if (selectedIndex == 1) {
+                searchStatus.SearchPager(
+                    onSearchStatusChange = { searchStatus = it },
+                    defaultResult = { },
+                    searchBarTopPadding = dynamicTopPadding,
+                ) { }
             }
         },
         containerColor = MiuixTheme.colorScheme.surface,
