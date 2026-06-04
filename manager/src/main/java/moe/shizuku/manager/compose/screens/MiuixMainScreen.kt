@@ -55,6 +55,10 @@ fun MiuixMainScreen(
 
     var showStopDialog by remember { mutableStateOf(false) }
     val showTopPopup = remember { mutableStateOf(false) }
+    
+    // 应用管理页面的排序和筛选状态
+    var sortOption by remember { mutableIntStateOf(0) }
+    var showSystemApps by remember { mutableStateOf(false) }
 
     if (showStopDialog) {
         WindowDialog(
@@ -150,10 +154,10 @@ fun MiuixMainScreen(
                                             DropdownImpl(
                                                 text = stringResource(resId),
                                                 optionSize = sortOptions.size,
-                                                isSelected = index == 0,
+                                                isSelected = sortOption == index,
                                                 index = index,
                                                 onSelectedIndexChange = {
-                                                    // TODO: 实现排序逻辑
+                                                    sortOption = index
                                                     showSortPopup.value = false
                                                 }
                                             )
@@ -184,10 +188,10 @@ fun MiuixMainScreen(
                                         DropdownImpl(
                                             text = stringResource(R.string.show_system_apps),
                                             optionSize = 1,
-                                            isSelected = false,
+                                            isSelected = showSystemApps,
                                             index = 0,
                                             onSelectedIndexChange = {
-                                                // TODO: 实现显示系统应用切换
+                                                showSystemApps = !showSystemApps
                                                 showMorePopup.value = false
                                             }
                                         )
@@ -248,7 +252,9 @@ fun MiuixMainScreen(
                 )
                 1 -> MiuixAppManagementScreen(
                     viewModel = appsViewModel,
-                    scrollBehavior = scrollBehavior
+                    scrollBehavior = scrollBehavior,
+                    sortOption = sortOption,
+                    showSystemApps = showSystemApps
                 )
                 2 -> MiuixSettingsScreen(
                     scrollBehavior = scrollBehavior

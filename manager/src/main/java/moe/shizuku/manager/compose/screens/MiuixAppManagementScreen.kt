@@ -1,5 +1,6 @@
 package moe.shizuku.manager.compose.screens
 
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +39,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import moe.shizuku.manager.Helps
 import moe.shizuku.manager.R
 import moe.shizuku.manager.authorization.AuthorizationManager
@@ -71,10 +75,13 @@ import top.yukonga.miuix.kmp.window.WindowDialog
 fun MiuixAppManagementScreen(
     viewModel: moe.shizuku.manager.management.AppsViewModel,
     scrollBehavior: top.yukonga.miuix.kmp.basic.ScrollBehavior,
+    sortOption: Int = 0,
+    showSystemApps: Boolean = false,
 ) {
     val packagesResource by viewModel.packages.observeAsState()
     val context = LocalContext.current
     val grantedStates = remember { mutableStateMapOf<String, Boolean>() }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         if (!ShizukuStateMachine.isRunning()) {
@@ -103,14 +110,33 @@ fun MiuixAppManagementScreen(
     val isLoading = packagesResource?.status == Status.LOADING
     val isError = packagesResource?.status == Status.ERROR
 
-    if (isLoading && packages.isNullOrEmpty()) {
+    // 应用排序和筛选
+    val filteredAndSortedPackages = remember(packages, sortOption, showSystemApps) {
+        packages?.let { list ->
+            val filtered = if (showSystemApps) {
+                list
+            } else {
+                list.filter { pi ->
+                    val appInfo = pi.applicationInfo
+                    appInfo != null && (appInfo.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0
+                }
+            }
+            when (sortOption) {
+                0 -> filtered.sortedBy { it.applicationInfo?.loadLabel(context.packageManager)?.toString()?.lowercase() ?: it.packageName.lowercase() }
+                1 -> filtered.sortedBy { it.packageName.lowercase() }
+                else -> filtered
+            }
+        }
+    }
+
+    if (isLoading && filteredAndSortedPackages.isNullOrEmpty()) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             InfiniteProgressIndicator()
         }
-    } else if (isError && packages.isNullOrEmpty()) {
+    } else if (isError && filteredAndSortedPackages.isNullOrEmpty()) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -133,7 +159,12 @@ fun MiuixAppManagementScreen(
         PullToRefresh(
             isRefreshing = isLoading,
             pullToRefreshState = pullToRefreshState,
-            onRefresh = { viewModel.load() },
+            onRefresh = {
+                scope.launch {
+                    viewModel.load()
+                    delay(500)
+                }
+            },
             refreshTexts = refreshTexts,
             contentPadding = PaddingValues(vertical = 6.dp),
         ) {
@@ -150,7 +181,7 @@ fun MiuixAppManagementScreen(
             ) {
                 // 全部切换按钮
                 item {
-                    val allGranted = packages?.all { pi ->
+                    val allGranted = filteredAndSortedPackages?.all { pi ->
                         val uid = pi.applicationInfo?.uid ?: return@all true
                         grantedStates[pi.packageName] ?: AuthorizationManager.granted(pi.packageName, uid)
                     } ?: false
@@ -166,7 +197,7 @@ fun MiuixAppManagementScreen(
                                 Switch(
                                     checked = allGranted,
                                     onCheckedChange = { grant ->
-                                        packages?.forEach { pi ->
+                                        filteredAndSortedPackages?.forEach { pi ->
                                             val uid = pi.applicationInfo?.uid ?: return@forEach
                                             if (grant) {
                                                 AuthorizationManager.grant(pi.packageName, uid)
@@ -180,7 +211,7 @@ fun MiuixAppManagementScreen(
                             },
                             onClick = {
                                 val grant = !allGranted
-                                packages?.forEach { pi ->
+                                filteredAndSortedPackages?.forEach { pi ->
                                     val uid = pi.applicationInfo?.uid ?: return@forEach
                                     if (grant) {
                                         AuthorizationManager.grant(pi.packageName, uid)
@@ -195,8 +226,8 @@ fun MiuixAppManagementScreen(
                 }
 
                 // 应用列表
-                if (packages != null) {
-                    items(packages, key = { it.packageName }) { pi ->
+                if (filteredAndSortedPackages != null) {
+                    items(filteredAndSortedPackages, key = { it.packageName }) { pi ->
                         MiuixAppItem(
                             packageInfo = pi,
                             isGranted = grantedStates[pi.packageName] ?: false,
