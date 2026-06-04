@@ -215,16 +215,17 @@ fun MiuixMainScreen(
                                             )
                                         }
                                     }
-                            )
-                            IconButton(
-                                onClick = { showMorePopup.value = true },
-                                holdDownState = showMorePopup.value,
-                            ) {
-                                Icon(
-                                    imageVector = MiuixIcons.MoreCircle,
-                                    tint = MiuixTheme.colorScheme.onSurface,
-                                    contentDescription = null
                                 )
+                                IconButton(
+                                    onClick = { showMorePopup.value = true },
+                                    holdDownState = showMorePopup.value,
+                                ) {
+                                    Icon(
+                                        imageVector = MiuixIcons.MoreCircle,
+                                        tint = MiuixTheme.colorScheme.onSurface,
+                                        contentDescription = null
+                                    )
+                                }
                             }
                         }
                     },
