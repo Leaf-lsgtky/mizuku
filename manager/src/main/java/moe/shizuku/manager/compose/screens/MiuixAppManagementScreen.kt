@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -94,7 +96,7 @@ import top.yukonga.miuix.kmp.window.WindowDialog
 @Composable
 fun MiuixAppManagementScreen(
     viewModel: moe.shizuku.manager.management.AppsViewModel,
-    scrollBehavior: MiuixScrollBehavior,
+    scrollBehavior: top.yukonga.miuix.kmp.basic.MiuixScrollBehavior,
     sortOption: Int = 0,
     showSystemApps: Boolean = false,
 ) {
@@ -175,7 +177,7 @@ fun MiuixAppManagementScreen(
         topBar = {
             searchStatus.TopAppBarAnim {
                 TopAppBar(
-                    title = stringResource(R.string.app_management_title),
+                    title = stringResource(R.string.home_app_management_title),
                     scrollBehavior = scrollBehavior,
                     bottomContent = {
                         Box(
