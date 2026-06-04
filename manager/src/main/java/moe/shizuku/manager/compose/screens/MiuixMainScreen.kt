@@ -40,7 +40,6 @@ import moe.shizuku.manager.compose.components.SearchStatus
 import moe.shizuku.manager.compose.rememberMainPagerState
 import moe.shizuku.manager.compose.utils.BlurredBar
 import moe.shizuku.manager.compose.utils.rememberBlurBackdrop
-import top.yukonga.miuix.kmp.blur.LayerBackdrop
 import moe.shizuku.manager.home.HomeViewModel
 import moe.shizuku.manager.management.AppsViewModel
 import moe.shizuku.manager.utils.ShizukuStateMachine
@@ -104,9 +103,9 @@ fun MiuixMainScreen(
 
     // 模糊效果
     val enableBlur = ShizukuSettings.getEnableBlur()
-    val blurBackdrop = rememberBlurBackdrop(enableBlur)
-    val blurActive = blurBackdrop != null
-    val barColor = if (blurActive) Color.Transparent else MiuixTheme.colorScheme.surface
+    val bottomBarBackdrop = rememberBlurBackdrop(enableBlur)
+    val bottomBarBlurActive = bottomBarBackdrop != null
+    val bottomBarColor = if (bottomBarBlurActive) Color.Transparent else MiuixTheme.colorScheme.surface
 
     // 返回按钮处理：取消搜索或返回首页
     BackHandler(enabled = !searchStatus.isCollapsed() || mainPagerState.selectedPage != 0) {
@@ -165,9 +164,9 @@ fun MiuixMainScreen(
 
     Scaffold(
         bottomBar = {
-            BlurredBar(blurBackdrop) {
+            BlurredBar(bottomBarBackdrop) {
                 NavigationBar(
-                    color = barColor
+                    color = bottomBarColor
                 ) {
                     NavigationBarItem(
                         selected = mainPagerState.selectedPage == 0,
@@ -200,15 +199,14 @@ fun MiuixMainScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .then(
-                    if (blurActive) Modifier.layerBackdrop(blurBackdrop)
+                    if (bottomBarBlurActive) Modifier.layerBackdrop(bottomBarBackdrop)
                     else Modifier
                 )
         ) { page ->
             when (page) {
                 0 -> MiuixMainPageWrapper(
                     title = pages[0],
-                    barColor = barColor,
-                    blurBackdrop = blurBackdrop,
+                    enableBlur = enableBlur,
                     scrollBehavior = scrollBehavior,
                     actions = {
                         Box {
@@ -254,8 +252,7 @@ fun MiuixMainScreen(
                 }
                 1 -> MiuixMainPageWrapper(
                     title = pages[1],
-                    barColor = barColor,
-                    blurBackdrop = blurBackdrop,
+                    enableBlur = enableBlur,
                     scrollBehavior = scrollBehavior,
                     actions = {
                         if (searchStatus.isCollapsed()) {
@@ -370,8 +367,7 @@ fun MiuixMainScreen(
                 }
                 2 -> MiuixMainPageWrapper(
                     title = pages[2],
-                    barColor = barColor,
-                    blurBackdrop = blurBackdrop,
+                    enableBlur = enableBlur,
                     scrollBehavior = scrollBehavior,
                 ) {
                     MiuixSettingsScreen(
@@ -418,19 +414,22 @@ fun MiuixMainScreen(
 @Composable
 private fun MiuixMainPageWrapper(
     title: String,
-    barColor: Color,
-    blurBackdrop: LayerBackdrop?,
+    enableBlur: Boolean,
     scrollBehavior: ScrollBehavior,
     actions: @Composable androidx.compose.foundation.layout.RowScope.() -> Unit = {},
     bottomContent: @Composable () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
+    val topBarBackdrop = rememberBlurBackdrop(enableBlur)
+    val topBarBlurActive = topBarBackdrop != null
+    val topBarColor = if (topBarBlurActive) Color.Transparent else MiuixTheme.colorScheme.surface
+
     Scaffold(
         topBar = {
-            BlurredBar(blurBackdrop) {
+            BlurredBar(topBarBackdrop) {
                 TopAppBar(
                     title = title,
-                    color = barColor,
+                    color = topBarColor,
                     scrollBehavior = scrollBehavior,
                     actions = actions,
                     bottomContent = bottomContent,
@@ -439,6 +438,15 @@ private fun MiuixMainPageWrapper(
         },
         popupHost = { },
     ) {
-        content()
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .then(
+                    if (topBarBlurActive) Modifier.layerBackdrop(topBarBackdrop)
+                    else Modifier
+                )
+        ) {
+            content()
+        }
     }
 }
