@@ -1,5 +1,6 @@
 package moe.shizuku.manager.compose.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -80,6 +81,14 @@ fun MiuixMainScreen(
     var searchResults by remember { mutableStateOf<List<android.content.pm.PackageInfo>>(emptyList()) }
     val dynamicTopPadding by remember {
         derivedStateOf { 12.dp * (1f - scrollBehavior.state.collapsedFraction) }
+    }
+
+    // 返回按钮处理：取消搜索
+    BackHandler(enabled = !searchStatus.isCollapsed()) {
+        searchStatus = searchStatus.copy(
+            searchText = "",
+            current = SearchStatus.Status.COLLAPSING
+        )
     }
 
     if (showStopDialog) {
