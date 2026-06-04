@@ -191,10 +191,7 @@ fun MiuixMainScreen(
         },
         containerColor = MiuixTheme.colorScheme.surface,
     ) { paddingValues ->
-        HorizontalPager(
-            state = mainPagerState.pagerState,
-            userScrollEnabled = true,
-            beyondViewportPageCount = 1,
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
@@ -202,7 +199,13 @@ fun MiuixMainScreen(
                     if (bottomBarBlurActive) Modifier.layerBackdrop(bottomBarBackdrop)
                     else Modifier
                 )
-        ) { page ->
+        ) {
+            HorizontalPager(
+                state = mainPagerState.pagerState,
+                userScrollEnabled = true,
+                beyondViewportPageCount = 1,
+                modifier = Modifier.fillMaxSize()
+            ) { page ->
             when (page) {
                 0 -> MiuixMainPageWrapper(
                     title = pages[0],
@@ -374,6 +377,7 @@ fun MiuixMainScreen(
                         scrollBehavior = scrollBehavior
                     )
                 }
+            }
             }
         }
     }
