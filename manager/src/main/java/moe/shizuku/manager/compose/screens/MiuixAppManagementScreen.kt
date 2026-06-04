@@ -269,7 +269,7 @@ fun MiuixAppManagementScreen(
 }
 
 @Composable
-private fun MiuixAppItem(
+fun MiuixAppItem(
     packageInfo: PackageInfo,
     isGranted: Boolean,
     onToggle: (Boolean) -> Unit,
