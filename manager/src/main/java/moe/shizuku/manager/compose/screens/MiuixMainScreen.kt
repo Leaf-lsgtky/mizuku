@@ -40,6 +40,7 @@ import moe.shizuku.manager.compose.components.SearchStatus
 import moe.shizuku.manager.compose.rememberMainPagerState
 import moe.shizuku.manager.compose.utils.BlurredBar
 import moe.shizuku.manager.compose.utils.rememberBlurBackdrop
+import top.yukonga.miuix.kmp.blur.LayerBackdrop
 import moe.shizuku.manager.home.HomeViewModel
 import moe.shizuku.manager.management.AppsViewModel
 import moe.shizuku.manager.utils.ShizukuStateMachine
@@ -418,9 +419,9 @@ fun MiuixMainScreen(
 private fun MiuixMainPageWrapper(
     title: String,
     barColor: Color,
-    blurBackdrop: Any?,
+    blurBackdrop: LayerBackdrop?,
     scrollBehavior: ScrollBehavior,
-    actions: @Composable () -> Unit = {},
+    actions: @Composable androidx.compose.foundation.layout.RowScope.() -> Unit = {},
     bottomContent: @Composable () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
