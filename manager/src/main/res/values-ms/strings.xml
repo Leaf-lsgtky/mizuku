@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
@@ -6,17 +6,23 @@
     <string name="home_status_service_not_running">%1$s tidak berjalan</string>
     <string name="home_status_service_version">Versi %2$s, %1$s</string>
     <string name="home_status_service_version_update"><![CDATA[Versi %2$s, %1$s<br>Mula semula untuk mengemas kini kepada versi %3$s]]></string>
+    <string name="home_status_service_version_update_plain">Versi %2$s, %1$s
+Mula semula untuk mengemas kini kepada versi %3$s</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Mulakan dengan menyambung ke komputer]]></string>
     <string name="home_adb_description"><![CDATA[Untuk peranti tanpa akar, anda perlu menggunakan adb untuk memulakan Shizuku (memerlukan sambungan komputer). Proses ini perlu diulang setiap kali peranti dimulakan semula. Silakan <b><a href=\"%1$s\">baca bantuan</a></b>.]]></string>
+    <string name="home_adb_description_plain">Untuk peranti tanpa akar, anda perlu menggunakan adb untuk memulakan Shizuku (memerlukan sambungan komputer). Proses ini perlu diulang setiap kali peranti dimulakan semula. Silakan baca bantuan.</string>
     <string name="home_adb_button_view_help">Baca bantuan</string>
     <string name="home_adb_button_view_command">Lihat arahan</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* Terdapat beberapa pertimbangan lain, sila sahkan bahawa anda telah membaca bantuan terlebih dahulu.]]></string>
+    <string name="home_adb_dialog_view_command_message_plain">%1$s  * Terdapat beberapa pertimbangan lain, sila sahkan bahawa anda telah membaca bantuan terlebih dahulu.</string>
     <string name="home_adb_dialog_view_command_copy_button">Salin</string>
     <string name="home_adb_dialog_view_command_button_send">Hantar</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Mulakan melalui penyahpepijatan wayarles]]></string>
     <string name="home_wireless_adb_description"><![CDATA[Pada Android 11 ke atas, anda boleh mendayakan Penyahpepijatan Wayarles dan memulakan Shizuku terus daripada peranti anda, tanpa menyambung ke komputer.<p>Sila lihat panduan langkah demi langkah dahulu.]]></string>
+    <string name="home_wireless_adb_description_plain">Pada Android 11 ke atas, anda boleh mendayakan Penyahpepijatan Wayarles dan memulakan Shizuku terus daripada peranti anda, tanpa menyambung ke komputer.
+Sila lihat panduan langkah demi langkah dahulu.</string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Sebelum Android 11, sambungan ke komputer diperlukan untuk mendayakan Penyahpepijatan Wayarles.]]></string>
     <string name="home_wireless_adb_view_guide_button">Panduan langkah demi langkah</string>
     <!-- Adb -->
@@ -133,6 +139,7 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Kebenaran adb adalah terhad</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Kemungkinan besar pengeluar peranti anda mengehadkan kebenaran adb.<p>Mungkin terdapat penyelesaian untuk sistem anda dalam <b><a href=\"%1$s\">dokumen ini</a></b>.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message_plain">Kemungkinan besar pengeluar peranti anda mengehadkan kebenaran adb. Mungkin terdapat penyelesaian untuk sistem anda dalam dokumen ini.</string>
     <string name="app_management_item_summary_requires_root">* memerlukan Shizuku berjalan dengan
         akar</string>
     <string name="app_management_toggle_all">Togol semua</string>
@@ -156,6 +163,8 @@
         dalam fail konfigurasi %3$s apl terminal anda.</string>
     <string name="terminal_tutorial_3">Buka shell dengan arahan berikut:</string>
     <string name="rish_description"><![CDATA[Dengan %1$s, anda boleh menjalankan arahan shell dalam mana-mana apl terminal.<p>Ketik untuk mengetahui lebih lanjut tentang cara menggunakannya.]]></string>
+    <string name="rish_description_plain">Dengan %1$s, anda boleh menjalankan arahan shell dalam mana-mana apl terminal.
+Ketik untuk mengetahui lebih lanjut tentang cara menggunakannya.</string>
     <!-- Settings -->
     <string name="settings_title">tetapan</string>
     <string name="settings_behavior">Tingkah laku</string>
@@ -178,6 +187,9 @@
     <string name="settings_restart_dialog_message">Shizuku perlu memulakan semula untuk menggunakan
         tetapan ini.</string>
     <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>Wi-Fi diperlukan. Shizuku akan terus berjalan dan menunggu sambungan Wi-Fi sebelum dimulakan semula di latar belakang.</b>]]></string>
+    <string name="settings_restart_dialog_message_wifi_required_plain">
+
+Wi-Fi diperlukan. Shizuku akan terus berjalan dan menunggu sambungan Wi-Fi sebelum dimulakan semula di latar belakang.</string>
     <string name="settings_tcp_port">port TCP</string>
     <string name="settings_tcp_port_default">Lalai (5555)</string>
     <string name="settings_tcp_port_hint">Biarkan kosong untuk menggunakan lalai (5555)</string>
@@ -258,6 +270,7 @@
     <string name="permission_label">akses Shizuku</string>
     <string name="permission_description">Benarkan apl menggunakan Shizuku.</string>
     <string name="permission_warning_template"><![CDATA[Benarkan <b>%1$s</b> ke %2$s?]]></string>
+    <string name="permission_warning_template_plain">Benarkan %1$s ke %2$s?</string>
     <string name="grant_dialog_button_allow_always">Benarkan sepanjang masa</string>
     <string name="grant_dialog_button_deny">"Nafikan"</string>
     <!-- Starter -->
@@ -291,8 +304,10 @@
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s tidak menyokong Shizuku moden</string>
     <string name="dialog_legacy_not_support_message"><![CDATA[Shizuku warisan telah ditamatkan sejak Mac 2019. Selain itu, Shizuku warisan tidak berfungsi pada sistem Android yang lebih baharu.<p>Sila minta pembangun <b>%1$s</b> untuk mengemas kini.]]></string>
+    <string name="dialog_legacy_not_support_message_plain">Shizuku warisan telah ditamatkan sejak Mac 2019. Selain itu, Shizuku warisan tidak berfungsi pada sistem Android yang lebih baharu. Sila minta pembangun %1$s untuk mengemas kini.</string>
     <string name="dialog_requesting_legacy_title">%1$s sedang meminta Shizuku warisan</string>
     <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> mempunyai sokongan Shizuku moden, tetapi ia meminta Shizuku warisan. Ini mungkin kerana Shizuku tidak berjalan, sila semak dalam aplikasi Shizuku.<p>Legasi Shizuku telah ditamatkan sejak Mac 2019.]]></string>
+    <string name="dialog_requesting_legacy_message_plain">%1$s mempunyai sokongan Shizuku moden, tetapi ia meminta Shizuku warisan. Ini mungkin kerana Shizuku tidak berjalan, sila semak dalam aplikasi Shizuku. Legasi Shizuku telah ditamatkan sejak Mac 2019.</string>
     <string name="dialog_requesting_legacy_button_open_shizuku">Buka Shizuku</string>
     <string name="wadb_notification_attempt_now">Cuba sekarang</string>
 </resources>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
@@ -6,17 +6,23 @@
     <string name="home_status_service_not_running">%1$s가 실행 중이 아닙니다</string>
     <string name="home_status_service_version">%1$s, 버전 %2$s</string>
     <string name="home_status_service_version_update"><![CDATA[%1$s, 버전 %2$s<br>다시 시작하여 버전 %3$s로 업데이트]]></string>
+    <string name="home_status_service_version_update_plain">%1$s, 버전 %2$s
+다시 시작하여 버전 %3$s로 업데이트</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[컴퓨터에 연결하여 시작]]></string>
     <string name="home_adb_description"><![CDATA[루링 없이 Shizuku를 시작하기 위해 adb가 필요합니다. (컴퓨터 연결 필수) 이 작업은 다시 시작 시 마다 필요로 합니다. 자세한 정보는 <b><a href="%1$s">도움말</a></b>을 확인하세요.]]></string>
+    <string name="home_adb_description_plain">루링 없이 Shizuku를 시작하기 위해 adb가 필요합니다. (컴퓨터 연결 필수) 이 작업은 다시 시작 시 마다 필요로 합니다. 자세한 정보는 도움말을 확인하세요.</string>
     <string name="home_adb_button_view_help">도움말 읽기</string>
     <string name="home_adb_button_view_command">명령어 보기</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* 몇 가지 다른 참고 사항이 있으므로, 도움말을 먼저 확인하세요.]]></string>
+    <string name="home_adb_dialog_view_command_message_plain">%1$s  * 몇 가지 다른 참고 사항이 있으므로, 도움말을 먼저 확인하세요.</string>
     <string name="home_adb_dialog_view_command_copy_button">복사</string>
     <string name="home_adb_dialog_view_command_button_send">보내기</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[무선 디버깅으로 시작]]></string>
     <string name="home_wireless_adb_description"><![CDATA[Android 11 또는 그 이상 버전에서는 컴퓨터에 연결하지 않아도 무선 디버깅을 활성화하하여 기기에서 직접 Shizuku를 시작할 수 있습니다.<p>단계별 가이드를 먼저 확인하세요.]]></string>
+    <string name="home_wireless_adb_description_plain">Android 11 또는 그 이상 버전에서는 컴퓨터에 연결하지 않아도 무선 디버깅을 활성화하하여 기기에서 직접 Shizuku를 시작할 수 있습니다.
+단계별 가이드를 먼저 확인하세요.</string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Android 11 이전에서는 무선 디버깅을 활성화하기 위해 컴퓨터에 연결해야 합니다.]]></string>
     <string name="home_wireless_adb_view_guide_button">단계별 가이드</string>
     <!-- Adb -->
@@ -112,6 +118,7 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">ADB의 권한이 제한됨</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[기기 제조사에서 ADB의 권한을 제한하고 있을 가능성이 높습니다.<p><b><a href="%1$s">이 문서</a></b>에 시스템에 대한 해결 방안이 있을 수 있습니다.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message_plain">기기 제조사에서 ADB의 권한을 제한하고 있을 가능성이 높습니다. 이 문서에 시스템에 대한 해결 방안이 있을 수 있습니다.</string>
     <string name="app_management_item_summary_requires_root">* 루트 권한으로 실행된 Shizuku 필요</string>
     <string name="app_management_toggle_all">모두 전환</string>
     <!-- Terminal -->
@@ -131,6 +138,8 @@
         있습니다.</string>
     <string name="terminal_tutorial_3">다음 명령으로 셸을 엽니다.</string>
     <string name="rish_description"><![CDATA[%1$s를 사용하면 모든 터미널 앱에서 셸 명령을 실행할 수 있습니다.<p>탭하여 사용 방법에 대한 자세한 내용을 알아보세요.]]></string>
+    <string name="rish_description_plain">%1$s를 사용하면 모든 터미널 앱에서 셸 명령을 실행할 수 있습니다.
+탭하여 사용 방법에 대한 자세한 내용을 알아보세요.</string>
     <!-- Settings -->
     <string name="settings_title">설정</string>
     <string name="settings_behavior">행동</string>
@@ -150,6 +159,9 @@
     <string name="settings_restart_dialog_title">재시작 필요</string>
     <string name="settings_restart_dialog_message">시즈쿠는 이 설정을 적용하려면 다시 시작해야 합니다.</string>
     <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>와이파이가 필수입니다. 시즈쿠는 계속 달리면서 와이파이 연결이 될 때까지 기다렸다가 백그라운드에서 다시 시작할 것이다.</b>]]></string>
+    <string name="settings_restart_dialog_message_wifi_required_plain">
+
+와이파이가 필수입니다. 시즈쿠는 계속 달리면서 와이파이 연결이 될 때까지 기다렸다가 백그라운드에서 다시 시작할 것이다.</string>
     <string name="settings_tcp_port">TCP 포트</string>
     <string name="settings_tcp_port_default">기본값(5555)</string>
     <string name="settings_tcp_port_hint">기본값(5555)을 사용하려면 비워두세요.</string>
@@ -221,6 +233,7 @@
     <string name="permission_label">Shizuku에 접근</string>
     <string name="permission_description">앱이 Shizuku를 사용하도록 허용합니다.</string>
     <string name="permission_warning_template"><![CDATA[<b>%1$s</b>을(를) %2$s에 허용하시겠습니까\?]]></string>
+    <string name="permission_warning_template_plain">%1$s을(를) %2$s에 허용하시겠습니까\?</string>
     <string name="grant_dialog_button_allow_always">항상 허용</string>
     <string name="grant_dialog_button_deny">"거부"</string>
     <!-- Starter -->
@@ -252,8 +265,10 @@
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s는 최신 Shizuku를 지원하지 않음</string>
     <string name="dialog_legacy_not_support_message"><![CDATA[구형 Shizuku는 2019년 3월에 지원이 중단되었습니다. 또한, 구형 Shizuku는 새로운 안드로이드 시스템에서 동작하지 않습니다.<p><b>%1$s</b> 개발자에게 업데이트를 문의하세요.]]></string>
+    <string name="dialog_legacy_not_support_message_plain">구형 Shizuku는 2019년 3월에 지원이 중단되었습니다. 또한, 구형 Shizuku는 새로운 안드로이드 시스템에서 동작하지 않습니다. %1$s 개발자에게 업데이트를 문의하세요.</string>
     <string name="dialog_requesting_legacy_title">%1$s가 구형 Shizuku를 요청하고 있음</string>
     <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b>가 최신 Shizuku를 지원하지만, 구형 Shizuku를 요청하고 있습니다. Shizuku가 실행 중이지 않아서 발생할 수 있으니 Shizuku 앱에서 확인하세요.<p>구형 Shizuku는 2019년 3월 부터 지원이 중단되었습니다.]]></string>
+    <string name="dialog_requesting_legacy_message_plain">%1$s가 최신 Shizuku를 지원하지만, 구형 Shizuku를 요청하고 있습니다. Shizuku가 실행 중이지 않아서 발생할 수 있으니 Shizuku 앱에서 확인하세요. 구형 Shizuku는 2019년 3월 부터 지원이 중단되었습니다.</string>
     <string name="dialog_requesting_legacy_button_open_shizuku">Shizuku 열기</string>
     <string name="wadb_notification_attempt_now">지금 시도하세요</string>
 </resources>

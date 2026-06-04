@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
@@ -6,17 +6,23 @@
     <string name="home_status_service_not_running">%1$s در حال اجرا نیست</string>
     <string name="home_status_service_version">نسخه %2$s، %1$s</string>
     <string name="home_status_service_version_update"><![CDATA[نسخه %2$s، %1$s<br>برای به‌روزرسانی به نسخه %3$s برنامه را راه‌اندازی مجدد نمایید]]></string>
+    <string name="home_status_service_version_update_plain">نسخه %2$s، %1$s
+برای به‌روزرسانی به نسخه %3$s برنامه را راه‌اندازی مجدد نمایید</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[با اتصال به رایانه شروع کنید]]></string>
     <string name="home_adb_description"><![CDATA[برای دستگاه‌های بدون دسترسی ریشه (روت)، باید از adb برای راه‌اندازی Shizuku استفاده کنید (نیاز به اتصال به رایانه دارد). این فرآیند باید هر بار که دستگاه راه اندازی مجدد می شود تکرار شود. لطفاً <b><a href=\"%1$s\">راهنما را بخوانید</a></b>.]]></string>
+    <string name="home_adb_description_plain">برای دستگاه‌های بدون دسترسی ریشه (روت)، باید از adb برای راه‌اندازی Shizuku استفاده کنید (نیاز به اتصال به رایانه دارد). این فرآیند باید هر بار که دستگاه راه اندازی مجدد می شود تکرار شود. لطفاً راهنما را بخوانید.</string>
     <string name="home_adb_button_view_help">خواندن راهنما</string>
     <string name="home_adb_button_view_command">مشاهده دستور</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* ملاحظات دیگری نیز وجود دارد، لطفاً تأیید کنید که ابتدا راهنما را خوانده اید.]]></string>
+    <string name="home_adb_dialog_view_command_message_plain">%1$s  * ملاحظات دیگری نیز وجود دارد، لطفاً تأیید کنید که ابتدا راهنما را خوانده اید.</string>
     <string name="home_adb_dialog_view_command_copy_button">رونوشت</string>
     <string name="home_adb_dialog_view_command_button_send">ارسال</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[از طریق اشکال زدایی بی‌سیم شروع کنید]]></string>
     <string name="home_wireless_adb_description"><![CDATA[در اندروید ۱۱ یا بالاتر، می‌توانید اشکال‌زدایی بی‌سیم را فعال کنید و Shizuku را مستقیماً از دستگاه خود بدون اتصال به رایانه شروع کنید.<p>لطفاً ابتدا راهنمای گام به گام را مطالعه کنید.]]></string>
+    <string name="home_wireless_adb_description_plain">در اندروید ۱۱ یا بالاتر، می‌توانید اشکال‌زدایی بی‌سیم را فعال کنید و Shizuku را مستقیماً از دستگاه خود بدون اتصال به رایانه شروع کنید.
+لطفاً ابتدا راهنمای گام به گام را مطالعه کنید.</string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[قبل از اندروید ۱۱، برای فعال کردن اشکال‌زدایی بی‌سیم، اتصال به رایانه لازم است.]]></string>
     <string name="home_wireless_adb_view_guide_button">راهنمای گام به گام</string>
     <!-- Adb -->
@@ -128,6 +134,7 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">مجوز adb محدود است</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[این احتمال وجود دارد که سازنده دستگاه شما مجوز adb را محدود کند.<p>ممکن است راه حلی برای دستگاه شما در <b><a href=\"%1$s\">این سند</a></b> وجود داشته باشد.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message_plain">این احتمال وجود دارد که سازنده دستگاه شما مجوز adb را محدود کند. ممکن است راه حلی برای دستگاه شما در این سند وجود داشته باشد.</string>
     <string name="app_management_item_summary_requires_root">* نیاز دارد که Shizuku با امتیازات ریشه
         اجرا شود</string>
     <string name="app_management_toggle_all">همه را تغییر دهید</string>
@@ -151,6 +158,8 @@
         %3$s برنامه ترمینال خود ایجاد کنید.</string>
     <string name="terminal_tutorial_3">با دستور زیر یک پوسته باز کنید:</string>
     <string name="rish_description"><![CDATA[با %1$sمی‌توانید دستورات shell را در هر برنامه ترمینالی اجرا کنید.<p>برای کسب اطلاعات بیشتر در مورد نحوه استفاده از آن، ضربه بزنید.]]></string>
+    <string name="rish_description_plain">با %1$sمی‌توانید دستورات shell را در هر برنامه ترمینالی اجرا کنید.
+برای کسب اطلاعات بیشتر در مورد نحوه استفاده از آن، ضربه بزنید.</string>
     <!-- Settings -->
     <string name="settings_title">تنظیمات</string>
     <string name="settings_behavior">رفتار</string>
@@ -173,6 +182,9 @@
     <string name="settings_restart_dialog_message">شیزوکو باید بازی را دوباره شروع کند تا بتواند این
         تنظیم را اعمال کند.</string>
     <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>وای فای لازم است. شیزوکو به کار خود ادامه می دهد و منتظر اتصال وای فای می ماند تا در پس زمینه ریستارت شود.</b>]]></string>
+    <string name="settings_restart_dialog_message_wifi_required_plain">
+
+وای فای لازم است. شیزوکو به کار خود ادامه می دهد و منتظر اتصال وای فای می ماند تا در پس زمینه ریستارت شود.</string>
     <string name="settings_tcp_port">پورت TCP</string>
     <string name="settings_tcp_port_default">پیش‌فرض (۵۵۵۵)</string>
     <string name="settings_tcp_port_hint">برای استفاده از مقدار پیش‌فرض (۵۵۵۵) خالی بگذارید.</string>
@@ -253,6 +265,7 @@
     <string name="permission_label">دسترسی Shizuku</string>
     <string name="permission_description">به برنامه اجازه دهید از Shizuku استفاده کند.</string>
     <string name="permission_warning_template"><![CDATA[اجازه <b>%1$s</b> برای %2$s؟]]></string>
+    <string name="permission_warning_template_plain">اجازه %1$s برای %2$s؟</string>
     <string name="grant_dialog_button_allow_always">همیشه اجازه داده شود</string>
     <string name="grant_dialog_button_deny">"رد"</string>
     <!-- Starter -->
@@ -286,8 +299,10 @@
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s از شیزوکوی جدید پشتیبانی نمی کند</string>
     <string name="dialog_legacy_not_support_message"><![CDATA[شیزوکوی قدیمی از مارس ۲۰۱۹ منسوخ شده است. همچنین، Shizuku قدیمی در دستگاه‌های اندروید جدید کار نمی‌کند.<p>لطفاً از توسعه‌دهنده <b>%1$s</b> بخواهید که به‌روزرسانی کند.]]></string>
+    <string name="dialog_legacy_not_support_message_plain">شیزوکوی قدیمی از مارس ۲۰۱۹ منسوخ شده است. همچنین، Shizuku قدیمی در دستگاه‌های اندروید جدید کار نمی‌کند. لطفاً از توسعه‌دهنده %1$s بخواهید که به‌روزرسانی کند.</string>
     <string name="dialog_requesting_legacy_title">%1$s در حال درخواست Shizuku قدیمی است</string>
     <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> پشتیبانی نسخه جدید شیزوکو دارد، اما شیزوکو قدیمی را درخواست می‌کند. این ممکن است به این دلیل باشد که Shizuku در حال اجرا نیست، لطفاً در برنامه Shizuku بررسی کنید.<p>Shizuku قدیمی از مارس ۲۰۱۹ منسوخ شده است.]]></string>
+    <string name="dialog_requesting_legacy_message_plain">%1$s پشتیبانی نسخه جدید شیزوکو دارد، اما شیزوکو قدیمی را درخواست می‌کند. این ممکن است به این دلیل باشد که Shizuku در حال اجرا نیست، لطفاً در برنامه Shizuku بررسی کنید. Shizuku قدیمی از مارس ۲۰۱۹ منسوخ شده است.</string>
     <string name="dialog_requesting_legacy_button_open_shizuku">باز کردن Shizuku</string>
     <string name="wadb_notification_attempt_now">همین حالا تلاش کنید</string>
 </resources>

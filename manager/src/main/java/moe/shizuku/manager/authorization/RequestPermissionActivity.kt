@@ -19,13 +19,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.TimeoutCancellationException
 import moe.shizuku.manager.Helps
 import moe.shizuku.manager.R
+import moe.shizuku.manager.ktx.toHtml
 import moe.shizuku.manager.app.AppActivity
 import moe.shizuku.manager.compose.theme.LocalIsMiuix
 import moe.shizuku.manager.compose.theme.ShizukuAppTheme
@@ -132,15 +135,15 @@ private fun PermissionConfirmDialog(
     onAllow: () -> Unit,
     onDeny: () -> Unit,
 ) {
-    val title = stringResource(R.string.permission_warning_template, label, stringResource(R.string.permission_group_description))
     val allowText = stringResource(R.string.grant_dialog_button_allow_always)
     val denyText = stringResource(R.string.grant_dialog_button_deny)
 
     if (LocalIsMiuix.current) {
+        val titlePlain = stringResource(R.string.permission_warning_template_plain, label, stringResource(R.string.permission_group_description))
         WindowDialog(
             show = true,
             onDismissRequest = {},
-            title = title,
+            title = titlePlain,
             content = {
                 Column {
                     Spacer(modifier = Modifier.height(24.dp))
@@ -164,12 +167,21 @@ private fun PermissionConfirmDialog(
             }
         )
     } else {
+        val context = LocalContext.current
+        val titleHtml = context.getString(R.string.permission_warning_template, label, stringResource(R.string.permission_group_description))
+            .toHtml(rikka.html.text.HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
         AlertDialog(
             onDismissRequest = {},
             title = {
-                androidx.compose.material3.Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
+                AndroidView(
+                    factory = { ctx ->
+                        android.widget.TextView(ctx).apply {
+                            text = titleHtml
+                        }
+                    },
+                    update = { tv ->
+                        tv.text = titleHtml
+                    },
                 )
             },
             confirmButton = {
@@ -189,10 +201,10 @@ private fun PermissionConfirmDialog(
 @Composable
 private fun AdbLimitedDialog(onDismiss: () -> Unit) {
     val title = "Shizuku: ${stringResource(R.string.app_management_dialog_adb_is_limited_title)}"
-    val message = stringResource(R.string.app_management_dialog_adb_is_limited_message, Helps.ADB.get())
     val okText = stringResource(android.R.string.ok)
 
     if (LocalIsMiuix.current) {
+        val messagePlain = stringResource(R.string.app_management_dialog_adb_is_limited_message_plain, Helps.ADB.get())
         WindowDialog(
             show = true,
             onDismissRequest = onDismiss,
@@ -200,7 +212,7 @@ private fun AdbLimitedDialog(onDismiss: () -> Unit) {
             content = {
                 Column {
                     Text(
-                        text = message,
+                        text = messagePlain,
                         color = MiuixTheme.colorScheme.onSurface,
                     )
                     Spacer(modifier = Modifier.height(24.dp))
@@ -214,15 +226,25 @@ private fun AdbLimitedDialog(onDismiss: () -> Unit) {
             }
         )
     } else {
+        val context = LocalContext.current
+        val messageHtml = context.getString(R.string.app_management_dialog_adb_is_limited_message, Helps.ADB.get())
+            .toHtml(rikka.html.text.HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
         AlertDialog(
             onDismissRequest = onDismiss,
             title = {
                 androidx.compose.material3.Text(title)
             },
             text = {
-                androidx.compose.material3.Text(
-                    text = message,
-                    style = MaterialTheme.typography.bodyMedium,
+                AndroidView(
+                    factory = { ctx ->
+                        android.widget.TextView(ctx).apply {
+                            movementMethod = android.text.method.LinkMovementMethod.getInstance()
+                            text = messageHtml
+                        }
+                    },
+                    update = { tv ->
+                        tv.text = messageHtml
+                    },
                 )
             },
             confirmButton = {

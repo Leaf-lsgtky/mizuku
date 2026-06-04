@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
@@ -6,17 +6,23 @@
     <string name="home_status_service_not_running">%1$s kjører ikke</string>
     <string name="home_status_service_version">Versjon %2$s, %1$s</string>
     <string name="home_status_service_version_update"><![CDATA[Versjon %2$s, %1$s<br>Start på nytt for å oppdatere til versjon %3$s]]></string>
+    <string name="home_status_service_version_update_plain">Versjon %2$s, %1$s
+Start på nytt for å oppdatere til versjon %3$s</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Start med å koble til en datamaskin]]></string>
     <string name="home_adb_description"><![CDATA[For enheter uten root må du bruke adb for å starte Shizuku (krever datamaskintilkobling). Denne prosessen må gjentas hver gang enheten startes på nytt. Vennligst <b><a href=\"%1$s\">les hjelpen</a></b>.]]></string>
+    <string name="home_adb_description_plain">For enheter uten root må du bruke adb for å starte Shizuku (krever datamaskintilkobling). Denne prosessen må gjentas hver gang enheten startes på nytt. Vennligst les hjelpen.</string>
     <string name="home_adb_button_view_help">Les hjelp</string>
     <string name="home_adb_button_view_command">Vis kommando</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* Det er noen andre hensyn å ta. Vennligst bekreft at du har lest hjelpen først.]]></string>
+    <string name="home_adb_dialog_view_command_message_plain">%1$s  * Det er noen andre hensyn å ta. Vennligst bekreft at du har lest hjelpen først.</string>
     <string name="home_adb_dialog_view_command_copy_button">Kopiere</string>
     <string name="home_adb_dialog_view_command_button_send">Sende</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Start via trådløs feilsøking]]></string>
     <string name="home_wireless_adb_description"><![CDATA[På Android 11 eller nyere kan du aktivere trådløs feilsøking og starte Shizuku direkte fra enheten din, uten å koble til en datamaskin.<p>Se først den trinnvise veiledningen.]]></string>
+    <string name="home_wireless_adb_description_plain">På Android 11 eller nyere kan du aktivere trådløs feilsøking og starte Shizuku direkte fra enheten din, uten å koble til en datamaskin.
+Se først den trinnvise veiledningen.</string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Før Android 11 kreves det tilkobling til en datamaskin for å aktivere trådløs feilsøking.]]></string>
     <string name="home_wireless_adb_view_guide_button">Steg-for-steg-guide</string>
     <!-- Adb -->
@@ -128,6 +134,7 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Tillatelsen til adb er begrenset</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Det er høyst mulig at enhetsprodusenten begrenser tillatelsene til adb.<p>Det kan finnes en løsning for systemet ditt i <b><a href=\"%1$s\">dette dokumentet</a></b>.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message_plain">Det er høyst mulig at enhetsprodusenten begrenser tillatelsene til adb. Det kan finnes en løsning for systemet ditt i dette dokumentet.</string>
     <string name="app_management_item_summary_requires_root">* krever at Shizuku kjører med root</string>
     <string name="app_management_toggle_all">Slå alle fra og til</string>
     <!-- Terminal -->
@@ -149,6 +156,8 @@
         terminalappen din %3$s .</string>
     <string name="terminal_tutorial_3">Åpne et skall med følgende kommando:</string>
     <string name="rish_description"><![CDATA[Med %1$skan du kjøre skallkommandoer i en hvilken som helst terminalapp.<p>Trykk for å lære mer om hvordan du bruker det.]]></string>
+    <string name="rish_description_plain">Med %1$skan du kjøre skallkommandoer i en hvilken som helst terminalapp.
+Trykk for å lære mer om hvordan du bruker det.</string>
     <!-- Settings -->
     <string name="settings_title">Innstillinger</string>
     <string name="settings_behavior">Oppførsel</string>
@@ -170,6 +179,9 @@
     <string name="settings_restart_dialog_message">Shizuku må starte på nytt for å kunne bruke denne
         innstillingen.</string>
     <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>Wi-Fi er påkrevd. Shizuku fortsetter å kjøre og venter på Wi-Fi-tilkobling før han starter på nytt i bakgrunnen.</b>]]></string>
+    <string name="settings_restart_dialog_message_wifi_required_plain">
+
+Wi-Fi er påkrevd. Shizuku fortsetter å kjøre og venter på Wi-Fi-tilkobling før han starter på nytt i bakgrunnen.</string>
     <string name="settings_tcp_port">TCP-port</string>
     <string name="settings_tcp_port_default">Standard (5555)</string>
     <string name="settings_tcp_port_hint">La det stå tomt for å bruke standard (5555)</string>
@@ -247,6 +259,7 @@
     <string name="permission_label">tilgang til Shizuku</string>
     <string name="permission_description">La appen bruke Shizuku.</string>
     <string name="permission_warning_template"><![CDATA[Tillate <b>%1$s</b> til %2$s?]]></string>
+    <string name="permission_warning_template_plain">Tillate %1$s til %2$s?</string>
     <string name="grant_dialog_button_allow_always">Gi all tid</string>
     <string name="grant_dialog_button_deny">"Benekte"</string>
     <!-- Starter -->
@@ -280,8 +293,10 @@
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s støtter ikke moderne Shizuku</string>
     <string name="dialog_legacy_not_support_message"><![CDATA[Legacy Shizuku har vært avviklet siden mars 2019. Legacy Shizuku fungerer heller ikke på nyere Android-systemer.<p>Be utvikleren av <b>%1$s</b> om å oppdatere.]]></string>
+    <string name="dialog_legacy_not_support_message_plain">Legacy Shizuku har vært avviklet siden mars 2019. Legacy Shizuku fungerer heller ikke på nyere Android-systemer. Be utvikleren av %1$s om å oppdatere.</string>
     <string name="dialog_requesting_legacy_title">%1$s ber om eldre Shizuku</string>
     <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> har støtte for moderne Shizuku, men den ber om den eldre versjonen av Shizuku. Dette kan være fordi Shizuku ikke kjører. Sjekk det i Shizuku-appen.<p>Den eldre versjonen av Shizuku har vært avviklet siden mars 2019.]]></string>
+    <string name="dialog_requesting_legacy_message_plain">%1$s har støtte for moderne Shizuku, men den ber om den eldre versjonen av Shizuku. Dette kan være fordi Shizuku ikke kjører. Sjekk det i Shizuku-appen. Den eldre versjonen av Shizuku har vært avviklet siden mars 2019.</string>
     <string name="dialog_requesting_legacy_button_open_shizuku">Åpne Shizuku</string>
     <string name="wadb_notification_attempt_now">Forsøk nå</string>
 </resources>

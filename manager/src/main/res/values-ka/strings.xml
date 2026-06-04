@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
@@ -6,17 +6,23 @@
     <string name="home_status_service_not_running">%1$s არ მუშაობს</string>
     <string name="home_status_service_version">ვერსია %2$s, %1$s</string>
     <string name="home_status_service_version_update"><![CDATA[ვერსია %2$s, %1$s<br>თავიდან დაიწყეთ ვერსიაზე განახლებისთვის %3$s]]></string>
+    <string name="home_status_service_version_update_plain">ვერსია %2$s, %1$s
+თავიდან დაიწყეთ ვერსიაზე განახლებისთვის %3$s</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[დაიწყე კომპიუტერთან დაკავშირებით]]></string>
     <string name="home_adb_description"><![CDATA[არა დარუთული მოწყობილობებისთვის, Shizuku რომ ჩართო შენ გჭირდება ადბ-ს გამოყენება(საჭიროებს კომპიუტერთან კავშირს). ეს პროცესი უნდა გაიმეოროთ თქვენი მოწყობილობის ყოველ გადატვირთვაზე. გთხოვთ <b><a href="%1$s">წაიკითხოთ დახმარება</a></b>.]]></string>
+    <string name="home_adb_description_plain">არა დარუთული მოწყობილობებისთვის, Shizuku რომ ჩართო შენ გჭირდება ადბ-ს გამოყენება(საჭიროებს კომპიუტერთან კავშირს). ეს პროცესი უნდა გაიმეოროთ თქვენი მოწყობილობის ყოველ გადატვირთვაზე. გთხოვთ წაიკითხოთ დახმარება.</string>
     <string name="home_adb_button_view_help">წაიკითხეთ დახმარება</string>
     <string name="home_adb_button_view_command">ბრძანების ნახვა</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* არსებობს სხვა მოსაზრებები, გთხოვთ, დაადასტუროთ, რომ ჯერ წაიკითხეთ დახმარება.]]></string>
+    <string name="home_adb_dialog_view_command_message_plain">%1$s  * არსებობს სხვა მოსაზრებები, გთხოვთ, დაადასტუროთ, რომ ჯერ წაიკითხეთ დახმარება.</string>
     <string name="home_adb_dialog_view_command_copy_button">კოპირება</string>
     <string name="home_adb_dialog_view_command_button_send">გამოწერა</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[დაიწყეთ უსადენო გამართვის საშუალებით]]></string>
     <string name="home_wireless_adb_description"><![CDATA[Android 11-ზე ან ზემოთ, შეგიძლიათ ჩართოთ უსადენო გამართვა და გაუშვათ Shizuku პირდაპირ თქვენი მოწყობილობიდან, კომპიუტერთან დაკავშირების გარეშე.<p>გთხოვთ, ჯერ ნახოთ ნაბიჯ-ნაბიჯ სახელმძღვანელო.]]></string>
+    <string name="home_wireless_adb_description_plain">Android 11-ზე ან ზემოთ, შეგიძლიათ ჩართოთ უსადენო გამართვა და გაუშვათ Shizuku პირდაპირ თქვენი მოწყობილობიდან, კომპიუტერთან დაკავშირების გარეშე.
+გთხოვთ, ჯერ ნახოთ ნაბიჯ-ნაბიჯ სახელმძღვანელო.</string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Android 11-მდე კომპიუტერთან დაკავშირება საჭიროა უკაბელო გამართვის გასააქტიურებლად.]]></string>
     <string name="home_wireless_adb_view_guide_button">ნაბიჯ-ნაბიჯ სახელმძღვანელო</string>
     <!-- Adb -->
@@ -133,6 +139,7 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">ADB-ის ნებართვა შეზღუდულია</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[ძალიან შესაძლებელია, რომ თქვენი მოწყობილობის მწარმოებელმა შეზღუდოს adb-ის ნებართვა.<p>შეიძლება არსებობდეს გამოსავალი თქვენი სისტემისთვის <b><a href=\"%1$s\">ეს დოკუმენტი</a></b>.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message_plain">ძალიან შესაძლებელია, რომ თქვენი მოწყობილობის მწარმოებელმა შეზღუდოს adb-ის ნებართვა. შეიძლება არსებობდეს გამოსავალი თქვენი სისტემისთვის ეს დოკუმენტი.</string>
     <string name="app_management_item_summary_requires_root">* მოითხოვს Shizuku გადის root</string>
     <string name="app_management_toggle_all">ყველაფრის გადართვა</string>
     <!-- Terminal -->
@@ -155,6 +162,8 @@
         %2$s -სთვის თქვენი ტერმინალის აპლიკაციის %3$s კონფიგურაციის ფაილში.</string>
     <string name="terminal_tutorial_3">გახსენით shell შემდეგი ბრძანებით:</string>
     <string name="rish_description"><![CDATA[%1$s-ის საშუალებით შეგიძლიათ გაუშვათ shell ბრძანებები ნებისმიერ ტერმინალის აპლიკაციაში.<p>შეეხეთ, რომ მეტი გაიგოთ მისი გამოყენების შესახებ.]]></string>
+    <string name="rish_description_plain">%1$s-ის საშუალებით შეგიძლიათ გაუშვათ shell ბრძანებები ნებისმიერ ტერმინალის აპლიკაციაში.
+შეეხეთ, რომ მეტი გაიგოთ მისი გამოყენების შესახებ.</string>
     <!-- Settings -->
     <string name="settings_title">პარამეტრები</string>
     <string name="settings_behavior">ქცევა</string>
@@ -177,6 +186,9 @@
     <string name="settings_restart_dialog_message">ამ პარამეტრის გამოსაყენებლად Shizuku-ს
         გადატვირთვაა საჭირო.</string>
     <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>საჭიროა Wi-Fi. Shizuku გააგრძელებს მუშაობას და დაელოდება Wi-Fi კავშირს, სანამ ფონურ რეჟიმში გადაიტვირთება.</b>]]></string>
+    <string name="settings_restart_dialog_message_wifi_required_plain">
+
+საჭიროა Wi-Fi. Shizuku გააგრძელებს მუშაობას და დაელოდება Wi-Fi კავშირს, სანამ ფონურ რეჟიმში გადაიტვირთება.</string>
     <string name="settings_tcp_port">TCP პორტი</string>
     <string name="settings_tcp_port_default">ნაგულისხმევი (5555)</string>
     <string name="settings_tcp_port_hint">დატოვე ცარიელი ნაგულისხმევი გამოსაყენებლად (5555)</string>
@@ -257,6 +269,7 @@
     <string name="permission_label">წვდომა Shizuku</string>
     <string name="permission_description">მიეცით აპს საშუალება გამოიყენოს Shizuku.</string>
     <string name="permission_warning_template"><![CDATA[ნება დართეთ <b>%1$s</b> მდე %2$s?]]></string>
+    <string name="permission_warning_template_plain">ნება დართეთ %1$s მდე %2$s?</string>
     <string name="grant_dialog_button_allow_always">ნება დართეთ ყველა დროის</string>
     <string name="grant_dialog_button_deny">"უარყოფა"</string>
     <!-- Starter -->
@@ -291,8 +304,10 @@
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s არ უჭერს მხარს თანამედროვე შიზუკუს</string>
     <string name="dialog_legacy_not_support_message"><![CDATA[Legacy Shizuku მოძველებულია 2019 წლის მარტიდან. ასევე, მემკვიდრეობითი Shizuku არ მუშაობს ახალ Android სისტემებზე.<p>გთხოვთ, ჰკითხოთ დეველოპერს <b>%1$s</b> განახლება.]]></string>
+    <string name="dialog_legacy_not_support_message_plain">Legacy Shizuku მოძველებულია 2019 წლის მარტიდან. ასევე, მემკვიდრეობითი Shizuku არ მუშაობს ახალ Android სისტემებზე. გთხოვთ, ჰკითხოთ დეველოპერს %1$s განახლება.</string>
     <string name="dialog_requesting_legacy_title">%1$s ითხოვს მემკვიდრეობას Shizuku</string>
     <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> აქვს თანამედროვე შიზუკუს მხარდაჭერა, მაგრამ ის ითხოვს მემკვიდრეობას შიზუკუს. ეს შეიძლება იმის გამო, რომ Shizuku არ მუშაობს, გთხოვთ, შეამოწმოთ Shizuku აპლიკაციაში.<p>Legacy Shizuku მოძველებულია 2019 წლის მარტიდან.]]></string>
+    <string name="dialog_requesting_legacy_message_plain">%1$s აქვს თანამედროვე შიზუკუს მხარდაჭერა, მაგრამ ის ითხოვს მემკვიდრეობას შიზუკუს. ეს შეიძლება იმის გამო, რომ Shizuku არ მუშაობს, გთხოვთ, შეამოწმოთ Shizuku აპლიკაციაში. Legacy Shizuku მოძველებულია 2019 წლის მარტიდან.</string>
     <string name="dialog_requesting_legacy_button_open_shizuku">გახსენით Shizuku</string>
     <string name="wadb_notification_attempt_now">სცადეთ ახლა.</string>
 </resources>

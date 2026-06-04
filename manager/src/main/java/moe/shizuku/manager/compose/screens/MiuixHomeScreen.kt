@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.offset
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -81,10 +82,6 @@ import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.CardDefaults
 import androidx.compose.foundation.layout.width
 import top.yukonga.miuix.kmp.icon.MiuixIcons
-import top.yukonga.miuix.kmp.icon.extended.Help
-import top.yukonga.miuix.kmp.icon.extended.Info
-import top.yukonga.miuix.kmp.icon.extended.Link
-import top.yukonga.miuix.kmp.icon.extended.Ok
 import top.yukonga.miuix.kmp.icon.extended.Refresh
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.window.WindowDialog
@@ -359,7 +356,7 @@ private fun MiuixServerStatusCard(
                     if (isRunning) {
                         val versionText = if (hasUpdate) {
                             stringResource(
-                                R.string.home_status_service_version_update,
+                                R.string.home_status_service_version_update_plain,
                                 user,
                                 "${status.apiVersion}.${status.patchVersion}",
                                 "${latestApiVersion}.${latestPatchVersion}",
@@ -373,7 +370,7 @@ private fun MiuixServerStatusCard(
                         }
                         Text(
                             modifier = Modifier.fillMaxWidth(),
-                            text = versionText.replace("<br>", "\n").replace(Regex("<[^>]*>"), ""),
+                            text = versionText,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
                             color = descTextColor,
@@ -450,7 +447,8 @@ private fun MiuixTerminalCard(onClick: () -> Unit) {
             summary = stringResource(R.string.home_terminal_description),
             endActions = {
                 Icon(
-                    imageVector = MiuixIcons.Help,
+                    painter = painterResource(R.drawable.ic_terminal_24),
+                    modifier = Modifier.size(24.dp),
                     tint = MiuixTheme.colorScheme.onSurface,
                     contentDescription = null,
                 )
@@ -470,7 +468,8 @@ private fun MiuixStartRootCard(isRestart: Boolean, onClick: () -> Unit) {
                 summary = stringResource(R.string.home_root_description, "Sui", "Sui"),
                 endActions = {
                     Icon(
-                        imageVector = MiuixIcons.Ok,
+                        painter = painterResource(R.drawable.ic_root_24dp),
+                        modifier = Modifier.size(24.dp),
                         tint = MiuixTheme.colorScheme.onSurface,
                         contentDescription = null,
                     )
@@ -504,11 +503,11 @@ private fun MiuixStartWirelessAdbCard(
         Card(modifier = Modifier.fillMaxWidth()) {
             BasicComponent(
                 title = stringResource(R.string.home_wireless_adb_title),
-                summary = stringResource(R.string.home_wireless_adb_description)
-                    .replace("<p>", "\n").replace(Regex("<[^>]*>"), ""),
+                summary = stringResource(R.string.home_wireless_adb_description_plain),
                 endActions = {
                     Icon(
-                        imageVector = MiuixIcons.Info,
+                        painter = painterResource(R.drawable.ic_wadb_24),
+                        modifier = Modifier.size(24.dp),
                         tint = MiuixTheme.colorScheme.onSurface,
                         contentDescription = null,
                     )
@@ -540,11 +539,11 @@ private fun MiuixStartAdbCard(onClick: () -> Unit) {
         Card(modifier = Modifier.fillMaxWidth()) {
             BasicComponent(
                 title = stringResource(R.string.home_adb_title),
-                summary = stringResource(R.string.home_adb_description, Helps.ADB.get())
-                    .replace(Regex("<[^>]*>"), ""),
+                summary = stringResource(R.string.home_adb_description_plain, Helps.ADB.get()),
                 endActions = {
                     Icon(
-                        imageVector = MiuixIcons.Help,
+                        painter = painterResource(R.drawable.ic_adb_24dp),
+                        modifier = Modifier.size(24.dp),
                         tint = MiuixTheme.colorScheme.onSurface,
                         contentDescription = null,
                     )
@@ -570,13 +569,14 @@ private fun MiuixAutomationCard(onClick: () -> Unit) {
         BasicComponent(
             title = stringResource(R.string.home_automation_title),
             summary = stringResource(R.string.home_automation_description),
-            endActions = {
-                Icon(
-                    imageVector = MiuixIcons.Help,
-                    tint = MiuixTheme.colorScheme.onSurface,
-                    contentDescription = null,
-                )
-            },
+                endActions = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_integration_instructions_24),
+                        modifier = Modifier.size(24.dp),
+                        tint = MiuixTheme.colorScheme.onSurface,
+                        contentDescription = null,
+                    )
+                },
             onClick = onClick,
         )
     }
@@ -589,13 +589,14 @@ private fun MiuixAdbPermissionLimitedCard() {
         BasicComponent(
             title = stringResource(R.string.home_adb_is_limited_title),
             summary = stringResource(R.string.home_adb_is_limited_description),
-            endActions = {
-                Icon(
-                    imageVector = MiuixIcons.Info,
-                    tint = MiuixTheme.colorScheme.onSurface,
-                    contentDescription = null,
-                )
-            },
+                endActions = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_warning_24),
+                        modifier = Modifier.size(24.dp),
+                        tint = MiuixTheme.colorScheme.onSurface,
+                        contentDescription = null,
+                    )
+                },
             onClick = { CustomTabsHelper.launchUrlOrCopy(context, Helps.ADB.get()) },
         )
     }
@@ -608,13 +609,14 @@ private fun MiuixLearnMoreCard() {
         BasicComponent(
             title = stringResource(R.string.home_learn_more_title),
             summary = stringResource(R.string.home_learn_more_description),
-            endActions = {
-                Icon(
-                    imageVector = MiuixIcons.Link,
-                    tint = MiuixTheme.colorScheme.onSurface,
-                    contentDescription = null,
-                )
-            },
+                endActions = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_learn_more_24dp),
+                        modifier = Modifier.size(24.dp),
+                        tint = MiuixTheme.colorScheme.onSurface,
+                        contentDescription = null,
+                    )
+                },
             onClick = { CustomTabsHelper.launchUrlOrCopy(context, Helps.DEVELOPER.get()) },
         )
     }
@@ -709,8 +711,7 @@ private fun MiuixAdbCommandDialog(onDismiss: () -> Unit) {
     ) {
         Column {
             Text(
-                text = stringResource(R.string.home_adb_dialog_view_command_message, command)
-                    .replace(Regex("<[^>]*>"), ""),
+                text = stringResource(R.string.home_adb_dialog_view_command_message_plain, command),
                 style = MiuixTheme.textStyles.body2,
                 color = MiuixTheme.colorScheme.onSurface,
                 fontFamily = FontFamily.Monospace,

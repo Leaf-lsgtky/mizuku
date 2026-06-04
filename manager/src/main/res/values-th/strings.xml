@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
@@ -6,17 +6,23 @@
     <string name="home_status_service_not_running">%1$s ไม่ได้กำลังทำงาน</string>
     <string name="home_status_service_version">เวอร์ชัน %2$s ผ่าน %1$s</string>
     <string name="home_status_service_version_update"><![CDATA[เวอร์ชัน %2$s, %1$s<br>เริ่มใหม่อีกครั้งเพื่ออัปเดตเป็นเวอร์ชัน %3$s]]></string>
+    <string name="home_status_service_version_update_plain">เวอร์ชัน %2$s, %1$s
+เริ่มใหม่อีกครั้งเพื่ออัปเดตเป็นเวอร์ชัน %3$s</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[เริ่มโดยเชื่อมต่อกับคอมพิวเตอร์]]></string>
     <string name="home_adb_description"><![CDATA[สำหรับอุปกรณ์ที่ไม่ได้ติดตั้งรูท จะต้องใช้ adb เพื่อเริ่ม Shizuku (จำเป็นต้องเชื่อมต่อกับคอมพิวเตอร์) กระบวนการนี้จะต้องทำทุกครั้งที่อุปกรณ์ปิดและเปิดใหม่ กรุณา<b><a href="%1$s">อ่านการช่วยเหลือ</a></b>]]></string>
+    <string name="home_adb_description_plain">สำหรับอุปกรณ์ที่ไม่ได้ติดตั้งรูท จะต้องใช้ adb เพื่อเริ่ม Shizuku (จำเป็นต้องเชื่อมต่อกับคอมพิวเตอร์) กระบวนการนี้จะต้องทำทุกครั้งที่อุปกรณ์ปิดและเปิดใหม่ กรุณาอ่านการช่วยเหลือ</string>
     <string name="home_adb_button_view_help">อ่านการช่วยเหลือ</string>
     <string name="home_adb_button_view_command">ดูคำสั่ง</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* มีข้อควรพิจารณาอื่น ๆ โปรดอ่านความช่วยเหลือให้เข้าใจก่อน]]></string>
+    <string name="home_adb_dialog_view_command_message_plain">%1$s  * มีข้อควรพิจารณาอื่น ๆ โปรดอ่านความช่วยเหลือให้เข้าใจก่อน</string>
     <string name="home_adb_dialog_view_command_copy_button">คัดลอก</string>
     <string name="home_adb_dialog_view_command_button_send">ส่ง</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[เริ่มผ่านการแก้ไขข้อบกพร่องผ่าน Wi-Fi]]></string>
     <string name="home_wireless_adb_description"><![CDATA[ตั้งแต่ Android 11 ขึ้นไป สามารถเปิดใช้งานการแก้ไขข้อบกพร่องผ่าน Wi-Fi เพื่อเริ่ม Shizuku ได้โดยตรงผ่านอุปกรณ์ โดยไม่ต้องเชื่อมต่อกับคอมพิวเตอร์ <p>โปรดอ่านคำแนะนำทีละขั้นตอนก่อน]]></string>
+    <string name="home_wireless_adb_description_plain">ตั้งแต่ Android 11 ขึ้นไป สามารถเปิดใช้งานการแก้ไขข้อบกพร่องผ่าน Wi-Fi เพื่อเริ่ม Shizuku ได้โดยตรงผ่านอุปกรณ์ โดยไม่ต้องเชื่อมต่อกับคอมพิวเตอร์ 
+โปรดอ่านคำแนะนำทีละขั้นตอนก่อน</string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[หาก Android เป็นรุ่นที่เก่ากว่า 11 นั้นจำเป็นต้องเชื่อมต่อกับคอมพิวเตอร์เพื่อเปิดใช้งานการแก้ไขข้อบกพร่องผ่าน Wi-Fi]]></string>
     <string name="home_wireless_adb_view_guide_button">คำแนะนำทีละขั้นตอน</string>
     <!-- Adb -->
@@ -129,6 +135,7 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">การอนุญาตของ adb นั้นจำกัด</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[เป็นไปได้สูงที่ผู้ผลิตอุปกรณ์ของคุณจะจำกัดการอนุญาตของ adb <p>อาจมีวิธีแก้ไขสำหรับอุปกรณ์ของคุณใน<b><a href="%1$s">เอกสารนี้</a></b>]]></string>
+    <string name="app_management_dialog_adb_is_limited_message_plain">เป็นไปได้สูงที่ผู้ผลิตอุปกรณ์ของคุณจะจำกัดการอนุญาตของ adb  อาจมีวิธีแก้ไขสำหรับอุปกรณ์ของคุณในเอกสารนี้</string>
     <string name="app_management_item_summary_requires_root">* จำเป็นต้องให้ Shizuku ทำงานผ่านรูท</string>
     <string name="app_management_toggle_all">สลับทั้งหมด</string>
     <!-- Terminal -->
@@ -150,6 +157,8 @@
         ในไฟล์การกำหนดค่า %3$s ของแอปเทอร์มินัลของคุณได้</string>
     <string name="terminal_tutorial_3">เปิดเชลล์ด้วยคำสั่งต่อไปนี้:</string>
     <string name="rish_description"><![CDATA[ด้วย %1$sคุณสามารถรันคำสั่งเชลล์ในแอปพลิเคชันเทอร์มินัลใดก็ได้<p>แตะเพื่อเรียนรู้เพิ่มเติมเกี่ยวกับวิธีการใช้งาน]]></string>
+    <string name="rish_description_plain">ด้วย %1$sคุณสามารถรันคำสั่งเชลล์ในแอปพลิเคชันเทอร์มินัลใดก็ได้
+แตะเพื่อเรียนรู้เพิ่มเติมเกี่ยวกับวิธีการใช้งาน</string>
     <!-- Settings -->
     <string name="settings_title">การตั้งค่า</string>
     <string name="settings_behavior">พฤติกรรม</string>
@@ -170,6 +179,9 @@
     <string name="settings_restart_dialog_title">จำเป็นต้องรีสตาร์ท</string>
     <string name="settings_restart_dialog_message">Shizuku ต้องรีสตาร์ทเพื่อใช้การตั้งค่านี้</string>
     <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>จําเป็นต้องใช้ Wi-Fi Shizuku จะทํางานต่อไปและรอการเชื่อมต่อ Wi-Fi ก่อนที่จะรีสตาร์ทในพื้นหลัง</b>]]></string>
+    <string name="settings_restart_dialog_message_wifi_required_plain">
+
+จําเป็นต้องใช้ Wi-Fi Shizuku จะทํางานต่อไปและรอการเชื่อมต่อ Wi-Fi ก่อนที่จะรีสตาร์ทในพื้นหลัง</string>
     <string name="settings_tcp_port">พอร์ต TCP</string>
     <string name="settings_tcp_port_default">ค่าเริ่มต้น (5555)</string>
     <string name="settings_tcp_port_hint">เว้นว่างไว้เพื่อใช้ค่าเริ่มต้น (5555)</string>
@@ -245,6 +257,7 @@
     <string name="permission_label">เข้าถึง Shizuku</string>
     <string name="permission_description">อนุญาตให้แอปใช้งาน Shizuku</string>
     <string name="permission_warning_template"><![CDATA[อนุญาต <b>%1$s</b> ให้ %2$s ไหม\?]]></string>
+    <string name="permission_warning_template_plain">อนุญาต %1$s ให้ %2$s ไหม\?</string>
     <string name="grant_dialog_button_allow_always">อนุญาตเสมอ</string>
     <string name="grant_dialog_button_deny">"ปฏิเสธ"</string>
     <!-- Starter -->
@@ -278,8 +291,10 @@
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s ไม่รองรับ Shizuku รุ่นใหม่</string>
     <string name="dialog_legacy_not_support_message"><![CDATA[Shizuku รุ่นเก่าได้ถูกเลิกใช้ไปแล้วตั้งแต่เดือนมีนาคม 2019 นอกจากนี้ Shizuku รุ่นเก่ายังใช้งานไม่ได้กับระบบ Android ที่ใหม่กว่า <p>โปรดติดต่อผู้พัฒนาของ <b>%1$s</b> เพื่ออัปเดตเป็นเวอร์ชันใหม่]]></string>
+    <string name="dialog_legacy_not_support_message_plain">Shizuku รุ่นเก่าได้ถูกเลิกใช้ไปแล้วตั้งแต่เดือนมีนาคม 2019 นอกจากนี้ Shizuku รุ่นเก่ายังใช้งานไม่ได้กับระบบ Android ที่ใหม่กว่า  โปรดติดต่อผู้พัฒนาของ %1$s เพื่ออัปเดตเป็นเวอร์ชันใหม่</string>
     <string name="dialog_requesting_legacy_title">%1$s กำลังขอร้อง Shizuku รุ่นเก่า</string>
     <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> รองรับ Shizuku รุ่นใหม่ แต่กำลังขอร้อง Shizuku รุ่นเก่า นี่อาจเป็นเพราะ Shizuku ไม่ทำงาน โปรดตรวจสอบในแอป Shizuku <p>Shizuku รุ่นเก่าได้ถูกเลิกใช้ไปแล้วตั้งแต่เดือนมีนาคมปี 2019]]></string>
+    <string name="dialog_requesting_legacy_message_plain">%1$s รองรับ Shizuku รุ่นใหม่ แต่กำลังขอร้อง Shizuku รุ่นเก่า นี่อาจเป็นเพราะ Shizuku ไม่ทำงาน โปรดตรวจสอบในแอป Shizuku  Shizuku รุ่นเก่าได้ถูกเลิกใช้ไปแล้วตั้งแต่เดือนมีนาคมปี 2019</string>
     <string name="dialog_requesting_legacy_button_open_shizuku">เปิด Shizuku</string>
     <string name="wadb_notification_attempt_now">ลองตอนนี้เลย</string>
 </resources>

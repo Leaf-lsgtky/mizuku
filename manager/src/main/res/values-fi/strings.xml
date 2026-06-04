@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
@@ -6,17 +6,23 @@
     <string name="home_status_service_not_running">%1$s ei juokse</string>
     <string name="home_status_service_version">Versio %2$s, %1$s</string>
     <string name="home_status_service_version_update"><![CDATA[Versio %2$s, %1$s<br>Aloita uudelleen päivittääksesi version %3$s]]></string>
+    <string name="home_status_service_version_update_plain">Versio %2$s, %1$s
+Aloita uudelleen päivittääksesi version %3$s</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Aloita yhdistämällä tietokoneeseen]]></string>
     <string name="home_adb_description"><![CDATA[Laitteille, joilla ei ole rootia, sinun täytyy käyttää adb:tä Shizukun käynnistämiseen (vaatii tietokoneyhteyden). Tämä prosessi täytyy toistaa aina, kun laite käynnistetään uudelleen. Anteeksi <b><a href=\"%1$s\">Lue apua</a></b>.]]></string>
+    <string name="home_adb_description_plain">Laitteille, joilla ei ole rootia, sinun täytyy käyttää adb:tä Shizukun käynnistämiseen (vaatii tietokoneyhteyden). Tämä prosessi täytyy toistaa aina, kun laite käynnistetään uudelleen. Anteeksi Lue apua.</string>
     <string name="home_adb_button_view_help">Lue apua</string>
     <string name="home_adb_button_view_command">Näytä komento</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* On muitakin huomioita, vahvista ensin, että olet lukenut ohjeen.]]></string>
+    <string name="home_adb_dialog_view_command_message_plain">%1$s  * On muitakin huomioita, vahvista ensin, että olet lukenut ohjeen.</string>
     <string name="home_adb_dialog_view_command_copy_button">Kopioida</string>
     <string name="home_adb_dialog_view_command_button_send">Lähettää</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Aloita langattomalla debuggauksella]]></string>
     <string name="home_wireless_adb_description"><![CDATA[Android 11:llä tai uudemmilla voit ottaa langattoman debuggauksen käyttöön ja käynnistää Shizukun suoraan laitteelta, ilman että sinun tarvitsee yhdistää tietokoneeseen.<p>Katso ensin vaiheittaiset ohjeet.]]></string>
+    <string name="home_wireless_adb_description_plain">Android 11:llä tai uudemmilla voit ottaa langattoman debuggauksen käyttöön ja käynnistää Shizukun suoraan laitteelta, ilman että sinun tarvitsee yhdistää tietokoneeseen.
+Katso ensin vaiheittaiset ohjeet.</string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Ennen Android 11:tä langattoman virheenkorjauksen mahdollistamiseksi vaadittiin tietokoneeseen yhdistäminen.]]></string>
     <string name="home_wireless_adb_view_guide_button">Vaiheittainen opas</string>
     <!-- Adb -->
@@ -131,6 +137,7 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">adb:n lupa on rajoitettu</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[On hyvin mahdollista, että laitevalmistajasi rajoittaa adb:n käyttöoikeuksia.<p>Järjestelmällesi saattaa olla ratkaisu <b><a href=\"%1$s\">Tämä asiakirja</a></b>.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message_plain">On hyvin mahdollista, että laitevalmistajasi rajoittaa adb:n käyttöoikeuksia. Järjestelmällesi saattaa olla ratkaisu Tämä asiakirja.</string>
     <string name="app_management_item_summary_requires_root">* vaatii Shizukun juoksuja rootilla</string>
     <string name="app_management_toggle_all">Kytke kaikki päälle</string>
     <!-- Terminal -->
@@ -153,6 +160,8 @@
         %2$s -komennolle päätesovelluksesi %3$s -määritystiedostossa.</string>
     <string name="terminal_tutorial_3">Avaa komentotulkki seuraavalla komennolla:</string>
     <string name="rish_description"><![CDATA[Komentosarjalla %1$svoit suorittaa komentotulkkikomentoja missä tahansa päätesovelluksessa.<p>Napauta saadaksesi lisätietoja sen käytöstä.]]></string>
+    <string name="rish_description_plain">Komentosarjalla %1$svoit suorittaa komentotulkkikomentoja missä tahansa päätesovelluksessa.
+Napauta saadaksesi lisätietoja sen käytöstä.</string>
     <!-- Settings -->
     <string name="settings_title">Asetukset</string>
     <string name="settings_behavior">Käyttäytyminen</string>
@@ -176,6 +185,9 @@
     <string name="settings_restart_dialog_message">Shizuku on käynnistettävä uudelleen, jotta tämä
         asetus otetaan käyttöön.</string>
     <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>Wi-Fi-yhteys vaaditaan. Shizuku jatkaa toimintaansa ja odottaa Wi-Fi-yhteyttä ennen uudelleenkäynnistystä taustalla.</b>]]></string>
+    <string name="settings_restart_dialog_message_wifi_required_plain">
+
+Wi-Fi-yhteys vaaditaan. Shizuku jatkaa toimintaansa ja odottaa Wi-Fi-yhteyttä ennen uudelleenkäynnistystä taustalla.</string>
     <string name="settings_tcp_port">TCP-portti</string>
     <string name="settings_tcp_port_default">Oletusarvo (5555)</string>
     <string name="settings_tcp_port_hint">Jätä tyhjä oletus (5555)</string>
@@ -253,6 +265,7 @@
     <string name="permission_label">pääsy Shizukuun</string>
     <string name="permission_description">Salli sovelluksen käyttää Shizukua.</string>
     <string name="permission_warning_template"><![CDATA[Sallia <b>%1$s</b> jotta %2$s?]]></string>
+    <string name="permission_warning_template_plain">Sallia %1$s jotta %2$s?</string>
     <string name="grant_dialog_button_allow_always">Anna koko ajan</string>
     <string name="grant_dialog_button_deny">"Kieltää"</string>
     <!-- Starter -->
@@ -286,8 +299,10 @@
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s ei tue nykyaikaista Shizukua</string>
     <string name="dialog_legacy_not_support_message"><![CDATA[Legacy Shizuku on ollut vanhentunut maaliskuusta 2019 lähtien. Lisäksi vanha Shizuku ei toimi uudemmissa Android-järjestelmissä.<p>Kysy kehittäjältä <b>%1$s</b> Päivitys.]]></string>
+    <string name="dialog_legacy_not_support_message_plain">Legacy Shizuku on ollut vanhentunut maaliskuusta 2019 lähtien. Lisäksi vanha Shizuku ei toimi uudemmissa Android-järjestelmissä. Kysy kehittäjältä %1$s Päivitys.</string>
     <string name="dialog_requesting_legacy_title">%1$s pyytää perintöä Shizukua</string>
     <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> Siinä on moderni Shizuku-tuki, mutta se pyytää perinteistä Shizukua. Tämä voi johtua siitä, että Shizuku ei ole käynnissä, tarkista Shizuku-sovelluksesta.<p>Legacy Shizuku on ollut vanhentunut maaliskuusta 2019 lähtien.]]></string>
+    <string name="dialog_requesting_legacy_message_plain">%1$s Siinä on moderni Shizuku-tuki, mutta se pyytää perinteistä Shizukua. Tämä voi johtua siitä, että Shizuku ei ole käynnissä, tarkista Shizuku-sovelluksesta. Legacy Shizuku on ollut vanhentunut maaliskuusta 2019 lähtien.</string>
     <string name="dialog_requesting_legacy_button_open_shizuku">Avaa Shizuku</string>
     <string name="wadb_notification_attempt_now">Yritä nyt</string>
 </resources>

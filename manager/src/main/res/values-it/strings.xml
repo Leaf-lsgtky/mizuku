@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
@@ -6,17 +6,23 @@
     <string name="home_status_service_not_running">%1$s non è in esecuzione</string>
     <string name="home_status_service_version">Versione %2$s, %1$s</string>
     <string name="home_status_service_version_update"><![CDATA[Versione %2$s, %1$s<br>Riavvia per aggiornare alla versione %3$s]]></string>
+    <string name="home_status_service_version_update_plain">Versione %2$s, %1$s
+Riavvia per aggiornare alla versione %3$s</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Avvia collegandoti ad un computer]]></string>
     <string name="home_adb_description"><![CDATA[Per i dispositivi non rootati occorre usare adb per avviare Shizuku (serve una connessione ad un computer). Questo processo deve essere ripetuto ogni volta che il dispositivo viene riavviato. Per favore <b><a href="%1$s">leggi la guida</a></b>.]]></string>
+    <string name="home_adb_description_plain">Per i dispositivi non rootati occorre usare adb per avviare Shizuku (serve una connessione ad un computer). Questo processo deve essere ripetuto ogni volta che il dispositivo viene riavviato. Per favore leggi la guida.</string>
     <string name="home_adb_button_view_help">Leggi la guida</string>
     <string name="home_adb_button_view_command">Visualizza comando</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Ci sono altre considerazioni, conferma di aver letto prima la guida.]]></string>
+    <string name="home_adb_dialog_view_command_message_plain">%1$s  * Ci sono altre considerazioni, conferma di aver letto prima la guida.</string>
     <string name="home_adb_dialog_view_command_copy_button">Copia</string>
     <string name="home_adb_dialog_view_command_button_send">Invia</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Avvia tramite Debug Wireless]]></string>
     <string name="home_wireless_adb_description"><![CDATA[Su Android 11 o successivi, puoi abilitare il Debug Wireless e avviare Shizuku direttamente dal tuo dispositivo, senza doverti collegare a un computer.<p>Consulta prima la guida passo-passo.]]></string>
+    <string name="home_wireless_adb_description_plain">Su Android 11 o successivi, puoi abilitare il Debug Wireless e avviare Shizuku direttamente dal tuo dispositivo, senza doverti collegare a un computer.
+Consulta prima la guida passo-passo.</string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Per le versioni precedenti ad Android 11, è necessario collegarsi ad un computer per abilitare il Debug Wireless.]]></string>
     <string name="home_wireless_adb_view_guide_button">Guida passo-passo</string>
     <!-- Adb -->
@@ -136,6 +142,7 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Il permesso di adb è limitato</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[È molto probabile che il fabbricante del tuo dispositivo limiti i permessi di adb.<p>Ci potrebbe essere una soluzione per il vostro dispositivo in <b><a href="%1$s">questo documento</a></b>.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message_plain">È molto probabile che il fabbricante del tuo dispositivo limiti i permessi di adb. Ci potrebbe essere una soluzione per il vostro dispositivo in questo documento.</string>
     <string name="app_management_item_summary_requires_root">* richiede Shizuku in modalità root</string>
     <string name="app_management_toggle_all">Attiva/disattiva tutto</string>
     <!-- Terminal -->
@@ -158,6 +165,8 @@
         un alias per %2$s nel file di configurazione %3$s dell\'app terminale.</string>
     <string name="terminal_tutorial_3">Aprire una shell con il seguente comando:</string>
     <string name="rish_description"><![CDATA[Con %1$spuoi eseguire comandi shell in qualsiasi app terminale.<p>Tocca per saperne di più su come utilizzarlo.]]></string>
+    <string name="rish_description_plain">Con %1$spuoi eseguire comandi shell in qualsiasi app terminale.
+Tocca per saperne di più su come utilizzarlo.</string>
     <!-- Settings -->
     <string name="settings_title">Impostazioni</string>
     <string name="settings_behavior">Comportamento</string>
@@ -179,6 +188,9 @@
     <string name="settings_restart_dialog_message">Shizuku deve ricominciare per poter applicare
         questa impostazione.</string>
     <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>Il Wi-Fi è necessario. Shizuku continuerà a funzionare e aspetterà una connessione Wi-Fi prima di riavviare in background.</b>]]></string>
+    <string name="settings_restart_dialog_message_wifi_required_plain">
+
+Il Wi-Fi è necessario. Shizuku continuerà a funzionare e aspetterà una connessione Wi-Fi prima di riavviare in background.</string>
     <string name="settings_tcp_port">porta TCP</string>
     <string name="settings_tcp_port_default">Predefinito (5555)</string>
     <string name="settings_tcp_port_hint">Lasciare vuoto per utilizzare il valore predefinito (5555)</string>
@@ -258,6 +270,7 @@
     <string name="permission_label">accesso Shizuku</string>
     <string name="permission_description">Consenti all\'app di usare Shizuku.</string>
     <string name="permission_warning_template"><![CDATA[Consentire a <b>%1$s</b> di %2$s\?]]></string>
+    <string name="permission_warning_template_plain">Consentire a %1$s di %2$s\?</string>
     <string name="grant_dialog_button_allow_always">Consenti sempre</string>
     <string name="grant_dialog_button_deny">"Nega"</string>
     <!-- Starter -->
@@ -293,8 +306,10 @@
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s non supporta il moderno Shizuku</string>
     <string name="dialog_legacy_not_support_message"><![CDATA[Shizuku legacy è stato deprecato a marzo 2019. Inoltre, Shizuku legacy non funziona sui sistemi Android più recenti.<p>Chiedi allo sviluppatore<b>%1$s</b> di aggiornare.]]></string>
+    <string name="dialog_legacy_not_support_message_plain">Shizuku legacy è stato deprecato a marzo 2019. Inoltre, Shizuku legacy non funziona sui sistemi Android più recenti. Chiedi allo sviluppatore%1$s di aggiornare.</string>
     <string name="dialog_requesting_legacy_title">%1$s sta richiedendo Shizuku legacy</string>
     <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> ha il supporto al Shizuku moderno, ma sta richiedendo Shizuku legacy. Questo potrebbe essere perché Shizuku non è in esecuzione, controlla nell\'app Shizuku.<p>Shizuku legacy è stato deprecato a marzo 2019.]]></string>
+    <string name="dialog_requesting_legacy_message_plain">%1$s ha il supporto al Shizuku moderno, ma sta richiedendo Shizuku legacy. Questo potrebbe essere perché Shizuku non è in esecuzione, controlla nell\'app Shizuku. Shizuku legacy è stato deprecato a marzo 2019.</string>
     <string name="dialog_requesting_legacy_button_open_shizuku">Apri Shizuku</string>
     <string name="wadb_notification_attempt_now">Prova ora</string>
 </resources>

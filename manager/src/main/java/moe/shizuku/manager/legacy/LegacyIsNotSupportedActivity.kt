@@ -15,10 +15,13 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import moe.shizuku.manager.MainActivity
 import moe.shizuku.manager.R
+import moe.shizuku.manager.ktx.toHtml
 import moe.shizuku.manager.app.AppActivity
 import moe.shizuku.manager.compose.theme.LocalIsMiuix
 import moe.shizuku.manager.compose.theme.ShizukuAppTheme
@@ -96,11 +99,11 @@ private fun LegacyV3SupportDialog(
     onOpenShizuku: () -> Unit,
 ) {
     val title = stringResource(R.string.dialog_requesting_legacy_title, label)
-    val message = stringResource(R.string.dialog_requesting_legacy_message, label)
     val openShizukuText = stringResource(R.string.dialog_requesting_legacy_button_open_shizuku)
     val okText = stringResource(android.R.string.ok)
 
     if (LocalIsMiuix.current) {
+        val messagePlain = stringResource(R.string.dialog_requesting_legacy_message_plain, label)
         WindowDialog(
             show = true,
             onDismissRequest = onDismiss,
@@ -108,7 +111,7 @@ private fun LegacyV3SupportDialog(
             content = {
                 Column {
                     Text(
-                        text = message,
+                        text = messagePlain,
                         color = MiuixTheme.colorScheme.onSurface,
                     )
                     Spacer(modifier = Modifier.height(24.dp))
@@ -135,15 +138,24 @@ private fun LegacyV3SupportDialog(
             }
         )
     } else {
+        val context = LocalContext.current
+        val messageHtml = context.getString(R.string.dialog_requesting_legacy_message, label)
+            .toHtml(rikka.html.text.HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
         AlertDialog(
             onDismissRequest = onDismiss,
             title = {
                 androidx.compose.material3.Text(text = title)
             },
             text = {
-                androidx.compose.material3.Text(
-                    text = message,
-                    style = MaterialTheme.typography.bodyMedium,
+                AndroidView(
+                    factory = { ctx ->
+                        android.widget.TextView(ctx).apply {
+                            text = messageHtml
+                        }
+                    },
+                    update = { tv ->
+                        tv.text = messageHtml
+                    },
                 )
             },
             confirmButton = {
@@ -169,10 +181,10 @@ private fun LegacyNotSupportedDialog(
     onDismiss: () -> Unit,
 ) {
     val title = stringResource(R.string.dialog_legacy_not_support_title, label)
-    val message = stringResource(R.string.dialog_legacy_not_support_message, label)
     val okText = stringResource(android.R.string.ok)
 
     if (LocalIsMiuix.current) {
+        val messagePlain = stringResource(R.string.dialog_legacy_not_support_message_plain, label)
         WindowDialog(
             show = true,
             onDismissRequest = onDismiss,
@@ -180,7 +192,7 @@ private fun LegacyNotSupportedDialog(
             content = {
                 Column {
                     Text(
-                        text = message,
+                        text = messagePlain,
                         color = MiuixTheme.colorScheme.onSurface,
                     )
                     Spacer(modifier = Modifier.height(24.dp))
@@ -194,15 +206,24 @@ private fun LegacyNotSupportedDialog(
             }
         )
     } else {
+        val context = LocalContext.current
+        val messageHtml = context.getString(R.string.dialog_legacy_not_support_message, label)
+            .toHtml(rikka.html.text.HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
         AlertDialog(
             onDismissRequest = onDismiss,
             title = {
                 androidx.compose.material3.Text(text = title)
             },
             text = {
-                androidx.compose.material3.Text(
-                    text = message,
-                    style = MaterialTheme.typography.bodyMedium,
+                AndroidView(
+                    factory = { ctx ->
+                        android.widget.TextView(ctx).apply {
+                            text = messageHtml
+                        }
+                    },
+                    update = { tv ->
+                        tv.text = messageHtml
+                    },
                 )
             },
             confirmButton = {

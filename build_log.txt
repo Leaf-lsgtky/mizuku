@@ -1,0 +1,490 @@
+build	Build with Gradle	锘?026-06-04T09:35:45.4147972Z ##[group]Run chmod +x gradlew
+build	Build with Gradle	2026-06-04T09:35:45.4148721Z ^[[36;1mchmod +x gradlew^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4149221Z ^[[36;1myes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null || true^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4149806Z ^[[36;1mecho 'org.gradle.caching=true' >> gradle.properties^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4150253Z ^[[36;1mecho 'org.gradle.parallel=true' >> gradle.properties^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4150625Z ^[[36;1m^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4150889Z ^[[36;1mif [ "" = "true" ] || [ "push" = "push" ]; then^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4151262Z ^[[36;1m  CMD="./gradlew :manager:assembleDebug"^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4151640Z ^[[36;1m  APK_DIR="manager/build/outputs/apk/debug"^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4151953Z ^[[36;1melse^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4152219Z ^[[36;1m  CMD="./gradlew :manager:assembleRelease"^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4152602Z ^[[36;1m  APK_DIR="manager/build/outputs/apk/release"^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4152948Z ^[[36;1mfi^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4153155Z ^[[36;1m^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4153396Z ^[[36;1m[ "" = "true" ] && CMD="$CMD -Pbeta"^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4153759Z ^[[36;1m^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4153960Z ^[[36;1meval $CMD^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4154213Z ^[[36;1mFILE=$(ls "$APK_DIR"/*.apk)^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4154493Z ^[[36;1m^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4154879Z ^[[36;1mVERSION=$(echo "$(basename "$FILE")" | sed -E 's/^shizuku-(.*)-(debug|release)\.apk/\1/')^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4155333Z ^[[36;1m^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4155558Z ^[[36;1mARTIFACT_NAME="shizuku-$VERSION"^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4155917Z ^[[36;1mif [ "" = "true" ] || [ "push" = "push" ]; then^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4156283Z ^[[36;1m  ARTIFACT_NAME="${ARTIFACT_NAME}-debug"^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4156598Z ^[[36;1mfi^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4156839Z ^[[36;1mARTIFACT_NAME="${ARTIFACT_NAME}.apk"^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4157145Z ^[[36;1m^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4157369Z ^[[36;1mRENAMED="$FILE"^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4157695Z ^[[36;1mif [ "$(basename "$FILE")" != "$ARTIFACT_NAME" ]; then^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4158095Z ^[[36;1m  RENAMED="$(dirname "$FILE")/$ARTIFACT_NAME"^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4158777Z ^[[36;1m  mv "$FILE" "$RENAMED"^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4159056Z ^[[36;1mfi^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4159267Z ^[[36;1m^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4159525Z ^[[36;1mecho "versionName=$VERSION" >> $GITHUB_OUTPUT^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4159938Z ^[[36;1mecho "artifactName=$ARTIFACT_NAME" >> $GITHUB_OUTPUT^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4160338Z ^[[36;1mecho "filePath=$RENAMED" >> $GITHUB_OUTPUT^[[0m
+build	Build with Gradle	2026-06-04T09:35:45.4189164Z shell: /usr/bin/bash -e {0}
+build	Build with Gradle	2026-06-04T09:35:45.4189467Z env:
+build	Build with Gradle	2026-06-04T09:35:45.4189685Z   KEYSTORE: 
+build	Build with Gradle	2026-06-04T09:35:45.4190043Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.11-10/x64
+build	Build with Gradle	2026-06-04T09:35:45.4190595Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.11-10/x64
+build	Build with Gradle	2026-06-04T09:35:45.4191053Z   GRADLE_ACTION_ID: gradle/actions/setup-gradle
+build	Build with Gradle	2026-06-04T09:35:45.4191396Z   GRADLE_USER_HOME: /home/runner/.gradle
+build	Build with Gradle	2026-06-04T09:35:45.4191934Z   GRADLE_BUILD_ACTION_SETUP_COMPLETED: true
+build	Build with Gradle	2026-06-04T09:35:45.4192264Z   GRADLE_BUILD_ACTION_CACHE_RESTORED: true
+build	Build with Gradle	2026-06-04T09:35:45.4192787Z   DEVELOCITY_INJECTION_INIT_SCRIPT_NAME: gradle-actions.inject-develocity.init.gradle
+build	Build with Gradle	2026-06-04T09:35:45.4193309Z   DEVELOCITY_INJECTION_CUSTOM_VALUE: gradle-actions
+build	Build with Gradle	2026-06-04T09:35:45.4193656Z   DEVELOCITY_INJECTION_ENABLED: true
+build	Build with Gradle	2026-06-04T09:35:45.4194002Z   DEVELOCITY_INJECTION_DEVELOCITY_PLUGIN_VERSION: 4.3.2
+build	Build with Gradle	2026-06-04T09:35:45.4194377Z   DEVELOCITY_INJECTION_CCUD_PLUGIN_VERSION: 2.1
+build	Build with Gradle	2026-06-04T09:35:45.4194840Z   DEVELOCITY_INJECTION_TERMS_OF_USE_URL: https://gradle.com/terms-of-service
+build	Build with Gradle	2026-06-04T09:35:45.4195307Z   DEVELOCITY_INJECTION_TERMS_OF_USE_AGREE: yes
+build	Build with Gradle	2026-06-04T09:35:45.4195677Z   GITHUB_DEPENDENCY_GRAPH_ENABLED: false
+build	Build with Gradle	2026-06-04T09:35:45.4195975Z ##[endgroup]
+build	Build with Gradle	2026-06-04T09:35:52.6126030Z yes: standard output: Broken pipe
+build	Build with Gradle	2026-06-04T09:35:52.7129549Z Downloading https://services.gradle.org/distributions/gradle-8.14-bin.zip
+build	Build with Gradle	2026-06-04T09:35:54.1842913Z .............10%.............20%.............30%.............40%.............50%.............60%.............70%.............80%.............90%..............100%
+build	Build with Gradle	2026-06-04T09:35:55.6710625Z Starting a Gradle Daemon (subsequent builds will be faster)
+build	Build with Gradle	2026-06-04T09:36:30.2691752Z 
+build	Build with Gradle	2026-06-04T09:36:30.2692912Z > Configure project :manager
+build	Build with Gradle	2026-06-04T09:36:30.2699508Z Checking the license for package NDK (Side by side) 29.0.13113456 in /usr/local/lib/android/sdk/licenses
+build	Build with Gradle	2026-06-04T09:36:30.2705415Z License for package NDK (Side by side) 29.0.13113456 accepted.
+build	Build with Gradle	2026-06-04T09:36:30.2706417Z Preparing "Install NDK (Side by side) 29.0.13113456 v.29.0.13113456 rc1".
+build	Build with Gradle	2026-06-04T09:36:46.1687842Z "Install NDK (Side by side) 29.0.13113456 v.29.0.13113456 rc1" ready.
+build	Build with Gradle	2026-06-04T09:36:46.1689341Z Installing NDK (Side by side) 29.0.13113456 in /usr/local/lib/android/sdk/ndk/29.0.13113456
+build	Build with Gradle	2026-06-04T09:36:46.1690385Z "Install NDK (Side by side) 29.0.13113456 v.29.0.13113456 rc1" complete.
+build	Build with Gradle	2026-06-04T09:36:46.4760482Z "Install NDK (Side by side) 29.0.13113456 v.29.0.13113456 rc1" finished.
+build	Build with Gradle	2026-06-04T09:36:48.5700837Z WARNING: We recommend using a newer Android Gradle plugin to use compile SDK version 37.0
+build	Build with Gradle	2026-06-04T09:36:48.5701914Z 
+build	Build with Gradle	2026-06-04T09:36:48.5702836Z This Android Gradle plugin (8.13.2) was tested up to compile SDK version 36.1.
+build	Build with Gradle	2026-06-04T09:36:48.5703618Z 
+build	Build with Gradle	2026-06-04T09:36:48.5704168Z You are strongly encouraged to update your project to use a newer
+build	Build with Gradle	2026-06-04T09:36:48.5705349Z Android Gradle plugin that has been tested with compile SDK version 37.0.
+build	Build with Gradle	2026-06-04T09:36:48.5706180Z 
+build	Build with Gradle	2026-06-04T09:36:48.5706738Z If you are already using the latest version of the Android Gradle plugin,
+build	Build with Gradle	2026-06-04T09:36:48.5708090Z you may need to wait until a newer version with support for compile SDK version 37.0 is available.
+build	Build with Gradle	2026-06-04T09:36:48.5709299Z 
+build	Build with Gradle	2026-06-04T09:36:48.5709787Z For more information refer to the compatibility table:
+build	Build with Gradle	2026-06-04T09:36:48.5710814Z https://d.android.com/r/tools/api-level-support
+build	Build with Gradle	2026-06-04T09:36:48.5711491Z 
+build	Build with Gradle	2026-06-04T09:36:48.5711876Z To suppress this warning, add/update
+build	Build with Gradle	2026-06-04T09:36:48.5712770Z     android.suppressUnsupportedCompileSdk=37.0
+build	Build with Gradle	2026-06-04T09:36:48.5713660Z to this project's gradle.properties.
+build	Build with Gradle	2026-06-04T09:36:49.6682781Z 
+build	Build with Gradle	2026-06-04T09:36:49.6707030Z > Task :aidl:preBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:49.6739386Z > Task :api:preBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:49.6765051Z > Task :shell:preBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:49.6765886Z > Task :aidl:preDebugBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:49.6766278Z > Task :api:preDebugBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:49.6766611Z > Task :shell:preDebugBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:49.6766997Z > Task :shell:mergeDebugNativeDebugMetadata NO-SOURCE
+build	Build with Gradle	2026-06-04T09:36:49.7712518Z > Task :api:generateDebugResValues
+build	Build with Gradle	2026-06-04T09:36:49.7729266Z > Task :shell:generateDebugBuildConfig
+build	Build with Gradle	2026-06-04T09:36:49.7748981Z > Task :api:generateDebugResources
+build	Build with Gradle	2026-06-04T09:36:49.8699538Z > Task :shell:javaPreCompileDebug
+build	Build with Gradle	2026-06-04T09:36:49.8729289Z > Task :api:packageDebugResources
+build	Build with Gradle	2026-06-04T09:36:49.8730624Z > Task :api:processDebugNavigationResources
+build	Build with Gradle	2026-06-04T09:36:51.4686674Z > Task :shell:checkDebugAarMetadata
+build	Build with Gradle	2026-06-04T09:36:51.5707437Z > Task :shell:processDebugNavigationResources
+build	Build with Gradle	2026-06-04T09:36:51.9736368Z > Task :shell:compileDebugNavigationResources
+build	Build with Gradle	2026-06-04T09:36:51.9800422Z > Task :shell:generateDebugResValues FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:52.0699618Z > Task :shell:mapDebugSourceSetPaths
+build	Build with Gradle	2026-06-04T09:36:52.0750876Z > Task :shell:generateDebugResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:52.0802604Z > Task :api:parseDebugLocalResources
+build	Build with Gradle	2026-06-04T09:36:52.0876569Z > Task :aidl:generateDebugResValues FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:52.0929192Z > Task :aidl:generateDebugResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:52.1704225Z > Task :aidl:packageDebugResources
+build	Build with Gradle	2026-06-04T09:36:52.1747292Z > Task :aidl:processDebugNavigationResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:52.1785697Z > Task :aidl:parseDebugLocalResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:52.1809072Z > Task :aidl:generateDebugRFile
+build	Build with Gradle	2026-06-04T09:36:52.1809705Z > Task :aidl:javaPreCompileDebug FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:52.1810961Z > Task :shared:preBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:52.1811535Z > Task :shared:preDebugBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:52.1812154Z > Task :shared:generateDebugResValues FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:52.1812842Z > Task :shared:generateDebugResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:52.2709409Z > Task :shared:packageDebugResources
+build	Build with Gradle	2026-06-04T09:36:52.2739247Z > Task :shared:processDebugNavigationResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:52.2769065Z > Task :shared:parseDebugLocalResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:52.3689660Z > Task :aidl:compileDebugAidl
+build	Build with Gradle	2026-06-04T09:36:52.6702451Z > Task :shared:generateDebugRFile
+build	Build with Gradle	2026-06-04T09:36:52.6759497Z > Task :shell:createDebugCompatibleScreenManifests
+build	Build with Gradle	2026-06-04T09:36:52.6769102Z > Task :shell:extractDeepLinksDebug
+build	Build with Gradle	2026-06-04T09:36:53.9688232Z > Task :shell:processDebugMainManifest
+build	Build with Gradle	2026-06-04T09:36:53.9747630Z > Task :shell:mergeDebugResources
+build	Build with Gradle	2026-06-04T09:36:53.9761765Z > Task :api:generateDebugRFile
+build	Build with Gradle	2026-06-04T09:36:53.9803098Z > Task :api:javaPreCompileDebug FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:53.9839645Z > Task :shared:javaPreCompileDebug FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:54.0687030Z > Task :common:preBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:54.0720156Z > Task :common:preDebugBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:54.0763469Z > Task :common:generateDebugResValues FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:54.0783098Z > Task :common:generateDebugResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:54.0827284Z > Task :common:packageDebugResources
+build	Build with Gradle	2026-06-04T09:36:54.0849342Z > Task :provider:preBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:54.0849955Z > Task :provider:preDebugBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:54.0850475Z > Task :provider:generateDebugResValues FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:54.0850998Z > Task :provider:generateDebugResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:54.0851541Z > Task :provider:packageDebugResources
+build	Build with Gradle	2026-06-04T09:36:54.0851988Z > Task :rish:preBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:54.0852443Z > Task :rish:preDebugBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:54.1707966Z > Task :rish:generateDebugResValues FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:54.1779608Z > Task :rish:generateDebugResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:54.1805106Z > Task :rish:packageDebugResources
+build	Build with Gradle	2026-06-04T09:36:54.1829043Z > Task :shell:processDebugManifest
+build	Build with Gradle	2026-06-04T09:36:54.1829684Z > Task :server:preBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:54.1859962Z > Task :server:preDebugBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:54.1929264Z > Task :server:generateDebugResValues FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:54.1940691Z > Task :server:generateDebugResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:54.1989100Z > Task :shell:mergeDebugShaders
+build	Build with Gradle	2026-06-04T09:36:54.1999583Z > Task :shell:processDebugManifestForPackage
+build	Build with Gradle	2026-06-04T09:36:54.2699681Z > Task :server:packageDebugResources
+build	Build with Gradle	2026-06-04T09:36:54.2732352Z > Task :server-shared:preBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:54.2759610Z > Task :server-shared:preDebugBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:54.2764289Z > Task :server-shared:generateDebugResValues FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:54.2789237Z > Task :server-shared:generateDebugResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:54.2819118Z > Task :server-shared:packageDebugResources
+build	Build with Gradle	2026-06-04T09:36:54.2850448Z > Task :starter:preBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:54.2879171Z > Task :starter:preDebugBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:54.2889307Z > Task :starter:generateDebugResValues FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:54.2919413Z > Task :starter:generateDebugResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:54.3686941Z > Task :starter:packageDebugResources
+build	Build with Gradle	2026-06-04T09:36:54.3727621Z > Task :api:compileDebugLibraryResources
+build	Build with Gradle	2026-06-04T09:36:54.3786419Z > Task :common:processDebugNavigationResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:54.3850564Z > Task :common:compileDebugLibraryResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:54.3879280Z > Task :common:parseDebugLocalResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:36:54.5696020Z > Task :common:generateDebugRFile
+build	Build with Gradle	2026-06-04T09:36:54.5729509Z > Task :api:writeDebugAarMetadata
+build	Build with Gradle	2026-06-04T09:36:54.6683484Z > Task :common:writeDebugAarMetadata
+build	Build with Gradle	2026-06-04T09:36:54.9699756Z > Task :shell:processDebugResources
+build	Build with Gradle	2026-06-04T09:36:56.9710239Z Note: /home/runner/work/mizuku/mizuku/shell/src/main/java/rikka/shizuku/shell/ShizukuShellLoader.java uses or overrides a deprecated API.
+build	Build with Gradle	2026-06-04T09:36:56.9711376Z 
+build	Build with Gradle	2026-06-04T09:36:56.9765848Z Note: Recompile with -Xlint:deprecation for details.
+build	Build with Gradle	2026-06-04T09:36:56.9766598Z > Task :shell:compileDebugJavaWithJavac
+build	Build with Gradle	2026-06-04T09:36:57.2719178Z 
+build	Build with Gradle	2026-06-04T09:36:57.2720055Z > Task :aidl:compileDebugJavaWithJavac
+build	Build with Gradle	2026-06-04T09:36:57.2749190Z > Task :shell:compileDebugShaders NO-SOURCE
+build	Build with Gradle	2026-06-04T09:36:57.2749879Z > Task :shell:generateDebugAssets UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:57.3683473Z > Task :shell:mergeDebugAssets
+build	Build with Gradle	2026-06-04T09:36:57.3709375Z > Task :shell:compressDebugAssets
+build	Build with Gradle	2026-06-04T09:36:57.3710055Z > Task :shell:processDebugJavaRes NO-SOURCE
+build	Build with Gradle	2026-06-04T09:36:57.3710691Z > Task :aidl:bundleLibCompileToJarDebug
+build	Build with Gradle	2026-06-04T09:36:57.8701185Z > Task :shell:mergeDebugJavaResource
+build	Build with Gradle	2026-06-04T09:36:57.9710878Z > Task :shared:compileDebugJavaWithJavac
+build	Build with Gradle	2026-06-04T09:36:57.9714912Z > Task :shared:bundleLibCompileToJarDebug
+build	Build with Gradle	2026-06-04T09:36:57.9748974Z > Task :manager:preBuild UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:36:58.0693435Z > Task :shell:checkDebugDuplicateClasses
+build	Build with Gradle	2026-06-04T09:36:58.2699685Z > Task :shell:transformDebugClassesWithAsm
+build	Build with Gradle	2026-06-04T09:36:59.2704330Z /home/runner/work/mizuku/mizuku/api/api/src/main/java/rikka/shizuku/Shizuku.java:492: warning: [dep-ann] deprecated item is not annotated with @Deprecated
+build	Build with Gradle	2026-06-04T09:36:59.2705553Z 
+build	Build with Gradle	2026-06-04T09:36:59.2730032Z     private static ShizukuRemoteProcess newProcess(@NonNull String[] cmd, @Nullable String[] env, @Nullable String dir) {
+build	Build with Gradle	2026-06-04T09:36:59.2731208Z > Task :api:compileDebugJavaWithJavac
+build	Build with Gradle	2026-06-04T09:36:59.2749035Z                                         ^
+build	Build with Gradle	2026-06-04T09:36:59.2778975Z 1 warning
+build	Build with Gradle	2026-06-04T09:36:59.2779216Z 
+build	Build with Gradle	2026-06-04T09:36:59.2779433Z > Task :api:bundleLibCompileToJarDebug
+build	Build with Gradle	2026-06-04T09:36:59.2780424Z > Task :manager:checkKotlinGradlePluginConfigurationErrors SKIPPED
+build	Build with Gradle	2026-06-04T09:36:59.2781332Z > Task :shell:dexBuilderDebug
+build	Build with Gradle	2026-06-04T09:36:59.3695114Z > Task :manager:generateDebugAutoResConfigLocaleConfigRes
+build	Build with Gradle	2026-06-04T09:36:59.3779691Z > Task :shell:desugarDebugFileDependencies
+build	Build with Gradle	2026-06-04T09:36:59.3809485Z > Task :manager:generateDebugMaterialThemeBuilderRes
+build	Build with Gradle	2026-06-04T09:36:59.3869403Z > Task :manager:generateDebugAutoResConfigSource
+build	Build with Gradle	2026-06-04T09:36:59.3894119Z > Task :manager:generateDebugMaterialThemeBuilderSource
+build	Build with Gradle	2026-06-04T09:36:59.3929489Z > Task :aidl:compileDebugLibraryResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:13.0699633Z > Task :aidl:writeDebugAarMetadata
+build	Build with Gradle	2026-06-04T09:37:13.2729690Z > Task :provider:writeDebugAarMetadata
+build	Build with Gradle	2026-06-04T09:37:13.2777329Z > Task :rish:writeDebugAarMetadata
+build	Build with Gradle	2026-06-04T09:37:13.2829233Z > Task :server:writeDebugAarMetadata
+build	Build with Gradle	2026-06-04T09:37:13.2849350Z > Task :server-shared:writeDebugAarMetadata
+build	Build with Gradle	2026-06-04T09:37:13.2879860Z > Task :shared:writeDebugAarMetadata
+build	Build with Gradle	2026-06-04T09:37:13.2913595Z > Task :starter:writeDebugAarMetadata
+build	Build with Gradle	2026-06-04T09:37:13.2939331Z > Task :provider:processDebugNavigationResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:13.2952157Z > Task :rish:processDebugNavigationResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:13.2954685Z > Task :server:processDebugNavigationResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:13.2955878Z > Task :server-shared:processDebugNavigationResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:13.2957011Z > Task :starter:processDebugNavigationResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:13.2957987Z > Task :aidl:extractDeepLinksDebug
+build	Build with Gradle	2026-06-04T09:37:13.3684848Z > Task :aidl:processDebugManifest
+build	Build with Gradle	2026-06-04T09:37:13.3707942Z > Task :api:extractDeepLinksDebug FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:13.3709067Z > Task :api:processDebugManifest
+build	Build with Gradle	2026-06-04T09:37:13.3709804Z > Task :common:extractDeepLinksDebug FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:13.3710574Z > Task :common:processDebugManifest
+build	Build with Gradle	2026-06-04T09:37:13.3711311Z > Task :provider:extractDeepLinksDebug FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:13.4683381Z > Task :provider:processDebugManifest
+build	Build with Gradle	2026-06-04T09:37:13.4710307Z > Task :rish:extractDeepLinksDebug FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:13.4728661Z > Task :rish:processDebugManifest
+build	Build with Gradle	2026-06-04T09:37:13.4769505Z > Task :server:extractDeepLinksDebug FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:13.4792378Z > Task :server:processDebugManifest
+build	Build with Gradle	2026-06-04T09:37:13.4825280Z > Task :server-shared:extractDeepLinksDebug FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:13.5709628Z > Task :server-shared:processDebugManifest
+build	Build with Gradle	2026-06-04T09:37:13.5719391Z > Task :shared:extractDeepLinksDebug FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:13.5751760Z > Task :shared:processDebugManifest
+build	Build with Gradle	2026-06-04T09:37:13.5779757Z > Task :starter:extractDeepLinksDebug FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:13.5816375Z > Task :starter:processDebugManifest
+build	Build with Gradle	2026-06-04T09:37:13.5827434Z > Task :provider:compileDebugLibraryResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:13.6709691Z > Task :provider:parseDebugLocalResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:14.0682954Z > Task :provider:generateDebugRFile
+build	Build with Gradle	2026-06-04T09:37:14.0739506Z > Task :rish:compileDebugLibraryResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:14.0809605Z > Task :rish:parseDebugLocalResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:14.0849146Z > Task :rish:generateDebugRFile
+build	Build with Gradle	2026-06-04T09:37:14.0859175Z > Task :server:compileDebugLibraryResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:14.0949305Z > Task :server:parseDebugLocalResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:14.0959292Z > Task :server-shared:parseDebugLocalResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:14.1689531Z > Task :server-shared:generateDebugRFile
+build	Build with Gradle	2026-06-04T09:37:14.1719097Z > Task :starter:parseDebugLocalResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:14.2689657Z > Task :starter:generateDebugRFile
+build	Build with Gradle	2026-06-04T09:37:14.2729055Z > Task :server:generateDebugRFile
+build	Build with Gradle	2026-06-04T09:37:14.2730075Z > Task :server-shared:compileDebugLibraryResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:14.2754264Z > Task :shared:compileDebugLibraryResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:14.2779203Z > Task :starter:compileDebugLibraryResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:14.2805142Z > Task :provider:javaPreCompileDebug FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:15.2740405Z Note: /home/runner/work/mizuku/mizuku/api/provider/src/main/java/rikka/shizuku/ShizukuProvider.java uses or overrides a deprecated API.
+build	Build with Gradle	2026-06-04T09:37:15.2741609Z 
+build	Build with Gradle	2026-06-04T09:37:15.2769338Z Note: Recompile with -Xlint:deprecation for details.
+build	Build with Gradle	2026-06-04T09:37:15.2770056Z > Task :provider:compileDebugJavaWithJavac
+build	Build with Gradle	2026-06-04T09:37:15.2798797Z 
+build	Build with Gradle	2026-06-04T09:37:15.2822974Z > Task :provider:bundleLibCompileToJarDebug
+build	Build with Gradle	2026-06-04T09:37:15.2848478Z > Task :rish:javaPreCompileDebug FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:15.6716914Z > Task :aidl:bundleLibRuntimeToJarDebug
+build	Build with Gradle	2026-06-04T09:37:15.6779561Z > Task :api:bundleLibRuntimeToJarDebug
+build	Build with Gradle	2026-06-04T09:37:15.6799751Z > Task :common:javaPreCompileDebug FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:15.6849559Z > Task :server:checkKotlinGradlePluginConfigurationErrors SKIPPED
+build	Build with Gradle	2026-06-04T09:37:15.6909537Z > Task :server-shared:javaPreCompileDebug FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:15.6929115Z > Task :rish:compileDebugJavaWithJavac
+build	Build with Gradle	2026-06-04T09:37:15.6969290Z > Task :shared:bundleLibRuntimeToJarDebug
+build	Build with Gradle	2026-06-04T09:37:15.7701550Z > Task :rish:bundleLibCompileToJarDebug
+build	Build with Gradle	2026-06-04T09:37:15.8699482Z > Task :rish:bundleLibRuntimeToJarDebug
+build	Build with Gradle	2026-06-04T09:37:15.8714473Z > Task :starter:javaPreCompileDebug FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:15.8729132Z > Task :common:compileDebugJavaWithJavac
+build	Build with Gradle	2026-06-04T09:37:15.9724064Z > Task :server:javaPreCompileDebug FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:15.9780564Z > Task :common:bundleLibCompileToJarDebug
+build	Build with Gradle	2026-06-04T09:37:15.9809457Z > Task :common:bundleLibRuntimeToJarDebug
+build	Build with Gradle	2026-06-04T09:37:15.9849028Z > Task :aidl:mergeDebugShaders
+build	Build with Gradle	2026-06-04T09:37:15.9969224Z > Task :api:mergeDebugShaders
+build	Build with Gradle	2026-06-04T09:37:15.9969870Z > Task :api:compileDebugShaders NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:16.0001067Z > Task :api:generateDebugAssets UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:37:16.0028913Z > Task :aidl:compileDebugShaders NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:16.0029657Z > Task :aidl:generateDebugAssets UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:37:16.0030212Z > Task :api:mergeDebugAssets
+build	Build with Gradle	2026-06-04T09:37:16.0030662Z > Task :aidl:mergeDebugAssets
+build	Build with Gradle	2026-06-04T09:37:16.0031186Z > Task :provider:mergeDebugShaders
+build	Build with Gradle	2026-06-04T09:37:16.0032140Z > Task :common:mergeDebugShaders
+build	Build with Gradle	2026-06-04T09:37:16.0032703Z > Task :provider:compileDebugShaders NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:16.0033408Z > Task :provider:generateDebugAssets UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:37:16.0059250Z > Task :common:compileDebugShaders NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:16.0089244Z > Task :common:generateDebugAssets UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:37:16.0092296Z > Task :common:mergeDebugAssets
+build	Build with Gradle	2026-06-04T09:37:16.0119184Z > Task :provider:mergeDebugAssets
+build	Build with Gradle	2026-06-04T09:37:16.0749643Z > Task :rish:mergeDebugShaders
+build	Build with Gradle	2026-06-04T09:37:16.0780369Z > Task :server:mergeDebugShaders
+build	Build with Gradle	2026-06-04T09:37:16.0809080Z > Task :server:compileDebugShaders NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:16.0809966Z > Task :server:generateDebugAssets UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:37:16.0839082Z > Task :rish:compileDebugShaders NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:16.0869077Z > Task :rish:generateDebugAssets UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:37:16.0869895Z > Task :server:mergeDebugAssets
+build	Build with Gradle	2026-06-04T09:37:16.0899163Z > Task :rish:mergeDebugAssets
+build	Build with Gradle	2026-06-04T09:37:16.0929292Z > Task :shared:mergeDebugShaders
+build	Build with Gradle	2026-06-04T09:37:16.0940109Z > Task :starter:mergeDebugShaders
+build	Build with Gradle	2026-06-04T09:37:16.0959086Z > Task :shared:compileDebugShaders NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:16.0989088Z > Task :shared:generateDebugAssets UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:37:16.1019015Z > Task :starter:compileDebugShaders NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:16.1019697Z > Task :starter:generateDebugAssets UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:37:16.1049149Z > Task :starter:mergeDebugAssets
+build	Build with Gradle	2026-06-04T09:37:16.1079917Z > Task :shared:mergeDebugAssets
+build	Build with Gradle	2026-06-04T09:37:16.1099147Z > Task :provider:bundleLibRuntimeToJarDebug
+build	Build with Gradle	2026-06-04T09:37:16.8689619Z Note: Some input files use or override a deprecated API.
+build	Build with Gradle	2026-06-04T09:37:16.8690419Z > Task :aidl:processDebugJavaRes NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:16.8728664Z 
+build	Build with Gradle	2026-06-04T09:37:16.8759421Z Note: Recompile with -Xlint:deprecation for details.
+build	Build with Gradle	2026-06-04T09:37:16.8788577Z > Task :server-shared:compileDebugJavaWithJavac
+build	Build with Gradle	2026-06-04T09:37:16.9687959Z 
+build	Build with Gradle	2026-06-04T09:37:16.9740685Z > Task :api:processDebugJavaRes NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:16.9777982Z > Task :common:processDebugJavaRes NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:16.9852188Z > Task :provider:processDebugJavaRes NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:16.9891506Z > Task :rish:processDebugJavaRes NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:16.9959185Z > Task :shared:processDebugJavaRes NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:16.9989138Z > Task :server-shared:mergeDebugShaders
+build	Build with Gradle	2026-06-04T09:37:17.0011219Z > Task :server-shared:compileDebugShaders NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:17.0069052Z > Task :server-shared:generateDebugAssets UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:37:17.0069807Z > Task :starter:processDebugJavaRes NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:17.0070417Z > Task :server-shared:mergeDebugAssets
+build	Build with Gradle	2026-06-04T09:37:17.0070969Z > Task :server-shared:processDebugJavaRes NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:17.0071618Z > Task :aidl:mergeDebugJniLibFolders
+build	Build with Gradle	2026-06-04T09:37:17.0072548Z > Task :aidl:mergeDebugNativeLibs NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:17.0073122Z > Task :api:mergeDebugJniLibFolders
+build	Build with Gradle	2026-06-04T09:37:17.0073673Z > Task :api:mergeDebugNativeLibs NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:17.0683401Z > Task :aidl:copyDebugJniLibsProjectOnly
+build	Build with Gradle	2026-06-04T09:37:17.0749758Z > Task :api:copyDebugJniLibsProjectOnly
+build	Build with Gradle	2026-06-04T09:37:17.0782353Z > Task :common:mergeDebugJniLibFolders
+build	Build with Gradle	2026-06-04T09:37:17.0811251Z > Task :common:mergeDebugNativeLibs NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:17.0817226Z > Task :provider:mergeDebugJniLibFolders
+build	Build with Gradle	2026-06-04T09:37:17.0817956Z > Task :common:copyDebugJniLibsProjectOnly
+build	Build with Gradle	2026-06-04T09:37:17.0819038Z > Task :provider:mergeDebugNativeLibs NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:17.0819816Z > Task :provider:copyDebugJniLibsProjectOnly
+build	Build with Gradle	2026-06-04T09:37:17.0820515Z > Task :server:mergeDebugJniLibFolders
+build	Build with Gradle	2026-06-04T09:37:17.0821293Z > Task :server-shared:transformDebugClassesWithAsm
+build	Build with Gradle	2026-06-04T09:37:17.0822125Z > Task :server:mergeDebugNativeLibs NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:17.0823010Z > Task :server:copyDebugJniLibsProjectOnly
+build	Build with Gradle	2026-06-04T09:37:17.0823881Z > Task :server-shared:bundleLibCompileToJarDebug
+build	Build with Gradle	2026-06-04T09:37:17.0825047Z > Task :shared:mergeDebugJniLibFolders
+build	Build with Gradle	2026-06-04T09:37:17.0825900Z > Task :server-shared:bundleLibRuntimeToJarDebug
+build	Build with Gradle	2026-06-04T09:37:17.4700157Z Note: /home/runner/work/mizuku/mizuku/starter/src/main/java/moe/shizuku/starter/ServiceStarter.java uses or overrides a deprecated API.
+build	Build with Gradle	2026-06-04T09:37:17.4701282Z 
+build	Build with Gradle	2026-06-04T09:37:17.4729601Z Note: Recompile with -Xlint:deprecation for details.
+build	Build with Gradle	2026-06-04T09:37:17.4730349Z > Task :starter:compileDebugJavaWithJavac
+build	Build with Gradle	2026-06-04T09:37:17.4748913Z 
+build	Build with Gradle	2026-06-04T09:37:17.4780362Z > Task :server-shared:mergeDebugJniLibFolders
+build	Build with Gradle	2026-06-04T09:37:17.4784633Z > Task :server-shared:mergeDebugNativeLibs NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:17.4809137Z > Task :starter:transformDebugClassesWithAsm
+build	Build with Gradle	2026-06-04T09:37:17.4831024Z > Task :server-shared:copyDebugJniLibsProjectOnly
+build	Build with Gradle	2026-06-04T09:37:17.4859081Z > Task :shared:mergeDebugNativeLibs NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:17.4881735Z > Task :starter:bundleLibCompileToJarDebug
+build	Build with Gradle	2026-06-04T09:37:17.4909060Z > Task :shared:copyDebugJniLibsProjectOnly
+build	Build with Gradle	2026-06-04T09:37:17.4919002Z > Task :starter:bundleLibRuntimeToJarDebug
+build	Build with Gradle	2026-06-04T09:37:17.6683413Z > Task :starter:mergeDebugJniLibFolders
+build	Build with Gradle	2026-06-04T09:37:17.6684379Z > Task :starter:mergeDebugNativeLibs NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:17.6685228Z > Task :starter:copyDebugJniLibsProjectOnly
+build	Build with Gradle	2026-06-04T09:37:18.7699510Z > Task :shell:mergeDebugJniLibFolders
+build	Build with Gradle	2026-06-04T09:37:18.9682470Z > Task :shell:mergeDebugNativeLibs NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:18.9709016Z > Task :shell:stripDebugDebugSymbols NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:19.8689066Z 
+build	Build with Gradle	2026-06-04T09:37:19.8709496Z > Task :rish:configureCMakeDebug[arm64-v8a]
+build	Build with Gradle	2026-06-04T09:37:19.8739090Z C/C++: Building Debug...
+build	Build with Gradle	2026-06-04T09:37:21.7708932Z 
+build	Build with Gradle	2026-06-04T09:37:21.7789508Z > Task :shell:validateSigningDebug
+build	Build with Gradle	2026-06-04T09:37:21.7819029Z > Task :shell:writeDebugAppMetadata
+build	Build with Gradle	2026-06-04T09:37:21.8709351Z > Task :shell:writeDebugSigningConfigVersions
+build	Build with Gradle	2026-06-04T09:37:22.6701032Z > Task :rish:buildCMakeDebug[arm64-v8a]
+build	Build with Gradle	2026-06-04T09:37:23.2684434Z 
+build	Build with Gradle	2026-06-04T09:37:23.2699467Z > Task :rish:configureCMakeDebug[armeabi-v7a]
+build	Build with Gradle	2026-06-04T09:37:23.2718978Z C/C++: Building Debug...
+build	Build with Gradle	2026-06-04T09:37:23.8689171Z 
+build	Build with Gradle	2026-06-04T09:37:23.8745697Z > Task :shell:mergeExtDexDebug
+build	Build with Gradle	2026-06-04T09:37:25.4692177Z > Task :rish:buildCMakeDebug[armeabi-v7a]
+build	Build with Gradle	2026-06-04T09:37:26.3688907Z 
+build	Build with Gradle	2026-06-04T09:37:26.3749723Z > Task :rish:configureCMakeDebug[x86]
+build	Build with Gradle	2026-06-04T09:37:26.3778919Z C/C++: Building Debug...
+build	Build with Gradle	2026-06-04T09:37:28.0689237Z 
+build	Build with Gradle	2026-06-04T09:37:28.0739468Z > Task :shell:mergeDexDebug
+build	Build with Gradle	2026-06-04T09:37:28.2689459Z > Task :rish:buildCMakeDebug[x86]
+build	Build with Gradle	2026-06-04T09:37:28.5769654Z > Task :shell:packageDebug
+build	Build with Gradle	2026-06-04T09:37:28.5792387Z > Task :shell:createDebugApkListingFileRedirect
+build	Build with Gradle	2026-06-04T09:37:28.8686693Z 
+build	Build with Gradle	2026-06-04T09:37:28.8799628Z > Task :rish:configureCMakeDebug[x86_64]
+build	Build with Gradle	2026-06-04T09:37:28.8829269Z C/C++: Building Debug...
+build	Build with Gradle	2026-06-04T09:37:28.8888894Z 
+build	Build with Gradle	2026-06-04T09:37:28.8919575Z > Task :shell:assembleDebug
+build	Build with Gradle	2026-06-04T09:37:28.9009286Z > Task :manager:preDebugBuild
+build	Build with Gradle	2026-06-04T09:37:28.9069330Z > Task :manager:mergeDebugNativeDebugMetadata NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:30.7689707Z > Task :rish:buildCMakeDebug[x86_64]
+build	Build with Gradle	2026-06-04T09:37:32.9707300Z > Task :rish:mergeDebugJniLibFolders
+build	Build with Gradle	2026-06-04T09:37:33.0682933Z > Task :rish:mergeDebugNativeLibs
+build	Build with Gradle	2026-06-04T09:37:33.1682438Z > Task :rish:copyDebugJniLibsProjectOnly
+build	Build with Gradle	2026-06-04T09:37:34.8699597Z > Task :manager:generateDebugResValues FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:34.8750727Z > Task :manager:dataBindingMergeDependencyArtifactsDebug
+build	Build with Gradle	2026-06-04T09:37:34.9719722Z > Task :manager:generateDebugResources
+build	Build with Gradle	2026-06-04T09:37:38.0692348Z > Task :manager:generateDebugBuildConfig
+build	Build with Gradle	2026-06-04T09:37:38.7709053Z 
+build	Build with Gradle	2026-06-04T09:37:38.7751778Z > Task :server:compileDebugKotlin
+build	Build with Gradle	2026-06-04T09:37:38.7753785Z w: file:///home/runner/work/mizuku/mizuku/server/src/main/java/rikka/shizuku/server/ApkChangedObservers.kt:48:54 'constructor(p0: String!, p1: Int): FileObserver' is deprecated. Deprecated in Java.
+build	Build with Gradle	2026-06-04T09:37:39.4701574Z 
+build	Build with Gradle	2026-06-04T09:37:39.4721899Z > Task :manager:checkDebugAarMetadata
+build	Build with Gradle	2026-06-04T09:37:39.7699646Z > Task :manager:processDebugNavigationResources
+build	Build with Gradle	2026-06-04T09:37:39.8724128Z > Task :manager:compileDebugNavigationResources FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:39.8743360Z > Task :manager:mapDebugSourceSetPaths
+build	Build with Gradle	2026-06-04T09:37:39.8769006Z > Task :manager:createDebugCompatibleScreenManifests
+build	Build with Gradle	2026-06-04T09:37:39.8800782Z > Task :manager:extractDeepLinksDebug
+build	Build with Gradle	2026-06-04T09:37:40.2696784Z Note: /home/runner/work/mizuku/mizuku/server/src/main/java/rikka/shizuku/server/ShizukuService.java uses or overrides a deprecated API.
+build	Build with Gradle	2026-06-04T09:37:40.2697871Z 
+build	Build with Gradle	2026-06-04T09:37:40.2729244Z Note: Recompile with -Xlint:deprecation for details.
+build	Build with Gradle	2026-06-04T09:37:40.2759326Z > Task :server:compileDebugJavaWithJavac
+build	Build with Gradle	2026-06-04T09:37:40.3691586Z 
+build	Build with Gradle	2026-06-04T09:37:40.3747662Z > Task :server:processDebugJavaRes
+build	Build with Gradle	2026-06-04T09:37:40.4689032Z > Task :server:transformDebugClassesWithAsm
+build	Build with Gradle	2026-06-04T09:37:40.6683462Z > Task :server:bundleLibRuntimeToJarDebug
+build	Build with Gradle	2026-06-04T09:37:40.6736001Z > Task :server:bundleLibCompileToJarDebug
+build	Build with Gradle	2026-06-04T09:37:40.9711694Z > Task :manager:processDebugMainManifest
+build	Build with Gradle	2026-06-04T09:37:40.9769648Z > Task :manager:mergeDebugResources
+build	Build with Gradle	2026-06-04T09:37:40.9806033Z > Task :manager:processDebugManifest
+build	Build with Gradle	2026-06-04T09:37:41.2683222Z > Task :manager:dataBindingGenBaseClassesDebug
+build	Build with Gradle	2026-06-04T09:37:41.2690822Z > Task :manager:javaPreCompileDebug FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:41.3687722Z > Task :manager:mergeDebugShaders
+build	Build with Gradle	2026-06-04T09:37:41.3689795Z > Task :manager:compileDebugShaders NO-SOURCE
+build	Build with Gradle	2026-06-04T09:37:41.3726144Z > Task :manager:generateDebugAssets UP-TO-DATE
+build	Build with Gradle	2026-06-04T09:37:41.5709609Z > Task :manager:mergeDebugAssets
+build	Build with Gradle	2026-06-04T09:37:41.5710828Z > Task :manager:desugarDebugFileDependencies FROM-CACHE
+build	Build with Gradle	2026-06-04T09:37:41.8689624Z > Task :manager:compressDebugAssets
+build	Build with Gradle	2026-06-04T09:37:43.6699587Z > Task :manager:checkDebugDuplicateClasses
+build	Build with Gradle	2026-06-04T09:37:44.5683108Z 
+build	Build with Gradle	2026-06-04T09:37:44.5684206Z > Task :manager:configureCMakeDebug[arm64-v8a]
+build	Build with Gradle	2026-06-04T09:37:44.5685210Z C/C++: Builing Debug...
+build	Build with Gradle	2026-06-04T09:38:11.2682225Z 
+build	Build with Gradle	2026-06-04T09:38:11.2719586Z > Task :manager:processDebugManifestForPackage
+build	Build with Gradle	2026-06-04T09:38:14.5706814Z > Task :manager:mergeExtDexDebug
+build	Build with Gradle	2026-06-04T09:39:36.7682734Z > Task :manager:mergeLibDexDebug
+build	Build with Gradle	2026-06-04T09:39:37.7682573Z > Task :manager:buildCMakeDebug[arm64-v8a]
+build	Build with Gradle	2026-06-04T09:39:39.2749118Z 
+build	Build with Gradle	2026-06-04T09:39:39.2809572Z > Task :manager:configureCMakeDebug[armeabi-v7a]
+build	Build with Gradle	2026-06-04T09:39:39.2810317Z C/C++: Builing Debug...
+build	Build with Gradle	2026-06-04T09:39:40.0685182Z 
+build	Build with Gradle	2026-06-04T09:39:40.0687054Z > Task :manager:buildCMakeDebug[armeabi-v7a]
+build	Build with Gradle	2026-06-04T09:39:40.9682986Z 
+build	Build with Gradle	2026-06-04T09:39:40.9709730Z > Task :manager:configureCMakeDebug[x86]
+build	Build with Gradle	2026-06-04T09:39:40.9799491Z C/C++: Builing Debug...
+build	Build with Gradle	2026-06-04T09:39:41.7689807Z 
+build	Build with Gradle	2026-06-04T09:39:41.7709464Z > Task :manager:buildCMakeDebug[x86]
+build	Build with Gradle	2026-06-04T09:39:42.5688896Z 
+build	Build with Gradle	2026-06-04T09:39:42.5749443Z > Task :manager:configureCMakeDebug[x86_64]
+build	Build with Gradle	2026-06-04T09:39:42.5869280Z C/C++: Builing Debug...
+build	Build with Gradle	2026-06-04T09:39:43.4688993Z 
+build	Build with Gradle	2026-06-04T09:39:43.4699342Z > Task :manager:buildCMakeDebug[x86_64]
+build	Build with Gradle	2026-06-04T09:39:43.4729238Z > Task :manager:mergeDebugJniLibFolders
+build	Build with Gradle	2026-06-04T09:39:43.8719528Z > Task :manager:validateSigningDebug
+build	Build with Gradle	2026-06-04T09:39:43.8779419Z > Task :manager:writeDebugAppMetadata
+build	Build with Gradle	2026-06-04T09:39:43.9717755Z > Task :manager:mergeDebugNativeLibs
+build	Build with Gradle	2026-06-04T09:39:45.3709628Z > Task :manager:writeDebugSigningConfigVersions
+build	Build with Gradle	2026-06-04T09:39:45.7685228Z > Task :manager:stripDebugDebugSymbols
+build	Build with Gradle	2026-06-04T09:39:46.4699853Z warn: removing resource moe.shizuku.privileged.api:string/action_start without required default value.
+build	Build with Gradle	2026-06-04T09:39:46.4739785Z warn: removing resource moe.shizuku.privileged.api:string/home_automation_dialog_label_action without required default value.
+build	Build with Gradle	2026-06-04T09:39:46.4771924Z warn: removing resource moe.shizuku.privileged.api:string/home_automation_dialog_label_class without required default value.
+build	Build with Gradle	2026-06-04T09:39:46.4829737Z warn: removing resource moe.shizuku.privileged.api:string/home_automation_dialog_label_package without required default value.
+build	Build with Gradle	2026-06-04T09:39:46.4889685Z warn: removing resource moe.shizuku.privileged.api:string/home_automation_dialog_label_target without required default value.
+build	Build with Gradle	2026-06-04T09:39:46.4920322Z warn: removing resource moe.shizuku.privileged.api:string/settings_tcp_learn_more without required default value.
+build	Build with Gradle	2026-06-04T09:39:46.4948576Z 
+build	Build with Gradle	2026-06-04T09:39:47.4683120Z > Task :manager:processDebugResources
+build	Build with Gradle	2026-06-04T09:40:04.5682127Z 
+build	Build with Gradle	2026-06-04T09:40:04.5688249Z e: file:///home/runner/work/mizuku/mizuku/manager/src/main/java/moe/shizuku/manager/compose/screens/MiuixAppManagementScreen.kt:107:64 @Composable invocations can only happen from the context of a @Composable function
+build	Build with Gradle	2026-06-04T09:40:04.5708927Z > Task :manager:compileDebugKotlin FAILED
+build	Build with Gradle	2026-06-04T09:40:04.5729688Z gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/buildWithGradle-1780565759390.json
+build	Build with Gradle	2026-06-04T09:40:04.6689258Z 
+build	Build with Gradle	2026-06-04T09:40:04.6689376Z 
+build	Build with Gradle	2026-06-04T09:40:04.6694861Z FAILURE: Build failed with an exception.
+build	Build with Gradle	2026-06-04T09:40:04.6696133Z [Incubating] Problems report is available at: file:///home/runner/work/mizuku/mizuku/build/reports/problems/problems-report.html
+build	Build with Gradle	2026-06-04T09:40:04.6697629Z 
+build	Build with Gradle	2026-06-04T09:40:04.6697928Z 253 actionable tasks: 190 executed, 63 from cache
+build	Build with Gradle	2026-06-04T09:40:04.6699021Z * What went wrong:
+build	Build with Gradle	2026-06-04T09:40:04.6699757Z Execution failed for task ':manager:compileDebugKotlin'.
+build	Build with Gradle	2026-06-04T09:40:04.6701100Z > A failure occurred while executing org.jetbrains.kotlin.compilerRunner.btapi.BuildToolsApiCompilationWork
+build	Build with Gradle	2026-06-04T09:40:04.6702384Z    > Compilation error. See log for more details
+build	Build with Gradle	2026-06-04T09:40:04.6702907Z 
+build	Build with Gradle	2026-06-04T09:40:04.6703155Z * Try:
+build	Build with Gradle	2026-06-04T09:40:04.6703734Z > Run with --stacktrace option to get the stack trace.
+build	Build with Gradle	2026-06-04T09:40:04.6704575Z > Run with --info or --debug option to get more log output.
+build	Build with Gradle	2026-06-04T09:40:04.6705448Z > Get more help at https://help.gradle.org.
+build	Build with Gradle	2026-06-04T09:40:04.6705973Z 
+build	Build with Gradle	2026-06-04T09:40:04.6706242Z BUILD FAILED in 4m 11s
+build	Build with Gradle	2026-06-04T09:40:04.8682695Z 
+build	Build with Gradle	2026-06-04T09:40:04.8683310Z Publishing Build Scan to Develocity...
+build	Build with Gradle	2026-06-04T09:40:04.9683387Z gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-scans/buildWithGradle-1780565759390.json
+build	Build with Gradle	2026-06-04T09:40:05.4708929Z https://gradle.com/s/vr4cswifall2o
+build	Build with Gradle	2026-06-04T09:40:05.4709422Z 
+build	Build with Gradle	2026-06-04T09:40:05.8933530Z ##[error]Process completed with exit code 1.

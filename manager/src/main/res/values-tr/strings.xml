@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
@@ -6,17 +6,23 @@
     <string name="home_status_service_not_running">%1$s çalışmıyor</string>
     <string name="home_status_service_version">Sürüm %2$s, %1$s</string>
     <string name="home_status_service_version_update"><![CDATA[Sürüm %2$s, %1$s<br>Sürüm %3$s, güncelleştirmek için yeniden başlatın]]></string>
+    <string name="home_status_service_version_update_plain">Sürüm %2$s, %1$s
+Sürüm %3$s, güncelleştirmek için yeniden başlatın</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Bilgisayara bağlanarak başlatın]]></string>
     <string name="home_adb_description"><![CDATA[Rootsuz cihazlar için Shizuku’yu başlatmak için adb kullanmanız gerekir (bilgisayar bağlantısı gerektirir). Bu işlemin cihaz her yeniden başlatıldığında tekrarlanması gerekir. Lütfen <b><a href="%1$s">yardımı okuyun</a></b>.]]></string>
+    <string name="home_adb_description_plain">Rootsuz cihazlar için Shizuku’yu başlatmak için adb kullanmanız gerekir (bilgisayar bağlantısı gerektirir). Bu işlemin cihaz her yeniden başlatıldığında tekrarlanması gerekir. Lütfen yardımı okuyun.</string>
     <string name="home_adb_button_view_help">Yardımı oku</string>
     <string name="home_adb_button_view_command">Komutu görüntüle</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Başka hususlar da var, lütfen önce yardımı okuduğunuzu onaylayın.]]></string>
+    <string name="home_adb_dialog_view_command_message_plain">%1$s  * Başka hususlar da var, lütfen önce yardımı okuduğunuzu onaylayın.</string>
     <string name="home_adb_dialog_view_command_copy_button">Kopyala</string>
     <string name="home_adb_dialog_view_command_button_send">Gönder</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Kablosuz hata ayıklama ile başlat]]></string>
     <string name="home_wireless_adb_description"><![CDATA[Android 11 ve üzeri sürümlerde, Kablosuz hata ayıklama ve Shizuku\'yu cihazınızdan bir bilgisayara bağlanmadan direkt aktif edebilirsiniz.<p>Lütfen öncelikle adım adım kılavuz\'u inceleyin.]]></string>
+    <string name="home_wireless_adb_description_plain">Android 11 ve üzeri sürümlerde, Kablosuz hata ayıklama ve Shizuku\'yu cihazınızdan bir bilgisayara bağlanmadan direkt aktif edebilirsiniz.
+Lütfen öncelikle adım adım kılavuz\'u inceleyin.</string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Android 11 ve önceki sürümlerde, Kablosuz hata ayıklama’yı aktif etmek için bir bilgisayara bağlanmak gereklidir.]]></string>
     <string name="home_wireless_adb_view_guide_button">Adım adım kılavuz</string>
     <!-- Adb -->
@@ -136,6 +142,7 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">ADB’nin izni sınırlıdır</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Cihaz üreticinizin adb iznini sınırlaması son derece olasıdır. <p>Bu belgede<b><a href="%1$s">sisteminiz için bir çözüm olabilir</a></b>.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message_plain">Cihaz üreticinizin adb iznini sınırlaması son derece olasıdır.  Bu belgedesisteminiz için bir çözüm olabilir.</string>
     <string name="app_management_item_summary_requires_root">* Shizuku’nun root ile çalıştırılması
         gerekli</string>
     <string name="app_management_toggle_all">Tümünü aç/kapat</string>
@@ -159,6 +166,8 @@
         dosyasında %2$s için bir takma ad oluşturabilirsiniz.</string>
     <string name="terminal_tutorial_3">Aşağıdaki komutla bir kabuk açın:</string>
     <string name="rish_description"><![CDATA[%1$sile herhangi bir terminal uygulamasında kabuk komutlarını çalıştırabilirsiniz.<p>Nasıl kullanılacağı hakkında daha fazla bilgi edinmek için dokunun.]]></string>
+    <string name="rish_description_plain">%1$sile herhangi bir terminal uygulamasında kabuk komutlarını çalıştırabilirsiniz.
+Nasıl kullanılacağı hakkında daha fazla bilgi edinmek için dokunun.</string>
     <!-- Settings -->
     <string name="settings_title">Ayarlar</string>
     <string name="settings_behavior">Davranış</string>
@@ -180,6 +189,9 @@
     <string name="settings_restart_dialog_message">Shizuku\'nun bu ayarı uygulayabilmesi için
         yeniden başlatması gerekiyor.</string>
     <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>Wi-Fi zorunlu. Shizuku çalışmaya devam edecek ve Wi-Fi bağlantısını bekleyecek, sonra arka planda yeniden başlatacak.</b>]]></string>
+    <string name="settings_restart_dialog_message_wifi_required_plain">
+
+Wi-Fi zorunlu. Shizuku çalışmaya devam edecek ve Wi-Fi bağlantısını bekleyecek, sonra arka planda yeniden başlatacak.</string>
     <string name="settings_tcp_port">TCP bağlantı noktası</string>
     <string name="settings_tcp_port_default">Varsayılan (5555)</string>
     <string name="settings_tcp_port_hint">Varsayılanı (5555) kullanmak için boş bırakın</string>
@@ -257,6 +269,7 @@
     <string name="permission_label">Shizuku’ya erişim</string>
     <string name="permission_description">Uygulamanın Shizuku’yu kullanmasına izin verin.</string>
     <string name="permission_warning_template"><![CDATA[<b>%1$s</b> uygulamasına %2$s için izin verilsin mi\?]]></string>
+    <string name="permission_warning_template_plain">%1$s uygulamasına %2$s için izin verilsin mi\?</string>
     <string name="grant_dialog_button_allow_always">Her zaman izin ver</string>
     <string name="grant_dialog_button_deny">"Reddet"</string>
     <!-- Starter -->
@@ -290,8 +303,10 @@
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s, yeni Shizuku’yu desteklemiyor</string>
     <string name="dialog_legacy_not_support_message"><![CDATA[Eski Shizuku, Mart 2019’dan beri kullanımdan kaldırılmıştır. Ayrıca, eski Shizuku yeni Android sistemlerinde çalışmaz. <p>Lütfen<b>%1$s</b> geliştiricisinden güncelleme yapmasını isteyin.]]></string>
+    <string name="dialog_legacy_not_support_message_plain">Eski Shizuku, Mart 2019’dan beri kullanımdan kaldırılmıştır. Ayrıca, eski Shizuku yeni Android sistemlerinde çalışmaz.  Lütfen%1$s geliştiricisinden güncelleme yapmasını isteyin.</string>
     <string name="dialog_requesting_legacy_title">%1$s, mevcut Shizuku gerektiriyor</string>
     <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> yeni Shizuku desteğine sahip ama eski Shizuku talep ediyor. Bu Shizuku çalışmadığı zaman meydana gelir, lütfen Shizuku uygulamasını kontrol edin.<p>Eski Shizuku uygulaması Mart 2019’da kullanımdan kaldırılmıştır.]]></string>
+    <string name="dialog_requesting_legacy_message_plain">%1$s yeni Shizuku desteğine sahip ama eski Shizuku talep ediyor. Bu Shizuku çalışmadığı zaman meydana gelir, lütfen Shizuku uygulamasını kontrol edin. Eski Shizuku uygulaması Mart 2019’da kullanımdan kaldırılmıştır.</string>
     <string name="dialog_requesting_legacy_button_open_shizuku">Shizuku’yu aç</string>
     <string name="wadb_notification_attempt_now">Şimdi dene</string>
 </resources>

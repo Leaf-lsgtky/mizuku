@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
@@ -6,17 +6,23 @@
     <string name="home_status_service_not_running">%1$s tidak berjalan</string>
     <string name="home_status_service_version">Versi %2$s, %1$s</string>
     <string name="home_status_service_version_update"><![CDATA[Versi %2$s, %1$s <br> Mulai ulang untuk upgrade ke versi %3$s]]></string>
+    <string name="home_status_service_version_update_plain">Versi %2$s, %1$s 
+ Mulai ulang untuk upgrade ke versi %3$s</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Mulai dengan menghubungkan ke komputer]]></string>
     <string name="home_adb_description"><![CDATA[Untuk perangkat tanpa akses root, Anda harus menggunakan adb untuk memulai Shizuku (perlu terhubung dengan komputer). Proses ini harus diulang setiap kali perangkat di-restart. Harap <b><a href="%1$s">baca dokumentasi</a></b> untuk info lebih lanjut.]]></string>
+    <string name="home_adb_description_plain">Untuk perangkat tanpa akses root, Anda harus menggunakan adb untuk memulai Shizuku (perlu terhubung dengan komputer). Proses ini harus diulang setiap kali perangkat di-restart. Harap baca dokumentasi untuk info lebih lanjut.</string>
     <string name="home_adb_button_view_help">Baca dokumentasi</string>
     <string name="home_adb_button_view_command">Lihat perintah</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Terdapat beberapa pertimbangan tambahan, harap pastikan bahwa Anda telah membaca dokumentasi.]]></string>
+    <string name="home_adb_dialog_view_command_message_plain">%1$s  * Terdapat beberapa pertimbangan tambahan, harap pastikan bahwa Anda telah membaca dokumentasi.</string>
     <string name="home_adb_dialog_view_command_copy_button">Salin</string>
     <string name="home_adb_dialog_view_command_button_send">Kirim</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Mulai melalui Debug Nirkabel]]></string>
     <string name="home_wireless_adb_description"><![CDATA[Pada Android 11 atau yang lebih baru, Anda dapat mengaktifkan debug Nirkabel dan memulai Shizuku langsung dari perangkat Anda, tanpa menyambungkan ke komputer.<p>Silakan lihat panduan langkah demi langkah terlebih dahulu.]]></string>
+    <string name="home_wireless_adb_description_plain">Pada Android 11 atau yang lebih baru, Anda dapat mengaktifkan debug Nirkabel dan memulai Shizuku langsung dari perangkat Anda, tanpa menyambungkan ke komputer.
+Silakan lihat panduan langkah demi langkah terlebih dahulu.</string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Sebelum Android 11, koneksi ke komputer diperlukan untuk mengaktifkan debug Nirkabel.]]></string>
     <string name="home_wireless_adb_view_guide_button">Panduan langkah demi langkah</string>
     <!-- Adb -->
@@ -135,6 +141,7 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Izin adb terbatas</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Kemungkinan besar merk perangkat Anda membatasi perizinan adb.<p>Solusi untuk perangkat Anda mungkin ada pada <b><a href="%1$s">dokumentasi ini</a></b>.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message_plain">Kemungkinan besar merk perangkat Anda membatasi perizinan adb. Solusi untuk perangkat Anda mungkin ada pada dokumentasi ini.</string>
     <string name="app_management_item_summary_requires_root">* Shizuku harus dijalankan dengan root</string>
     <string name="app_management_toggle_all">Beralih semua</string>
     <!-- Terminal -->
@@ -157,6 +164,8 @@
         untuk %2$s dalam file konfigurasi %3$s aplikasi terminal Anda.</string>
     <string name="terminal_tutorial_3">Buka shell dengan perintah berikut:</string>
     <string name="rish_description"><![CDATA[Dengan %1$s, Anda dapat menjalankan perintah shell di aplikasi terminal apa pun.<p>Ketuk untuk mempelajari lebih lanjut tentang cara menggunakannya.]]></string>
+    <string name="rish_description_plain">Dengan %1$s, Anda dapat menjalankan perintah shell di aplikasi terminal apa pun.
+Ketuk untuk mempelajari lebih lanjut tentang cara menggunakannya.</string>
     <!-- Settings -->
     <string name="settings_title">Pengaturan</string>
     <string name="settings_behavior">Perilaku</string>
@@ -178,6 +187,9 @@
     <string name="settings_restart_dialog_message">Shizuku perlu memulai ulang untuk menerapkan
         pengaturan ini.</string>
     <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>Wi-Fi diperlukan. Shizuku akan terus berjalan dan menunggu koneksi Wi-Fi sebelum memulai ulang di latar belakang.</b>]]></string>
+    <string name="settings_restart_dialog_message_wifi_required_plain">
+
+Wi-Fi diperlukan. Shizuku akan terus berjalan dan menunggu koneksi Wi-Fi sebelum memulai ulang di latar belakang.</string>
     <string name="settings_tcp_port">Pelabuhan TCP</string>
     <string name="settings_tcp_port_default">Standar (5555)</string>
     <string name="settings_tcp_port_hint">Biarkan kosong untuk menggunakan default (5555)</string>
@@ -257,6 +269,7 @@
     <string name="permission_label">mengakses Shizuku</string>
     <string name="permission_description">Izinkan aplikasi menggunakan Shizuku.</string>
     <string name="permission_warning_template"><![CDATA[Izinkan <b>%1$s</b> untuk %2$s\?]]></string>
+    <string name="permission_warning_template_plain">Izinkan %1$s untuk %2$s\?</string>
     <string name="grant_dialog_button_allow_always">Selalu izinkan</string>
     <string name="grant_dialog_button_deny">"Tolak"</string>
     <!-- Starter -->
@@ -291,8 +304,10 @@
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s tidak mendukung Shizuku modern</string>
     <string name="dialog_legacy_not_support_message"><![CDATA[Shizuku Kuno sudah dihentikan sejak Maret 2019. Selain itu, Shizuku kuno tidak bisa bekerja pada sistem Android yang lebih baru.<p>Coba minta kepada pengembang dari <b>%1$s</b> untuk memperbarui aplikasinya.]]></string>
+    <string name="dialog_legacy_not_support_message_plain">Shizuku Kuno sudah dihentikan sejak Maret 2019. Selain itu, Shizuku kuno tidak bisa bekerja pada sistem Android yang lebih baru. Coba minta kepada pengembang dari %1$s untuk memperbarui aplikasinya.</string>
     <string name="dialog_requesting_legacy_title">%1$s meminta akses Shizuku kuno</string>
     <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> memiliki dukungan Shizuku modern, namun meminta akses Shizuku kuno. Hal ini bisa terjadi karena Shizuku tidak aktif, harap periksa di aplikasi Shizuku. <p>Shizuku Kuno sudah dihentikan sejak Maret 2019.]]></string>
+    <string name="dialog_requesting_legacy_message_plain">%1$s memiliki dukungan Shizuku modern, namun meminta akses Shizuku kuno. Hal ini bisa terjadi karena Shizuku tidak aktif, harap periksa di aplikasi Shizuku.  Shizuku Kuno sudah dihentikan sejak Maret 2019.</string>
     <string name="dialog_requesting_legacy_button_open_shizuku">Buka Shizuku</string>
     <string name="wadb_notification_attempt_now">Coba sekarang</string>
 </resources>

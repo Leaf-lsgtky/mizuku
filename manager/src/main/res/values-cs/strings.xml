@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
@@ -6,17 +6,22 @@
     <string name="home_status_service_not_running">%1$s neběží</string>
     <string name="home_status_service_version">Verze %2$s, %1$s</string>
     <string name="home_status_service_version_update"><![CDATA[Verze %2$s, %1$s<br>Znovu spusťte pro aktualizaci na verzi %3$s]]></string>
+    <string name="home_status_service_version_update_plain">Verze %2$s, %1$s
+Znovu spusťte pro aktualizaci na verzi %3$s</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Spustit připojením k počítači]]></string>
     <string name="home_adb_description"><![CDATA[U zařízení bez root musíte ke spuštění Shizuku použít adb (vyžaduje připojení k počítači). Tento proces je třeba opakovat při každém restartu zařízení. Přečtěte si prosím <b> <a href="%1$s"> nápovědu </a> </b>.]]></string>
+    <string name="home_adb_description_plain">U zařízení bez root musíte ke spuštění Shizuku použít adb (vyžaduje připojení k počítači). Tento proces je třeba opakovat při každém restartu zařízení. Přečtěte si prosím   nápovědu  .</string>
     <string name="home_adb_button_view_help">Přečíst nápovědu</string>
     <string name="home_adb_button_view_command">Zobrazit příkaz</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Existuje několik dalších úvah, nejprve si prosím přečtěte nápovědu.]]></string>
+    <string name="home_adb_dialog_view_command_message_plain">%1$s  * Existuje několik dalších úvah, nejprve si prosím přečtěte nápovědu.</string>
     <string name="home_adb_dialog_view_command_copy_button">Kopírovat</string>
     <string name="home_adb_dialog_view_command_button_send">Odeslat</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Spustit pomocí WiFi debuging]]></string>
     <string name="home_wireless_adb_description"><![CDATA[Na verzi Android 11 nebo vyšší můžete povolit Bezdrátové ladění a spustit Shizuku přímo z vašeho zařízení, bez připojení k počítači. Přečtěte si prosím prvně návod krok-za-krokem před spuštěním.]]></string>
+    <string name="home_wireless_adb_description_plain">Na verzi Android 11 nebo vyšší můžete povolit Bezdrátové ladění a spustit Shizuku přímo z vašeho zařízení, bez připojení k počítači. Přečtěte si prosím prvně návod krok-za-krokem před spuštěním.</string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Před Androidem 11, připojení k počítači je vyžadováno k povolení Bezdrátového Ladění.]]></string>
     <string name="home_wireless_adb_view_guide_button">Návod krok-za-krokem</string>
     <!-- Adb -->
@@ -95,6 +100,7 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Oprávnění adb je omezené</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Je vysoce možné, že výrobce vašeho zařízení omezuje oprávnění adb. <p> V <b> <a href="%1$s"> tomto dokumentu </a> </b> může být pro váš systém řešení.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message_plain">Je vysoce možné, že výrobce vašeho zařízení omezuje oprávnění adb.   V   tomto dokumentu   může být pro váš systém řešení.</string>
     <string name="app_management_item_summary_requires_root">* vyžaduje spustit Shizuku s rootem</string>
     <string name="app_management_toggle_all">Přepínat vše</string>
     <!-- Terminal -->
@@ -109,6 +115,8 @@
     <string name="terminal_tutorial_2_description">Tip: Pokud se domovský adresář (~) vaší terminálové aplikace nachází v adresáři soukromých souborů, umístění souborů tam vám umožní spustit %1$s bez zápisu cesty.\n\nV opačném případě můžete vytvořit alias pro %2$s v konfiguračním souboru %3$s vaší terminálové aplikace.</string>
     <string name="terminal_tutorial_3">Otevřete shell pomocí následujícího příkazu:</string>
     <string name="rish_description"><![CDATA[Pomocí %1$smůžete spouštět příkazy shellu v jakékoli terminálové aplikaci.<p>Klepnutím se dozvíte více o jeho použití.]]></string>
+    <string name="rish_description_plain">Pomocí %1$smůžete spouštět příkazy shellu v jakékoli terminálové aplikaci.
+Klepnutím se dozvíte více o jeho použití.</string>
     <!-- Settings -->
     <string name="settings_title">Nastavení</string>
     <string name="settings_behavior">Chování</string>
@@ -125,6 +133,9 @@
     <string name="settings_restart_dialog_title">Vyžadován restart</string>
     <string name="settings_restart_dialog_message">Aby se toto nastavení projevilo, je nutné restartovat Shizuku.</string>
     <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>Je vyžadováno připojení k Wi-Fi. Shizuku bude pokračovat v běhu a počká na připojení k Wi-Fi, než se restartuje na pozadí.</b>]]></string>
+    <string name="settings_restart_dialog_message_wifi_required_plain">
+
+Je vyžadováno připojení k Wi-Fi. Shizuku bude pokračovat v běhu a počká na připojení k Wi-Fi, než se restartuje na pozadí.</string>
     <string name="settings_tcp_port">TCP port</string>
     <string name="settings_tcp_port_default">Výchozí (5555)</string>
     <string name="settings_tcp_port_hint">Nechat prázdné pole pro výchozí použití (5555)</string>
@@ -195,7 +206,8 @@
     <!-- Permission related, appears in system permission UI -->
     <string name="permission_label">přístup k Shizuku</string>
     <string name="permission_description">povolí aplikaci používat systémová rozhraní API s vyššími oprávněními (Shizuku).</string>
-    <string name="permission_warning_template"><![CDATA[Povolit aplikaci </b>%1$s</b> %2$s\?]]></string>
+    <string name="permission_warning_template"><![CDATA[Povolit aplikaci <b>%1$s</b> %2$s\?]]></string>
+    <string name="permission_warning_template_plain">Povolit aplikaci %1$s %2$s\?</string>
     <string name="grant_dialog_button_allow_always">Povolit vždy</string>
     <string name="grant_dialog_button_deny">"Zakázat"</string>
     <!-- Starter -->
@@ -223,8 +235,10 @@
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s nepodporuje moderní Shizuku</string>
     <string name="dialog_legacy_not_support_message"><![CDATA[Podpora starší verze Shizuku je od března 2019. Starší verze Shizuku také nefunguje na novějších systémech Android. <p> O aktualizaci požádejte vývojáře <b>%1$s </b>.]]></string>
+    <string name="dialog_legacy_not_support_message_plain">Podpora starší verze Shizuku je od března 2019. Starší verze Shizuku také nefunguje na novějších systémech Android.   O aktualizaci požádejte vývojáře %1$s .</string>
     <string name="dialog_requesting_legacy_title">%1$s vyžaduje starší Shizuku</string>
     <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s </b> má podporu pro moderní Shizuku, ale vyžaduje starší Shizuku. Mohlo by to být proto, že Shizuku není spuštěno, zkontrolujte aplikaci Shizuku. <p> Podpora staršího Shizuku je od března 2019 ukončena.]]></string>
+    <string name="dialog_requesting_legacy_message_plain">%1$s  má podporu pro moderní Shizuku, ale vyžaduje starší Shizuku. Mohlo by to být proto, že Shizuku není spuštěno, zkontrolujte aplikaci Shizuku.   Podpora staršího Shizuku je od března 2019 ukončena.</string>
     <string name="dialog_requesting_legacy_button_open_shizuku">Otevřít Shizuku</string>
     <string name="wadb_notification_attempt_now">Pokus nyní</string>
 </resources>

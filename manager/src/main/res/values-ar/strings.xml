@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
@@ -6,17 +6,23 @@
     <string name="home_status_service_not_running">%1$s لا يعمل</string>
     <string name="home_status_service_version">الإصدار %2$s, %1$s</string>
     <string name="home_status_service_version_update"><![CDATA[الإصدار %2$s, %1$s<br>اعد تشغيل التطبيق من جديد للتحديث إلى الإصدار %3$s]]></string>
+    <string name="home_status_service_version_update_plain">الإصدار %2$s, %1$s
+اعد تشغيل التطبيق من جديد للتحديث إلى الإصدار %3$s</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[ابدأ بالاتصال بجهاز كمبيوتر]]></string>
     <string name="home_adb_description"><![CDATA[بالنسبة للأجهزة التي لا تحتوي على الجذر (Root) ، تحتاج إلى استخدام adb لبدء Shizuku (يتطلب اتصال الكمبيوتر). يجب تكرار هذه العملية في كل مرة يتم فيها إعادة تشغيل الجهاز. يرجى <b><a href="%1$s"> قراءة التعليمات </a></b>.]]></string>
+    <string name="home_adb_description_plain">بالنسبة للأجهزة التي لا تحتوي على الجذر (Root) ، تحتاج إلى استخدام adb لبدء Shizuku (يتطلب اتصال الكمبيوتر). يجب تكرار هذه العملية في كل مرة يتم فيها إعادة تشغيل الجهاز. يرجى  قراءة التعليمات .</string>
     <string name="home_adb_button_view_help">اقرأ التعليمات</string>
     <string name="home_adb_button_view_command">عرض الأمر</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[font face=monospace>%1$s</font><br><br>* هناك بعض الاعتبارات الأخرى، يرجى تأكيد أنك قرأت التعليمات أولا.]]></string>
+    <string name="home_adb_dialog_view_command_message_plain">font face=monospace>%1$s  * هناك بعض الاعتبارات الأخرى، يرجى تأكيد أنك قرأت التعليمات أولا.</string>
     <string name="home_adb_dialog_view_command_copy_button">نسخ</string>
     <string name="home_adb_dialog_view_command_button_send">إرسال</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[البدء باستخدام التصحيح اللاسلكي]]></string>
     <string name="home_wireless_adb_description"><![CDATA[على أندرويد 11 وما فوق ، يمكنك تفعيل التصحيح اللاسلكي وبدء Shizuku مباشرة من جهازك ، دون الاحتياج إتصال بالكمبيوتر.<p>يرجى الإطلاع أولاً على التعليمات المفصلة خطوة بخطوة.]]></string>
+    <string name="home_wireless_adb_description_plain">على أندرويد 11 وما فوق ، يمكنك تفعيل التصحيح اللاسلكي وبدء Shizuku مباشرة من جهازك ، دون الاحتياج إتصال بالكمبيوتر.
+يرجى الإطلاع أولاً على التعليمات المفصلة خطوة بخطوة.</string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[على الأجهزة الأقدم من إصدار الأندرويد 11 ، يلزم الاتصال بجهاز كمبيوتر لتمكين المعالجة/التصحيح اللاسلكي.]]></string>
     <string name="home_wireless_adb_view_guide_button">‌دليل خطوة بخطوة</string>
     <!-- Adb -->
@@ -131,6 +137,7 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">إذن الADB محدود</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[من المحتمل جدًا أن تحدد الشركة المصنعة للجهاز إذن adb. <p> قد يكون هناك حل لنظامك في <b><a href="%1$s">هذا المستند</a></b>.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message_plain">من المحتمل جدًا أن تحدد الشركة المصنعة للجهاز إذن adb.   قد يكون هناك حل لنظامك في هذا المستند.</string>
     <string name="app_management_item_summary_requires_root">* يطلب Shizuku الجذر (الروت) للعمل</string>
     <string name="app_management_toggle_all">تبديل الكل</string>
     <!-- Terminal -->
@@ -152,6 +159,8 @@
         كتابة المسار.\n\nوإلا، يمكنك إنشاء اسم مستعار لـ %2$s في ملف تكوين تطبيقك الطرفي %3$s .</string>
     <string name="terminal_tutorial_3">افتح shell باستخدام الأمر التالي:</string>
     <string name="rish_description"><![CDATA[باستخدام %1$s، يمكنك تشغيل أوامر shell في أي تطبيق طرفي. انقر فوق<p>لمعرفة المزيد حول كيفية استخدامه.]]></string>
+    <string name="rish_description_plain">باستخدام %1$s، يمكنك تشغيل أوامر shell في أي تطبيق طرفي. انقر فوق
+لمعرفة المزيد حول كيفية استخدامه.</string>
     <!-- Settings -->
     <string name="settings_title">الإعدادات</string>
     <string name="settings_behavior">سلوك</string>
@@ -172,6 +181,9 @@
     <string name="settings_restart_dialog_title">مطلوب إعادة التشغيل</string>
     <string name="settings_restart_dialog_message">يجب على Shizuku إعادة التشغيل لتطبيق هذا الإعداد.</string>
     <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>يتطلب اتصالاً لاسلكياً. سيستمر شيزوكو بالعمل وينتظر اتصالاً لاسلكياً قبل إعادة التشغيل في الخلفية.</b>]]></string>
+    <string name="settings_restart_dialog_message_wifi_required_plain">
+
+يتطلب اتصالاً لاسلكياً. سيستمر شيزوكو بالعمل وينتظر اتصالاً لاسلكياً قبل إعادة التشغيل في الخلفية.</string>
     <string name="settings_tcp_port">منفذ TCP</string>
     <string name="settings_tcp_port_default">افتراضي (5555)</string>
     <string name="settings_tcp_port_hint">اتركه فارغًا لاستخدام الإعداد الافتراضي (5555)</string>
@@ -249,6 +261,7 @@
     <string name="permission_label">الوصول إلى Shizuku</string>
     <string name="permission_description">اسمح للتطبيق باستخدام Shizuku.</string>
     <string name="permission_warning_template"><![CDATA[هل تريد السماح لـ <b>%1$s</b> بـ %2$s؟]]></string>
+    <string name="permission_warning_template_plain">هل تريد السماح لـ %1$s بـ %2$s؟</string>
     <string name="grant_dialog_button_allow_always">السماح في كل وقت</string>
     <string name="grant_dialog_button_deny">"منع"</string>
     <!-- Starter -->
@@ -282,8 +295,10 @@
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s لا يدعم النسخة الحديثة من Shizuku</string>
     <string name="dialog_legacy_not_support_message"><![CDATA[تم إهمال Legacy Shizuku منذ آذار (مارس) 2019. أيضًا ، لا يعمل Shizuku القديم على أنظمة Android الأحدث. <p> يُرجى مطالبة مطور <b> %1$s </b> بالتحديث.]]></string>
+    <string name="dialog_legacy_not_support_message_plain">تم إهمال Legacy Shizuku منذ آذار (مارس) 2019. أيضًا ، لا يعمل Shizuku القديم على أنظمة Android الأحدث.   يُرجى مطالبة مطور  %1$s  بالتحديث.</string>
     <string name="dialog_requesting_legacy_title">يطلب %1$s تطبيق Shizuku القديم</string>
     <string name="dialog_requesting_legacy_message"><![CDATA[يحتوي <b> %1$s </b> على دعم Shizuku الحديث ، لكنه يتطلب شيزوكو القديم. قد يكون هذا بسبب عدم تشغيل Shizuku ، يرجى التحقق في تطبيق Shizuku. <p> تم إيقاف Legacy Shizuku منذ آذار (مارس) 2019.]]></string>
+    <string name="dialog_requesting_legacy_message_plain">يحتوي  %1$s  على دعم Shizuku الحديث ، لكنه يتطلب شيزوكو القديم. قد يكون هذا بسبب عدم تشغيل Shizuku ، يرجى التحقق في تطبيق Shizuku.   تم إيقاف Legacy Shizuku منذ آذار (مارس) 2019.</string>
     <string name="dialog_requesting_legacy_button_open_shizuku">افتح Shizuku</string>
     <string name="wadb_notification_attempt_now">حاول الآن</string>
 </resources>

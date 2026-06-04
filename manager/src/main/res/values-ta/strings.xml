@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
@@ -6,17 +6,23 @@
     <string name="home_status_service_not_running">%1$s செயல்நிலையில் இல்லை</string>
     <string name="home_status_service_version">பதிப்பு %2$s, %1$s</string>
     <string name="home_status_service_version_update"><![CDATA[பதிப்பு %2$s, %1$s<br>%3$s பதிப்புக்கு மேம்படுத்த செயலியை மறுதொடக்கம் செய்யவும்]]></string>
+    <string name="home_status_service_version_update_plain">பதிப்பு %2$s, %1$s
+%3$s பதிப்புக்கு மேம்படுத்த செயலியை மறுதொடக்கம் செய்யவும்</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[முதலில், திறன்பேசியை கணினியுடன் இணைக்கவும்]]></string>
     <string name="home_adb_description"><![CDATA[Root அணுகல் இல்லாத பட்சத்தில், adb பயன்படுத்தி Shizuku வை தொடங்க வேண்டும் (கணினி இணைப்பு தேவை). ஒவ்வொரு முறை திறன்பேசி மறுதொடக்கம் ஆகும்போதும் இச்செயலை செய்ய வேண்டும். <b><a href="%1$s">உதவி பக்கத்தை படிக்கவும்</a></b>]]></string>
+    <string name="home_adb_description_plain">Root அணுகல் இல்லாத பட்சத்தில், adb பயன்படுத்தி Shizuku வை தொடங்க வேண்டும் (கணினி இணைப்பு தேவை). ஒவ்வொரு முறை திறன்பேசி மறுதொடக்கம் ஆகும்போதும் இச்செயலை செய்ய வேண்டும். உதவி பக்கத்தை படிக்கவும்</string>
     <string name="home_adb_button_view_help">உதவி பக்கத்தை திற</string>
     <string name="home_adb_button_view_command">கட்டளையைக் காட்டு</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face="monospace">%1$s</font><br><br>* வேறு சில பரிசீலனைகள் உள்ளன, முதலில் நீங்கள் உதவியைப் படித்திருப்பதை உறுதிப்படுத்தவும்.]]></string>
+    <string name="home_adb_dialog_view_command_message_plain">%1$s  * வேறு சில பரிசீலனைகள் உள்ளன, முதலில் நீங்கள் உதவியைப் படித்திருப்பதை உறுதிப்படுத்தவும்.</string>
     <string name="home_adb_dialog_view_command_copy_button">நகலெடு</string>
     <string name="home_adb_dialog_view_command_button_send">அனுப்பவும்</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[வயர்லெஸ் பிழைத்திருத்தம் மூலம் தொடங்கவும்]]></string>
     <string name="home_wireless_adb_description"><![CDATA[Android 11 அல்லது அதற்கு மேற்பட்ட பதிப்புகளில், கணினியுடன் இணைக்காமலேயே, வயர்லெஸ் பிழைத்திருத்தத்தை இயக்கி, உங்கள் சாதனத்திலிருந்து நேரடியாக Shizuku ஐத் தொடங்கலாம்.<p>முதலில் படிப்படியான வழிகாட்டியைப் பார்க்கவும்.]]></string>
+    <string name="home_wireless_adb_description_plain">Android 11 அல்லது அதற்கு மேற்பட்ட பதிப்புகளில், கணினியுடன் இணைக்காமலேயே, வயர்லெஸ் பிழைத்திருத்தத்தை இயக்கி, உங்கள் சாதனத்திலிருந்து நேரடியாக Shizuku ஐத் தொடங்கலாம்.
+முதலில் படிப்படியான வழிகாட்டியைப் பார்க்கவும்.</string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[ஆண்ட்ராய்டு 11க்கு முன், வயர்லெஸ் பிழைத்திருத்தத்தை இயக்க கணினியுடன் இணைப்பது அவசியம்.]]></string>
     <string name="home_wireless_adb_view_guide_button">படிப்படியான வழிகாட்டி</string>
     <!-- Adb -->
@@ -135,6 +141,7 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">adb இன் அனுமதி குறைவாக உள்ளது.</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[உங்கள் சாதன உற்பத்தியாளர் adb இன் அனுமதியை வரம்பிடுவது மிகவும் சாத்தியம்.<p> <b><a href=\"%1$s\">இந்த ஆவணத்தில்</a></b>உங்கள் கணினிக்கு ஒரு தீர்வு இருக்கலாம்.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message_plain">உங்கள் சாதன உற்பத்தியாளர் adb இன் அனுமதியை வரம்பிடுவது மிகவும் சாத்தியம்.  இந்த ஆவணத்தில்உங்கள் கணினிக்கு ஒரு தீர்வு இருக்கலாம்.</string>
     <string name="app_management_item_summary_requires_root">* ரூட்டுடன் கூடிய ஷிசுகு ரன்கள் தேவை.</string>
     <string name="app_management_toggle_all">அனைத்தையும் மாற்று</string>
     <!-- Terminal -->
@@ -159,6 +166,8 @@
         உள்ளமைவு கோப்பில் %2$s க்கு மாற்றுப்பெயரை உருவாக்கலாம்.</string>
     <string name="terminal_tutorial_3">பின்வரும் கட்டளையுடன் ஒரு ஷெல்லைத் திறக்கவும்:</string>
     <string name="rish_description"><![CDATA[%1$sஉடன், நீங்கள் எந்த முனைய பயன்பாட்டிலும் ஷெல் கட்டளைகளை இயக்கலாம்.<p>அதை எவ்வாறு பயன்படுத்துவது என்பது பற்றி மேலும் அறிய தட்டவும்.]]></string>
+    <string name="rish_description_plain">%1$sஉடன், நீங்கள் எந்த முனைய பயன்பாட்டிலும் ஷெல் கட்டளைகளை இயக்கலாம்.
+அதை எவ்வாறு பயன்படுத்துவது என்பது பற்றி மேலும் அறிய தட்டவும்.</string>
     <!-- Settings -->
     <string name="settings_title">அமைப்புகள்</string>
     <string name="settings_behavior">நடத்தை</string>
@@ -181,6 +190,9 @@
     <string name="settings_restart_dialog_message">இந்த அமைப்பைப் பயன்படுத்த Shizuku மறுதொடக்கம்
         செய்ய வேண்டும்.</string>
     <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>Wi-Fi தேவை. Shizuku தொடர்ந்து இயங்கும் மற்றும் பின்னணியில் மறுதொடக்கம் செய்வதற்கு முன் Wi-Fi இணைப்புக்காக காத்திருக்கும்.</b>]]></string>
+    <string name="settings_restart_dialog_message_wifi_required_plain">
+
+Wi-Fi தேவை. Shizuku தொடர்ந்து இயங்கும் மற்றும் பின்னணியில் மறுதொடக்கம் செய்வதற்கு முன் Wi-Fi இணைப்புக்காக காத்திருக்கும்.</string>
     <string name="settings_tcp_port">TCP போர்ட்</string>
     <string name="settings_tcp_port_default">இயல்புநிலை (5555)</string>
     <string name="settings_tcp_port_hint">இயல்புநிலையைப் பயன்படுத்த காலியாக விடவும் (5555)</string>
@@ -262,6 +274,7 @@
     <string name="permission_label">ஷிசுகுவை அணுகவும்</string>
     <string name="permission_description">ஷிசுகுவைப் பயன்படுத்த பயன்பாட்டை அனுமதிக்கவும்.</string>
     <string name="permission_warning_template"><![CDATA[<b>%1$s</b> %2$sஐ அனுமதிக்கவா?]]></string>
+    <string name="permission_warning_template_plain">%1$s %2$sஐ அனுமதிக்கவா?</string>
     <string name="grant_dialog_button_allow_always">எல்லா நேரங்களிலும் அனுமதி</string>
     <string name="grant_dialog_button_deny">"மறுக்கவும்"</string>
     <!-- Starter -->
@@ -297,8 +310,10 @@
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s நவீன ஷிசுகுவை ஆதரிக்கவில்லை</string>
     <string name="dialog_legacy_not_support_message"><![CDATA[மார்ச் 2019 முதல் Legacy Shizuku நிறுத்தப்பட்டுள்ளது. மேலும், Legacy Shizuku புதிய Android அமைப்புகளில் வேலை செய்யாது.<p>புதுப்பிக்க <b>%1$s</b> டெவலப்பரிடம் கேளுங்கள்.]]></string>
+    <string name="dialog_legacy_not_support_message_plain">மார்ச் 2019 முதல் Legacy Shizuku நிறுத்தப்பட்டுள்ளது. மேலும், Legacy Shizuku புதிய Android அமைப்புகளில் வேலை செய்யாது. புதுப்பிக்க %1$s டெவலப்பரிடம் கேளுங்கள்.</string>
     <string name="dialog_requesting_legacy_title">%1$s மரபுவழி ஷிசுகுவைக் கோருகிறது</string>
     <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> நவீன ஷிசுகு ஆதரவைக் கொண்டுள்ளது, ஆனால் இது மரபுவழி ஷிசுகுவைக் கோருகிறது. ஷிசுகு இயங்காததால் இது நிகழலாம், தயவுசெய்து ஷிசுகு பயன்பாட்டைப் பார்க்கவும்.<p>மரபுவழி ஷிசுகு மார்ச் 2019 முதல் நிறுத்தப்பட்டுள்ளது.]]></string>
+    <string name="dialog_requesting_legacy_message_plain">%1$s நவீன ஷிசுகு ஆதரவைக் கொண்டுள்ளது, ஆனால் இது மரபுவழி ஷிசுகுவைக் கோருகிறது. ஷிசுகு இயங்காததால் இது நிகழலாம், தயவுசெய்து ஷிசுகு பயன்பாட்டைப் பார்க்கவும். மரபுவழி ஷிசுகு மார்ச் 2019 முதல் நிறுத்தப்பட்டுள்ளது.</string>
     <string name="dialog_requesting_legacy_button_open_shizuku">ஷிசுகுவைத் திறக்கவும்</string>
     <string name="wadb_notification_attempt_now">இப்போதே முயற்சிக்கவும்</string>
 </resources>

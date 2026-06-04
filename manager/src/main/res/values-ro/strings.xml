@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
@@ -6,17 +6,23 @@
     <string name="home_status_service_not_running">%1$s nu rulează</string>
     <string name="home_status_service_version">Versiune %2$s, %1$s</string>
     <string name="home_status_service_version_update"><![CDATA[Versiune %2$s, %1$s<br>Pornește din nou pentru a actualiza la versiunea %3$s]]></string>
+    <string name="home_status_service_version_update_plain">Versiune %2$s, %1$s
+Pornește din nou pentru a actualiza la versiunea %3$s</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Începe prin a te conecta la un computer]]></string>
     <string name="home_adb_description"><![CDATA[Pentru dispozitivele fără root, trebuie să utilizezi adb pentru a porni Shizuku (necesită conexiune la computer). Acest proces trebuie repetat de fiecare dată când dispozitivul este repornit. <b><a href="%1$s">Citește ajutorul</a></b>.]]></string>
+    <string name="home_adb_description_plain">Pentru dispozitivele fără root, trebuie să utilizezi adb pentru a porni Shizuku (necesită conexiune la computer). Acest proces trebuie repetat de fiecare dată când dispozitivul este repornit. Citește ajutorul.</string>
     <string name="home_adb_button_view_help">Citește ajutorul</string>
     <string name="home_adb_button_view_command">Vizualizare comandă</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Există și alte considerații, mai întâi confirmă că ai citit ajutorul.]]></string>
+    <string name="home_adb_dialog_view_command_message_plain">%1$s  * Există și alte considerații, mai întâi confirmă că ai citit ajutorul.</string>
     <string name="home_adb_dialog_view_command_copy_button">Copiere</string>
     <string name="home_adb_dialog_view_command_button_send">Trimitere</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Pornește prin depanare fără fir]]></string>
     <string name="home_wireless_adb_description"><![CDATA[Pe Android 11 sau o versiune ulterioară, poți activa depanarea wireless și poți porni Shizuku direct de pe dispozitiv, fără a te conecta la un computer.<p>Mai întâi consultă ghidul pas cu pas.]]></string>
+    <string name="home_wireless_adb_description_plain">Pe Android 11 sau o versiune ulterioară, poți activa depanarea wireless și poți porni Shizuku direct de pe dispozitiv, fără a te conecta la un computer.
+Mai întâi consultă ghidul pas cu pas.</string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Înainte de Android 11, este necesară conectarea la un computer pentru a activa depanarea fără fir.]]></string>
     <string name="home_wireless_adb_view_guide_button">Ghidul pas cu pas</string>
     <!-- Adb -->
@@ -134,6 +140,7 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Permisiunea adb este limitată</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Este foarte posibil ca producătorul dispozitivului să limiteze permisiunea adb.<p>Este posibil să existe o soluție pentru acest sistem în <b><a href="%1$s">acest document</a></b>.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message_plain">Este foarte posibil ca producătorul dispozitivului să limiteze permisiunea adb. Este posibil să existe o soluție pentru acest sistem în acest document.</string>
     <string name="app_management_item_summary_requires_root">* necesită Shizuku să rulează cu root</string>
     <string name="app_management_toggle_all">Comutare toate</string>
     <!-- Terminal -->
@@ -156,6 +163,8 @@
         fișierul de configurare %3$s al aplicației terminale.</string>
     <string name="terminal_tutorial_3">Deschideți un shell cu următoarea comandă:</string>
     <string name="rish_description"><![CDATA[Cu %1$s, puteți rula comenzi shell în orice aplicație terminal.<p>Atingeți pentru a afla mai multe despre cum să o utilizați.]]></string>
+    <string name="rish_description_plain">Cu %1$s, puteți rula comenzi shell în orice aplicație terminal.
+Atingeți pentru a afla mai multe despre cum să o utilizați.</string>
     <!-- Settings -->
     <string name="settings_title">Setări</string>
     <string name="settings_behavior">Comportament</string>
@@ -177,6 +186,9 @@
     <string name="settings_restart_dialog_message">Shizuku trebuie să repornească pentru a aplica
         această setare.</string>
     <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>Wi-Fi este necesar. Shizuku va continua să ruleze și va aștepta o conexiune Wi-Fi înainte de a reporni în fundal.</b>]]></string>
+    <string name="settings_restart_dialog_message_wifi_required_plain">
+
+Wi-Fi este necesar. Shizuku va continua să ruleze și va aștepta o conexiune Wi-Fi înainte de a reporni în fundal.</string>
     <string name="settings_tcp_port">Port TCP</string>
     <string name="settings_tcp_port_default">Implicit (5555)</string>
     <string name="settings_tcp_port_hint">Lăsați necompletat pentru a utiliza valoarea implicită
@@ -257,6 +269,7 @@
     <string name="permission_label">accesare Shizuku</string>
     <string name="permission_description">Permite aplicației să folosească Shizuku.</string>
     <string name="permission_warning_template"><![CDATA[Permiți <b>%1$s</b> să %2$s\?]]></string>
+    <string name="permission_warning_template_plain">Permiți %1$s să %2$s\?</string>
     <string name="grant_dialog_button_allow_always">Permite tot timpul</string>
     <string name="grant_dialog_button_deny">"Refuz"</string>
     <!-- Starter -->
@@ -291,8 +304,10 @@
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s nu suportă Shizuku modern</string>
     <string name="dialog_legacy_not_support_message"><![CDATA[Vechea versiune Shizuku a fost retrasă din martie 2019. De asemenea, vechea versiune Shizuku nu funcționează pe sisteme Android mai noi.<p>Cere dezvoltatorului <b>%1$s</b> să actualizeze.]]></string>
+    <string name="dialog_legacy_not_support_message_plain">Vechea versiune Shizuku a fost retrasă din martie 2019. De asemenea, vechea versiune Shizuku nu funcționează pe sisteme Android mai noi. Cere dezvoltatorului %1$s să actualizeze.</string>
     <string name="dialog_requesting_legacy_title">%1$s solicită Shizuku vechi</string>
     <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> are suport Shizuku modern, dar solicită Shizuku vechi. Acest lucru se poate datora faptului că Shizuku nu rulează, verifică în aplicația Shizuku.<p>Versiunea veche a Shizuku a fost retrasă din martie 2019.]]></string>
+    <string name="dialog_requesting_legacy_message_plain">%1$s are suport Shizuku modern, dar solicită Shizuku vechi. Acest lucru se poate datora faptului că Shizuku nu rulează, verifică în aplicația Shizuku. Versiunea veche a Shizuku a fost retrasă din martie 2019.</string>
     <string name="dialog_requesting_legacy_button_open_shizuku">Deschide Shizuku</string>
     <string name="wadb_notification_attempt_now">Încearcă acum</string>
 </resources>

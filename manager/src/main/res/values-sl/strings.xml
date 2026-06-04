@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
@@ -6,17 +6,23 @@
     <string name="home_status_service_not_running">%1$s ne teče</string>
     <string name="home_status_service_version">Verzija %2$s, %1$s</string>
     <string name="home_status_service_version_update"><![CDATA[Verzija %2$s, %1$s<br>Začni znova za posodobitev na verzijo %3$s]]></string>
+    <string name="home_status_service_version_update_plain">Verzija %2$s, %1$s
+Začni znova za posodobitev na verzijo %3$s</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Začni z povezovanjem na računalnik]]></string>
     <string name="home_adb_description"><![CDATA[Za naprave brez root-a, potrebujete adb, da zaženete Shizuku (potrebna je računalniška povezava). Ta proces je potrebno ponoviti vsakič, ko se naprava ponovno zažene. Prosimo <b><a href="%1$s">preberite pomoč</a></b>.]]></string>
+    <string name="home_adb_description_plain">Za naprave brez root-a, potrebujete adb, da zaženete Shizuku (potrebna je računalniška povezava). Ta proces je potrebno ponoviti vsakič, ko se naprava ponovno zažene. Prosimo preberite pomoč.</string>
     <string name="home_adb_button_view_help">Preberite pomoč</string>
     <string name="home_adb_button_view_command">Pokaži ukaz</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Obstaja nekaj premislekov. Prosimo, potrdite, da ste najprej prebrali pomoč.]]></string>
+    <string name="home_adb_dialog_view_command_message_plain">%1$s  * Obstaja nekaj premislekov. Prosimo, potrdite, da ste najprej prebrali pomoč.</string>
     <string name="home_adb_dialog_view_command_copy_button">Kopiraj</string>
     <string name="home_adb_dialog_view_command_button_send">Pošlji</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Začni preko Brezžičnega razhroščevanja]]></string>
     <string name="home_wireless_adb_description"><![CDATA[Na Androidu 11 ali več, lahko vklopite Brezžično razhroščevanje in začnete Shizuku direktno iz vaše naprave, brez povezovanja na računalnik.<p>Prosimo, najprej poglejte vodnik po korakih.]]></string>
+    <string name="home_wireless_adb_description_plain">Na Androidu 11 ali več, lahko vklopite Brezžično razhroščevanje in začnete Shizuku direktno iz vaše naprave, brez povezovanja na računalnik.
+Prosimo, najprej poglejte vodnik po korakih.</string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Pred Androidom 11, je povezava z računalnikom potrebna, da omogočite Brezžično razhroščevanje.]]></string>
     <string name="home_wireless_adb_view_guide_button">Vodnik po korakih</string>
     <!-- Adb -->
@@ -134,6 +140,7 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Dovoljenje adb je omejeno</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Zelo možno je, da proizvajalec vaše naprave omejuje dovoljenja adb.<p>Rešitev za vaš sistem je morda v <b><a href=\"%1$s\">tem dokumentu</a></b>.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message_plain">Zelo možno je, da proizvajalec vaše naprave omejuje dovoljenja adb. Rešitev za vaš sistem je morda v tem dokumentu.</string>
     <string name="app_management_item_summary_requires_root">* zahteva, da Shizuku teče s root-om</string>
     <string name="app_management_toggle_all">Preklopi vse</string>
     <!-- Terminal -->
@@ -156,6 +163,8 @@
         aplikacije ustvarite vzdevek za %2$s .</string>
     <string name="terminal_tutorial_3">Odprite lupino z naslednjim ukazom:</string>
     <string name="rish_description"><![CDATA[Z %1$slahko zaženete ukaze lupine v kateri koli terminalski aplikaciji.<p>Dotaknite se, če želite izvedeti več o uporabi.]]></string>
+    <string name="rish_description_plain">Z %1$slahko zaženete ukaze lupine v kateri koli terminalski aplikaciji.
+Dotaknite se, če želite izvedeti več o uporabi.</string>
     <!-- Settings -->
     <string name="settings_title">Nastavitve</string>
     <string name="settings_behavior">Vedenje</string>
@@ -177,6 +186,9 @@
     <string name="settings_restart_dialog_message">Shizuku mora začeti znova, da lahko uporabi to
         nastavitev.</string>
     <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>Wi-Fi je obvezen. Shizuku bo še naprej delovala in počakala na Wi-Fi povezavo, preden se bo v ozadju ponovno zagnala.</b>]]></string>
+    <string name="settings_restart_dialog_message_wifi_required_plain">
+
+Wi-Fi je obvezen. Shizuku bo še naprej delovala in počakala na Wi-Fi povezavo, preden se bo v ozadju ponovno zagnala.</string>
     <string name="settings_tcp_port">TCP priključek</string>
     <string name="settings_tcp_port_default">Privzeto (5555)</string>
     <string name="settings_tcp_port_hint">Pustite prazno za privzeto (5555)</string>
@@ -257,6 +269,7 @@
     <string name="permission_label">dostop do Shizuku</string>
     <string name="permission_description">Dovoli aplikaciji uporabo Shizukuja.</string>
     <string name="permission_warning_template"><![CDATA[Dovoli <b>%1$s</b> do %2$s?]]></string>
+    <string name="permission_warning_template_plain">Dovoli %1$s do %2$s?</string>
     <string name="grant_dialog_button_allow_always">Dovoli ves čas</string>
     <string name="grant_dialog_button_deny">"Zavrni"</string>
     <!-- Starter -->
@@ -290,8 +303,10 @@
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s ne podpira sodobnega jezika Shizuku</string>
     <string name="dialog_legacy_not_support_message"><![CDATA[Podedovana različica Shizukuja je od marca 2019 opuščena. Prav tako podedovana različica Shizukuja ne deluje na novejših sistemih Android.<p>Za posodobitev prosite razvijalca <b>%1$s</b> .]]></string>
+    <string name="dialog_legacy_not_support_message_plain">Podedovana različica Shizukuja je od marca 2019 opuščena. Prav tako podedovana različica Shizukuja ne deluje na novejših sistemih Android. Za posodobitev prosite razvijalca %1$s .</string>
     <string name="dialog_requesting_legacy_title">%1$s zahteva starejšo različico Shizukuja</string>
     <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> ima podporo za sodoben Shizuku, vendar zahteva starejši Shizuku. To je morda zato, ker Shizuku ne deluje, preverite v aplikaciji Shizuku.<p>Starejši Shizuku je od marca 2019 zastarel.]]></string>
+    <string name="dialog_requesting_legacy_message_plain">%1$s ima podporo za sodoben Shizuku, vendar zahteva starejši Shizuku. To je morda zato, ker Shizuku ne deluje, preverite v aplikaciji Shizuku. Starejši Shizuku je od marca 2019 zastarel.</string>
     <string name="dialog_requesting_legacy_button_open_shizuku">Odpri Shizuku</string>
     <string name="wadb_notification_attempt_now">Poskusite zdaj</string>
 </resources>

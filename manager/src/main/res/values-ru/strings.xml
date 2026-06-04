@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- To translators: you can leave your here -->
     <!-- Home - Status -->
@@ -6,17 +6,22 @@
     <string name="home_status_service_not_running">%1$s не запущен</string>
     <string name="home_status_service_version">Версия %2$s, %1$s</string>
     <string name="home_status_service_version_update"><![CDATA[Версия %2$s, %1$s<br>Запустите снова что бы обновиться до версии %3$s]]></string>
+    <string name="home_status_service_version_update_plain">Версия %2$s, %1$s
+Запустите снова что бы обновиться до версии %3$s</string>
     <!-- Home - Adb -->
     <string name="home_adb_title"><![CDATA[Запуск через соединение с ПК]]></string>
     <string name="home_adb_description"><![CDATA[Для устройств без root прав потребуется обращаться к adb для запуска Shizuku (не обойтись без соединения с компьютером). Этот процесс нужно повторять каждый раз, когда устройство перезагружается. Пожалуйста, <b><a href="%1$s">прочтите справку</a></b>.]]></string>
+    <string name="home_adb_description_plain">Для устройств без root прав потребуется обращаться к adb для запуска Shizuku (не обойтись без соединения с компьютером). Этот процесс нужно повторять каждый раз, когда устройство перезагружается. Пожалуйста, прочтите справку.</string>
     <string name="home_adb_button_view_help">Читать справку</string>
     <string name="home_adb_button_view_command">Просмотр команды</string>
     <string name="home_adb_dialog_view_command_message"><![CDATA[<font face=monospace>%1$s</font><br><br>* Есть и другие способы; сначала убедитесь, что сперва прочли справку.]]></string>
+    <string name="home_adb_dialog_view_command_message_plain">%1$s  * Есть и другие способы; сначала убедитесь, что сперва прочли справку.</string>
     <string name="home_adb_dialog_view_command_copy_button">Скопировать</string>
     <string name="home_adb_dialog_view_command_button_send">Отправить</string>
     <!-- Home - Wireless Adb -->
     <string name="home_wireless_adb_title"><![CDATA[Запуск через отладку по Wi-Fi]]></string>
     <string name="home_wireless_adb_description"><![CDATA[На Android 11 или выше Вы можете включить отладку по Wi-Fi без дополнительного ПО, без подключения к компьютеру. Пожалуйста, сперва просмотрите инструкцию]]></string>
+    <string name="home_wireless_adb_description_plain">На Android 11 или выше Вы можете включить отладку по Wi-Fi без дополнительного ПО, без подключения к компьютеру. Пожалуйста, сперва просмотрите инструкцию</string>
     <string name="home_wireless_adb_description_pre_11"><![CDATA[Для отладки по Wi-Fi в Android до 11 версии  потребуется соединения с компьютером.]]></string>
     <string name="home_wireless_adb_view_guide_button">Пошаговая инструкция</string>
     <!-- Adb -->
@@ -136,6 +141,7 @@
     <!-- Application management -->
     <string name="app_management_dialog_adb_is_limited_title">Доступ к adb ограничен</string>
     <string name="app_management_dialog_adb_is_limited_message"><![CDATA[Возможно, что производитель вашего устройства ограничивает доступ к adb.<p>Решение для вашей системы может быть описано <b><a href="%1$s">здесь</a></b>.]]></string>
+    <string name="app_management_dialog_adb_is_limited_message_plain">Возможно, что производитель вашего устройства ограничивает доступ к adb. Решение для вашей системы может быть описано здесь.</string>
     <string name="app_management_item_summary_requires_root">* требуется Shizuku, запущенный с root
         правами</string>
     <string name="app_management_toggle_all">Переключить все</string>
@@ -159,6 +165,8 @@
         в файле конфигурации %3$s вашего терминального приложения.</string>
     <string name="terminal_tutorial_3">Откройте оболочку с помощью следующей команды:</string>
     <string name="rish_description"><![CDATA[С помощью %1$sвы можете запускать команды оболочки в любом терминальном приложении.<p>Нажмите, чтобы узнать больше об использовании.]]></string>
+    <string name="rish_description_plain">С помощью %1$sвы можете запускать команды оболочки в любом терминальном приложении.
+Нажмите, чтобы узнать больше об использовании.</string>
     <!-- Settings -->
     <string name="settings_title">Настройки</string>
     <string name="settings_behavior">Поведение</string>
@@ -180,6 +188,9 @@
     <string name="settings_restart_dialog_message">Сидзуку нужно начать заново, чтобы применить этот
         сеттинг.</string>
     <string name="settings_restart_dialog_message_wifi_required"><![CDATA[<br><br><b>Требуется Wi-Fi. Шизуку продолжит работу и ждёт Wi-Fi подключения, прежде чем перезагрузить в фоновом режиме.</b>]]></string>
+    <string name="settings_restart_dialog_message_wifi_required_plain">
+
+Требуется Wi-Fi. Шизуку продолжит работу и ждёт Wi-Fi подключения, прежде чем перезагрузить в фоновом режиме.</string>
     <string name="settings_tcp_port">TCP-порт</string>
     <string name="settings_tcp_port_default">По умолчанию (5555)</string>
     <string name="settings_tcp_port_hint">Оставьте поле пустым, чтобы использовать значение по
@@ -262,6 +273,7 @@
     <string name="permission_label">доступ Shizuku</string>
     <string name="permission_description">Разрешить приложению использовать Shizuku.</string>
     <string name="permission_warning_template"><![CDATA[Разрешить <b>%1$s</b> следующее: %2$s\?]]></string>
+    <string name="permission_warning_template_plain">Разрешить %1$s следующее: %2$s\?</string>
     <string name="grant_dialog_button_allow_always">Разрешить всегда</string>
     <string name="grant_dialog_button_deny">"Запретить"</string>
     <!-- Starter -->
@@ -295,8 +307,10 @@
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s не поддерживает актуальную версию Shizuku</string>
     <string name="dialog_legacy_not_support_message"><![CDATA[Изначальная версия Shizuku устарела с марта 2019 года. Кроме того, она не работает на новых системах Android.<p>Пожалуйста, попросите разработчика <b>%1$s</b> внести поправки.]]></string>
+    <string name="dialog_legacy_not_support_message_plain">Изначальная версия Shizuku устарела с марта 2019 года. Кроме того, она не работает на новых системах Android. Пожалуйста, попросите разработчика %1$s внести поправки.</string>
     <string name="dialog_requesting_legacy_title">%1$s запрашивает устаревшую версию Shizuku</string>
     <string name="dialog_requesting_legacy_message"><![CDATA[<b>%1$s</b> имеет поддержку актуального Shizuku, но запрашивает его устаревшую версию. Возможно это происходит оттого, что Shizuku не запущен, пожалуйста, перепроверьте в приложении Shizuku.<p>Изначальная версия Shizuku признана устаревшей ещё в марте 2019 года.]]></string>
+    <string name="dialog_requesting_legacy_message_plain">%1$s имеет поддержку актуального Shizuku, но запрашивает его устаревшую версию. Возможно это происходит оттого, что Shizuku не запущен, пожалуйста, перепроверьте в приложении Shizuku. Изначальная версия Shizuku признана устаревшей ещё в марте 2019 года.</string>
     <string name="dialog_requesting_legacy_button_open_shizuku">Открыть Shizuku</string>
     <string name="wadb_notification_attempt_now">Попробуй сейчас</string>
 </resources>
