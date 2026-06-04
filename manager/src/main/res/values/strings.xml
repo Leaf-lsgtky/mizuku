@@ -251,6 +251,7 @@
     <string name="sort_by_package_name">Sort by package name</string>
     <string name="menu_sort">Sort</string>
     <string name="show_system_apps">Show system apps</string>
+    <string name="search_apps">Search apps</string>
 
     <!-- Refresh -->
     <string name="refresh_pulling">Pull to refresh</string>

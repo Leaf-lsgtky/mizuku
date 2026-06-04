@@ -25,7 +25,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,8 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import moe.shizuku.manager.Helps
 import moe.shizuku.manager.R
 import moe.shizuku.manager.authorization.AuthorizationManager
@@ -54,22 +51,15 @@ import rikka.lifecycle.Status
 import rikka.shizuku.Shizuku
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Card
-import top.yukonga.miuix.kmp.basic.DropdownImpl
-import top.yukonga.miuix.kmp.basic.HorizontalDivider
-import top.yukonga.miuix.kmp.basic.Icon
-import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.InfiniteProgressIndicator
-import top.yukonga.miuix.kmp.basic.ListPopupColumn
-import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.PullToRefresh
 import top.yukonga.miuix.kmp.basic.Switch
 import top.yukonga.miuix.kmp.basic.Text
-import top.yukonga.miuix.kmp.basic.TextButton
+import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.basic.rememberPullToRefreshState
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 import top.yukonga.miuix.kmp.utils.scrollEndHaptic
-import top.yukonga.miuix.kmp.window.WindowDialog
 
 @Composable
 fun MiuixAppManagementScreen(
@@ -81,13 +71,22 @@ fun MiuixAppManagementScreen(
     val packagesResource by viewModel.packages.observeAsState()
     val context = LocalContext.current
     val grantedStates = remember { mutableStateMapOf<String, Boolean>() }
-    val scope = rememberCoroutineScope()
+    var isRefreshing by remember { mutableStateOf(false) }
+    var searchText by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         if (!ShizukuStateMachine.isRunning()) {
             return@LaunchedEffect
         }
         viewModel.load()
+    }
+
+    LaunchedEffect(isRefreshing) {
+        if (isRefreshing) {
+            viewModel.load()
+            kotlinx.coroutines.delay(1000)
+            isRefreshing = false
+        }
     }
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
@@ -110,8 +109,8 @@ fun MiuixAppManagementScreen(
     val isLoading = packagesResource?.status == Status.LOADING
     val isError = packagesResource?.status == Status.ERROR
 
-    // 应用排序和筛选
-    val filteredAndSortedPackages = remember(packages, sortOption, showSystemApps) {
+    // 应用排序、筛选和搜索
+    val filteredAndSortedPackages = remember(packages, sortOption, showSystemApps, searchText) {
         packages?.let { list ->
             val filtered = if (showSystemApps) {
                 list
@@ -121,132 +120,146 @@ fun MiuixAppManagementScreen(
                     appInfo != null && (appInfo.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0
                 }
             }
+            val searched = if (searchText.isBlank()) {
+                filtered
+            } else {
+                filtered.filter { pi ->
+                    val label = pi.applicationInfo?.loadLabel(context.packageManager)?.toString() ?: pi.packageName
+                    label.contains(searchText, ignoreCase = true) || pi.packageName.contains(searchText, ignoreCase = true)
+                }
+            }
             when (sortOption) {
-                0 -> filtered.sortedBy { it.applicationInfo?.loadLabel(context.packageManager)?.toString()?.lowercase() ?: it.packageName.lowercase() }
-                1 -> filtered.sortedBy { it.packageName.lowercase() }
-                else -> filtered
+                0 -> searched.sortedBy { it.applicationInfo?.loadLabel(context.packageManager)?.toString()?.lowercase() ?: it.packageName.lowercase() }
+                1 -> searched.sortedBy { it.packageName.lowercase() }
+                else -> searched
             }
         }
     }
 
-    if (isLoading && filteredAndSortedPackages.isNullOrEmpty()) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            InfiniteProgressIndicator()
-        }
-    } else if (isError && filteredAndSortedPackages.isNullOrEmpty()) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = stringResource(R.string.home_app_management_empty),
-                style = MiuixTheme.textStyles.body1,
-                color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
-            )
-        }
-    } else {
-        val pullToRefreshState = rememberPullToRefreshState()
-        val refreshTexts = listOf(
-            stringResource(R.string.refresh_pulling),
-            stringResource(R.string.refresh_release),
-            stringResource(R.string.refresh_refresh),
-            stringResource(R.string.refresh_complete),
+    Column(modifier = Modifier.fillMaxSize()) {
+        // 搜索框
+        top.yukonga.miuix.kmp.basic.TextField(
+            value = searchText,
+            onValueChange = { searchText = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+            placeholder = stringResource(R.string.search_apps),
         )
 
-        PullToRefresh(
-            isRefreshing = isLoading,
-            pullToRefreshState = pullToRefreshState,
-            onRefresh = {
-                scope.launch {
-                    viewModel.load()
-                    delay(500)
-                }
-            },
-            refreshTexts = refreshTexts,
-            contentPadding = PaddingValues(vertical = 6.dp),
-        ) {
-            val lazyListState = rememberLazyListState()
-            LazyColumn(
-                state = lazyListState,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .scrollEndHaptic()
-                    .overScrollVertical()
-                    .nestedScroll(scrollBehavior.nestedScrollConnection),
-                contentPadding = PaddingValues(vertical = 6.dp),
-                overscrollEffect = null,
+        if (isLoading && filteredAndSortedPackages.isNullOrEmpty() && !isRefreshing) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                // 全部切换按钮
-                item {
-                    val allGranted = filteredAndSortedPackages?.all { pi ->
-                        val uid = pi.applicationInfo?.uid ?: return@all true
-                        grantedStates[pi.packageName] ?: AuthorizationManager.granted(pi.packageName, uid)
-                    } ?: false
+                InfiniteProgressIndicator()
+            }
+        } else if (isError && filteredAndSortedPackages.isNullOrEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.home_app_management_empty),
+                    style = MiuixTheme.textStyles.body1,
+                    color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+                )
+            }
+        } else {
+            val pullToRefreshState = rememberPullToRefreshState()
+            val refreshTexts = listOf(
+                stringResource(R.string.refresh_pulling),
+                stringResource(R.string.refresh_release),
+                stringResource(R.string.refresh_refresh),
+                stringResource(R.string.refresh_complete),
+            )
 
-                    Card(
-                        modifier = Modifier
-                            .padding(horizontal = 12.dp, vertical = 6.dp)
-                            .fillMaxWidth(),
-                    ) {
-                        BasicComponent(
-                            title = stringResource(R.string.app_management_toggle_all),
-                            endActions = {
-                                Switch(
-                                    checked = allGranted,
-                                    onCheckedChange = { grant ->
-                                        filteredAndSortedPackages?.forEach { pi ->
-                                            val uid = pi.applicationInfo?.uid ?: return@forEach
-                                            if (grant) {
-                                                AuthorizationManager.grant(pi.packageName, uid)
-                                            } else {
-                                                AuthorizationManager.revoke(pi.packageName, uid)
+            PullToRefresh(
+                isRefreshing = isRefreshing,
+                pullToRefreshState = pullToRefreshState,
+                onRefresh = { isRefreshing = true },
+                refreshTexts = refreshTexts,
+            ) {
+                val lazyListState = rememberLazyListState()
+                LazyColumn(
+                    state = lazyListState,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .scrollEndHaptic()
+                        .overScrollVertical()
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+                    contentPadding = PaddingValues(vertical = 6.dp),
+                    overscrollEffect = null,
+                ) {
+                    // 全部切换按钮
+                    item {
+                        val allGranted = filteredAndSortedPackages?.all { pi ->
+                            val uid = pi.applicationInfo?.uid ?: return@all true
+                            grantedStates[pi.packageName] ?: AuthorizationManager.granted(pi.packageName, uid)
+                        } ?: false
+
+                        Card(
+                            modifier = Modifier
+                                .padding(horizontal = 12.dp, vertical = 6.dp)
+                                .fillMaxWidth(),
+                        ) {
+                            BasicComponent(
+                                title = stringResource(R.string.app_management_toggle_all),
+                                endActions = {
+                                    Switch(
+                                        checked = allGranted,
+                                        onCheckedChange = { grant ->
+                                            filteredAndSortedPackages?.forEach { pi ->
+                                                val uid = pi.applicationInfo?.uid ?: return@forEach
+                                                if (grant) {
+                                                    AuthorizationManager.grant(pi.packageName, uid)
+                                                } else {
+                                                    AuthorizationManager.revoke(pi.packageName, uid)
+                                                }
+                                                grantedStates[pi.packageName] = grant
                                             }
-                                            grantedStates[pi.packageName] = grant
+                                        },
+                                    )
+                                },
+                                onClick = {
+                                    val grant = !allGranted
+                                    filteredAndSortedPackages?.forEach { pi ->
+                                        val uid = pi.applicationInfo?.uid ?: return@forEach
+                                        if (grant) {
+                                            AuthorizationManager.grant(pi.packageName, uid)
+                                        } else {
+                                            AuthorizationManager.revoke(pi.packageName, uid)
                                         }
-                                    },
-                                )
-                            },
-                            onClick = {
-                                val grant = !allGranted
-                                filteredAndSortedPackages?.forEach { pi ->
-                                    val uid = pi.applicationInfo?.uid ?: return@forEach
-                                    if (grant) {
+                                        grantedStates[pi.packageName] = grant
+                                    }
+                                }
+                            )
+                        }
+                    }
+
+                    // 应用列表
+                    if (filteredAndSortedPackages != null) {
+                        items(filteredAndSortedPackages, key = { it.packageName }) { pi ->
+                            MiuixAppItem(
+                                packageInfo = pi,
+                                isGranted = grantedStates[pi.packageName] ?: false,
+                                onToggle = { granted ->
+                                    val uid = pi.applicationInfo?.uid ?: return@MiuixAppItem
+                                    if (granted) {
                                         AuthorizationManager.grant(pi.packageName, uid)
                                     } else {
                                         AuthorizationManager.revoke(pi.packageName, uid)
                                     }
-                                    grantedStates[pi.packageName] = grant
-                                }
-                            }
-                        )
+                                    grantedStates[pi.packageName] = granted
+                                },
+                            )
+                        }
                     }
-                }
 
-                // 应用列表
-                if (filteredAndSortedPackages != null) {
-                    items(filteredAndSortedPackages, key = { it.packageName }) { pi ->
-                        MiuixAppItem(
-                            packageInfo = pi,
-                            isGranted = grantedStates[pi.packageName] ?: false,
-                            onToggle = { granted ->
-                                val uid = pi.applicationInfo?.uid ?: return@MiuixAppItem
-                                if (granted) {
-                                    AuthorizationManager.grant(pi.packageName, uid)
-                                } else {
-                                    AuthorizationManager.revoke(pi.packageName, uid)
-                                }
-                                grantedStates[pi.packageName] = granted
-                            },
-                        )
+                    // 底部间距
+                    item {
+                        Spacer(Modifier.height(16.dp))
                     }
-                }
-
-                // 底部间距
-                item {
-                    Spacer(Modifier.height(16.dp))
                 }
             }
         }

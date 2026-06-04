@@ -247,6 +247,7 @@
     <string name="sort_by_package_name">按包名排序</string>
     <string name="menu_sort">排序</string>
     <string name="show_system_apps">显示系统应用</string>
+    <string name="search_apps">搜索应用</string>
 
     <!-- Refresh -->
     <string name="refresh_pulling">下拉刷新</string>
