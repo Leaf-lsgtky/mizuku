@@ -88,6 +88,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -603,6 +604,15 @@ private fun StartRootCard(isRestart: Boolean, onClick: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(12.dp))
             Button(onClick = onClick) {
+                Icon(
+                    painter = painterResource(
+                        if (isRestart) R.drawable.ic_server_restart
+                        else R.drawable.ic_server_start_24dp
+                    ),
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp),
+                )
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = stringResource(
                         if (isRestart) R.string.home_root_button_restart
@@ -657,16 +667,34 @@ private fun StartWirelessAdbCard(
             Spacer(modifier = Modifier.height(12.dp))
             if (EnvironmentUtils.isTlsSupported()) {
                 OutlinedButton(onClick = onViewGuide) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_outline_open_in_new_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp),
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(stringResource(R.string.home_wireless_adb_view_guide_button))
                 }
                 Spacer(modifier = Modifier.height(8.dp))
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = onStartWadb) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_server_start_24dp),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp),
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(stringResource(R.string.start))
                 }
                 if (EnvironmentUtils.isTlsSupported()) {
-                    OutlinedButton(onClick = onPair) {
+                    Button(onClick = onPair) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_baseline_link_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text(stringResource(R.string.adb_pairing))
                     }
                 }
@@ -727,6 +755,12 @@ private fun StartAdbCard(onClick: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(12.dp))
             Button(onClick = onClick) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_code_24dp),
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp),
+                )
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(stringResource(R.string.home_adb_button_view_command))
             }
         }
@@ -823,6 +857,12 @@ private fun AdbPermissionLimitedCard() {
             OutlinedButton(onClick = {
                 CustomTabsHelper.launchUrlOrCopy(context, Helps.ADB.get())
             }) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_outline_open_in_new_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp),
+                )
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(stringResource(R.string.home_adb_button_view_help))
             }
         }

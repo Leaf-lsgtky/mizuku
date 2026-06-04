@@ -481,7 +481,19 @@ private fun MiuixStartRootCard(isRestart: Boolean, onClick: () -> Unit) {
             },
             bottomAction = {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = onClick) {
+                    Button(
+                        onClick = onClick,
+                        colors = ButtonDefaults.buttonColorsPrimary(),
+                    ) {
+                        Icon(
+                            painter = painterResource(
+                                if (isRestart) R.drawable.ic_server_restart
+                                else R.drawable.ic_server_start_24dp
+                            ),
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = stringResource(
                                 if (isRestart) R.string.home_root_button_restart
@@ -519,18 +531,40 @@ private fun MiuixStartWirelessAdbCard(
             },
             bottomAction = {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = onStartWadb) {
+                    Button(
+                        onClick = onStartWadb,
+                        colors = ButtonDefaults.buttonColorsPrimary(),
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_server_start_24dp),
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text(stringResource(R.string.start))
                     }
                     if (EnvironmentUtils.isTlsSupported()) {
-                        TextButton(
-                            text = stringResource(R.string.adb_pairing),
+                        Button(
                             onClick = onPair,
-                        )
-                        TextButton(
-                            text = stringResource(R.string.home_wireless_adb_view_guide_button),
-                            onClick = onViewGuide,
-                        )
+                            colors = ButtonDefaults.buttonColorsPrimary(),
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_baseline_link_24),
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp),
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(stringResource(R.string.adb_pairing))
+                        }
+                        Button(onClick = onViewGuide) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_outline_open_in_new_24),
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp),
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(stringResource(R.string.home_wireless_adb_view_guide_button))
+                        }
                     }
                 }
             },
@@ -555,14 +589,27 @@ private fun MiuixStartAdbCard(onClick: () -> Unit) {
             },
             bottomAction = {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    TextButton(
-                        text = stringResource(R.string.home_adb_button_view_command),
+                    Button(
                         onClick = onClick,
-                    )
-                    TextButton(
-                        text = stringResource(R.string.home_adb_button_view_help),
-                        onClick = { CustomTabsHelper.launchUrlOrCopy(context, Helps.ADB.get()) },
-                    )
+                        colors = ButtonDefaults.buttonColorsPrimary(),
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_code_24dp),
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.home_adb_button_view_command))
+                    }
+                    Button(onClick = { CustomTabsHelper.launchUrlOrCopy(context, Helps.ADB.get()) }) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_outline_open_in_new_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.home_adb_button_view_help))
+                    }
                 }
             },
         )
