@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
@@ -43,17 +44,18 @@ import moe.shizuku.manager.home.HomeViewModel
 import moe.shizuku.manager.management.AppsViewModel
 import moe.shizuku.manager.utils.ShizukuStateMachine
 import top.yukonga.miuix.kmp.blur.layerBackdrop
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
+import top.yukonga.miuix.kmp.basic.DropdownImpl
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
+import top.yukonga.miuix.kmp.basic.ListPopupColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
-import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.NavigationBar
 import top.yukonga.miuix.kmp.basic.NavigationBarItem
 import top.yukonga.miuix.kmp.basic.Scaffold
+import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
-import top.yukonga.miuix.kmp.basic.ButtonDefaults
-import androidx.compose.foundation.layout.width
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.All
@@ -62,8 +64,6 @@ import top.yukonga.miuix.kmp.icon.extended.Settings
 import top.yukonga.miuix.kmp.icon.extended.Sort
 import top.yukonga.miuix.kmp.icon.extended.VerticalSplit
 import top.yukonga.miuix.kmp.overlay.OverlayListPopup
-import top.yukonga.miuix.kmp.basic.DropdownImpl
-import top.yukonga.miuix.kmp.basic.ListPopupColumn
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 import top.yukonga.miuix.kmp.window.WindowDialog
@@ -162,198 +162,222 @@ fun MiuixMainScreen(
         stringResource(R.string.settings_title)
     )
 
-    Scaffold(
-        topBar = {
-            searchStatus.TopAppBarAnim {
-                BlurredBar(blurBackdrop) {
-                    TopAppBar(
-                        title = pages[mainPagerState.selectedPage],
-                        color = barColor,
-                        scrollBehavior = scrollBehavior,
-                    actions = {
-                        if (mainPagerState.selectedPage == 0) {
-                            Box {
-                                IconButton(
-                                    onClick = { showTopPopup.value = true },
-                                    holdDownState = showTopPopup.value
-                                ) {
-                                    Icon(
-                                        imageVector = MiuixIcons.MoreCircle,
-                                        tint = MiuixTheme.colorScheme.onSurface,
-                                        contentDescription = null
-                                    )
-                                }
-                                OverlayListPopup(
-                                    show = showTopPopup.value,
-                                    onDismissRequest = { showTopPopup.value = false },
-                                    content = {
-                                        ListPopupColumn {
-                                            DropdownImpl(
-                                                text = stringResource(R.string.action_stop),
-                                                optionSize = 1,
-                                                isSelected = false,
-                                                onSelectedIndexChange = {
-                                                    showTopPopup.value = false
-                                                    showStopDialog = true
-                                                },
-                                                index = 0
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            topBar = {
+                searchStatus.TopAppBarAnim {
+                    BlurredBar(blurBackdrop) {
+                        TopAppBar(
+                            title = pages[mainPagerState.selectedPage],
+                            color = barColor,
+                            scrollBehavior = scrollBehavior,
+                            actions = {
+                                if (mainPagerState.selectedPage == 0) {
+                                    Box {
+                                        IconButton(
+                                            onClick = { showTopPopup.value = true },
+                                            holdDownState = showTopPopup.value
+                                        ) {
+                                            Icon(
+                                                imageVector = MiuixIcons.MoreCircle,
+                                                tint = MiuixTheme.colorScheme.onSurface,
+                                                contentDescription = null
                                             )
                                         }
+                                        OverlayListPopup(
+                                            show = showTopPopup.value,
+                                            onDismissRequest = { showTopPopup.value = false },
+                                            content = {
+                                                ListPopupColumn {
+                                                    DropdownImpl(
+                                                        text = stringResource(R.string.action_stop),
+                                                        optionSize = 1,
+                                                        isSelected = false,
+                                                        onSelectedIndexChange = {
+                                                            showTopPopup.value = false
+                                                            showStopDialog = true
+                                                        },
+                                                        index = 0
+                                                    )
+                                                }
+                                            }
+                                        )
                                     }
-                                )
-                            }
-                        } else if (mainPagerState.selectedPage == 1 && searchStatus.isCollapsed()) {
-                            // 应用管理页面的排序按钮
-                            Box {
-                                val showSortPopup = remember { mutableStateOf(false) }
-                                OverlayListPopup(
-                                    show = showSortPopup.value,
-                                    onDismissRequest = { showSortPopup.value = false },
-                                    content = {
-                                        ListPopupColumn {
-                                            val sortOptions = listOf(
-                                                R.string.sort_by_name,
-                                                R.string.sort_by_package_name,
-                                            )
-                                            sortOptions.forEachIndexed { index, resId ->
-                                                DropdownImpl(
-                                                    text = stringResource(resId),
-                                                    optionSize = sortOptions.size,
-                                                    isSelected = sortOption == index,
-                                                    index = index,
-                                                    onSelectedIndexChange = {
-                                                        sortOption = index
-                                                        showSortPopup.value = false
+                                } else if (mainPagerState.selectedPage == 1 && searchStatus.isCollapsed()) {
+                                    // 应用管理页面的排序按钮
+                                    Box {
+                                        val showSortPopup = remember { mutableStateOf(false) }
+                                        OverlayListPopup(
+                                            show = showSortPopup.value,
+                                            onDismissRequest = { showSortPopup.value = false },
+                                            content = {
+                                                ListPopupColumn {
+                                                    val sortOptions = listOf(
+                                                        R.string.sort_by_name,
+                                                        R.string.sort_by_package_name,
+                                                    )
+                                                    sortOptions.forEachIndexed { index, resId ->
+                                                        DropdownImpl(
+                                                            text = stringResource(resId),
+                                                            optionSize = sortOptions.size,
+                                                            isSelected = sortOption == index,
+                                                            index = index,
+                                                            onSelectedIndexChange = {
+                                                                sortOption = index
+                                                                showSortPopup.value = false
+                                                            }
+                                                        )
                                                     }
-                                                )
-                                            }
-                                        }
-                                    }
-                                )
-                                IconButton(
-                                    onClick = { showSortPopup.value = true },
-                                    holdDownState = showSortPopup.value,
-                                ) {
-                                    Icon(
-                                        imageVector = MiuixIcons.Sort,
-                                        tint = MiuixTheme.colorScheme.onSurface,
-                                        contentDescription = stringResource(R.string.menu_sort)
-                                    )
-                                }
-                            }
-
-                            // 应用管理页面的更多选项按钮
-                            Box {
-                                val showMorePopup = remember { mutableStateOf(false) }
-                                OverlayListPopup(
-                                    show = showMorePopup.value,
-                                    onDismissRequest = { showMorePopup.value = false },
-                                    content = {
-                                        ListPopupColumn {
-                                            DropdownImpl(
-                                                text = stringResource(R.string.show_system_apps),
-                                                optionSize = 1,
-                                                isSelected = showSystemApps,
-                                                index = 0,
-                                                onSelectedIndexChange = {
-                                                    showSystemApps = !showSystemApps
-                                                    showMorePopup.value = false
                                                 }
+                                            }
+                                        )
+                                        IconButton(
+                                            onClick = { showSortPopup.value = true },
+                                            holdDownState = showSortPopup.value,
+                                        ) {
+                                            Icon(
+                                                imageVector = MiuixIcons.Sort,
+                                                tint = MiuixTheme.colorScheme.onSurface,
+                                                contentDescription = stringResource(R.string.menu_sort)
                                             )
                                         }
                                     }
-                                )
-                                IconButton(
-                                    onClick = { showMorePopup.value = true },
-                                    holdDownState = showMorePopup.value,
-                                ) {
-                                    Icon(
-                                        imageVector = MiuixIcons.MoreCircle,
-                                        tint = MiuixTheme.colorScheme.onSurface,
-                                        contentDescription = null
-                                    )
-                                }
-                            }
-                        }
-                    },
-                    bottomContent = {
-                        if (mainPagerState.selectedPage == 1) {
-                            Box(
-                                modifier = Modifier
-                                    .alpha(if (searchStatus.isCollapsed()) 1f else 0f)
-                                    .onGloballyPositioned { coordinates ->
-                                        with(density) {
-                                            val newOffsetY = coordinates.positionInWindow().y.toDp()
-                                            if (searchStatus.offsetY != newOffsetY) {
-                                                searchStatus = searchStatus.copy(offsetY = newOffsetY)
-                                            }
-                                        }
-                                    }
-                                    .then(
-                                        if (searchStatus.isCollapsed()) {
-                                            Modifier.pointerInput(Unit) {
-                                                detectTapGestures {
-                                                    searchStatus = searchStatus.copy(current = SearchStatus.Status.EXPANDING)
+
+                                    // 应用管理页面的更多选项按钮
+                                    Box {
+                                        val showMorePopup = remember { mutableStateOf(false) }
+                                        OverlayListPopup(
+                                            show = showMorePopup.value,
+                                            onDismissRequest = { showMorePopup.value = false },
+                                            content = {
+                                                ListPopupColumn {
+                                                    DropdownImpl(
+                                                        text = stringResource(R.string.show_system_apps),
+                                                        optionSize = 1,
+                                                        isSelected = showSystemApps,
+                                                        index = 0,
+                                                        onSelectedIndexChange = {
+                                                            showSystemApps = !showSystemApps
+                                                            showMorePopup.value = false
+                                                        }
+                                                    )
                                                 }
                                             }
-                                        } else Modifier
-                                    )
-                            ) {
-                                SearchBarFake(searchStatus.label, dynamicTopPadding)
+                                        )
+                                        IconButton(
+                                            onClick = { showMorePopup.value = true },
+                                            holdDownState = showMorePopup.value,
+                                        ) {
+                                            Icon(
+                                                imageVector = MiuixIcons.MoreCircle,
+                                                tint = MiuixTheme.colorScheme.onSurface,
+                                                contentDescription = null
+                                            )
+                                        }
+                                    }
+                                }
+                            },
+                            bottomContent = {
+                                if (mainPagerState.selectedPage == 1) {
+                                    Box(
+                                        modifier = Modifier
+                                            .alpha(if (searchStatus.isCollapsed()) 1f else 0f)
+                                            .onGloballyPositioned { coordinates ->
+                                                with(density) {
+                                                    val newOffsetY = coordinates.positionInWindow().y.toDp()
+                                                    if (searchStatus.offsetY != newOffsetY) {
+                                                        searchStatus = searchStatus.copy(offsetY = newOffsetY)
+                                                    }
+                                                }
+                                            }
+                                            .then(
+                                                if (searchStatus.isCollapsed()) {
+                                                    Modifier.pointerInput(Unit) {
+                                                        detectTapGestures {
+                                                            searchStatus = searchStatus.copy(current = SearchStatus.Status.EXPANDING)
+                                                        }
+                                                    }
+                                                } else Modifier
+                                            )
+                                    ) {
+                                        SearchBarFake(searchStatus.label, dynamicTopPadding)
+                                    }
+                                }
                             }
-                        }
+                        )
                     }
-                )
+                }
+            },
+            bottomBar = {
+                BlurredBar(blurBackdrop) {
+                    NavigationBar(
+                        color = barColor
+                    ) {
+                        NavigationBarItem(
+                            selected = mainPagerState.selectedPage == 0,
+                            onClick = { mainPagerState.animateToPage(0) },
+                            icon = MiuixIcons.VerticalSplit,
+                            label = stringResource(R.string.app_name)
+                        )
+                        NavigationBarItem(
+                            selected = mainPagerState.selectedPage == 1,
+                            onClick = { mainPagerState.animateToPage(1) },
+                            icon = MiuixIcons.All,
+                            label = stringResource(R.string.home_app_management_title)
+                        )
+                        NavigationBarItem(
+                            selected = mainPagerState.selectedPage == 2,
+                            onClick = { mainPagerState.animateToPage(2) },
+                            icon = MiuixIcons.Settings,
+                            label = stringResource(R.string.settings_title)
+                        )
+                    }
+                }
+            },
+            containerColor = MiuixTheme.colorScheme.surface,
+        ) { paddingValues ->
+            HorizontalPager(
+                state = mainPagerState.pagerState,
+                userScrollEnabled = true,
+                beyondViewportPageCount = 1,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .then(
+                        if (blurActive) Modifier.layerBackdrop(blurBackdrop)
+                        else Modifier
+                    )
+            ) { page ->
+                when (page) {
+                    0 -> MiuixHomeScreen(
+                        homeViewModel = homeViewModel,
+                        appsViewModel = appsViewModel,
+                        onNavigateToStarter = onNavigateToStarter,
+                        onNavigateToShellTutorial = onNavigateToShellTutorial,
+                        onNavigateToAdbPairingTutorial = onNavigateToAdbPairingTutorial,
+                        scrollBehavior = scrollBehavior
+                    )
+                    1 -> MiuixAppManagementScreen(
+                        viewModel = appsViewModel,
+                        scrollBehavior = scrollBehavior,
+                        sortOption = sortOption,
+                        showSystemApps = showSystemApps,
+                        searchStatus = searchStatus,
+                        onSearchStatusChange = { searchStatus = it },
+                        onSearchResults = { searchResults = it }
+                    )
+                    2 -> MiuixSettingsScreen(
+                        scrollBehavior = scrollBehavior
+                    )
                 }
             }
-        },
-        bottomBar = {
-            BlurredBar(blurBackdrop) {
-                NavigationBar(
-                    color = barColor
-                ) {
-                NavigationBarItem(
-                    selected = mainPagerState.selectedPage == 0,
-                    onClick = { mainPagerState.animateToPage(0) },
-                    icon = MiuixIcons.VerticalSplit,
-                    label = stringResource(R.string.app_name)
-                )
-                NavigationBarItem(
-                    selected = mainPagerState.selectedPage == 1,
-                    onClick = { mainPagerState.animateToPage(1) },
-                    icon = MiuixIcons.All,
-                    label = stringResource(R.string.home_app_management_title)
-                )
-                NavigationBarItem(
-                    selected = mainPagerState.selectedPage == 2,
-                    onClick = { mainPagerState.animateToPage(2) },
-                    icon = MiuixIcons.Settings,
-                    label = stringResource(R.string.settings_title)
-                )
-                }
-            }
-        },
-        popupHost = {
-            if (mainPagerState.selectedPage == 1) {
-                searchStatus.SearchPager(
-                    onSearchStatusChange = { searchStatus = it },
-                    defaultResult = {
-                        // 显示默认的应用列表
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize().overScrollVertical()
-                        ) {
-                            items(searchResults, key = { it.packageName }) { pi ->
-                                MiuixAppItem(
-                                    packageInfo = pi,
-                                    isGranted = false,
-                                    onToggle = { }
-                                )
-                            }
-                        }
-                    },
-                    searchBarTopPadding = dynamicTopPadding,
-                ) {
-                    // 显示搜索结果
+        }
+
+        if (mainPagerState.selectedPage == 1) {
+            searchStatus.SearchPager(
+                onSearchStatusChange = { searchStatus = it },
+                defaultResult = {
+                    // 显示默认的应用列表
                     LazyColumn(
                         modifier = Modifier.fillMaxSize().overScrollVertical()
                     ) {
@@ -365,44 +389,21 @@ fun MiuixMainScreen(
                             )
                         }
                     }
+                },
+                searchBarTopPadding = dynamicTopPadding,
+            ) {
+                // 显示搜索结果
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize().overScrollVertical()
+                ) {
+                    items(searchResults, key = { it.packageName }) { pi ->
+                        MiuixAppItem(
+                            packageInfo = pi,
+                            isGranted = false,
+                            onToggle = { }
+                        )
+                    }
                 }
-            }
-        },
-        containerColor = MiuixTheme.colorScheme.surface,
-    ) { paddingValues ->
-        HorizontalPager(
-            state = mainPagerState.pagerState,
-            userScrollEnabled = true,
-            beyondViewportPageCount = 1,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .then(
-                    if (blurActive) Modifier.layerBackdrop(blurBackdrop)
-                    else Modifier
-                )
-        ) { page ->
-            when (page) {
-                0 -> MiuixHomeScreen(
-                    homeViewModel = homeViewModel,
-                    appsViewModel = appsViewModel,
-                    onNavigateToStarter = onNavigateToStarter,
-                    onNavigateToShellTutorial = onNavigateToShellTutorial,
-                    onNavigateToAdbPairingTutorial = onNavigateToAdbPairingTutorial,
-                    scrollBehavior = scrollBehavior
-                )
-                1 -> MiuixAppManagementScreen(
-                    viewModel = appsViewModel,
-                    scrollBehavior = scrollBehavior,
-                    sortOption = sortOption,
-                    showSystemApps = showSystemApps,
-                    searchStatus = searchStatus,
-                    onSearchStatusChange = { searchStatus = it },
-                    onSearchResults = { searchResults = it }
-                )
-                2 -> MiuixSettingsScreen(
-                    scrollBehavior = scrollBehavior
-                )
             }
         }
     }

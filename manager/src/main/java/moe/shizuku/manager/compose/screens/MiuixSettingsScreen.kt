@@ -7,12 +7,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,11 +41,13 @@ import moe.shizuku.manager.utils.SettingsHelper
 import moe.shizuku.manager.utils.ShizukuStateMachine
 import rikka.material.app.LocaleDelegate
 import rikka.shizuku.manager.ShizukuLocales
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
+import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.preference.ArrowPreference
 import top.yukonga.miuix.kmp.preference.OverlayDropdownPreference
 import top.yukonga.miuix.kmp.preference.SwitchPreference
@@ -90,6 +94,8 @@ fun MiuixSettingsScreen(
     var restartDialogMessage by remember { mutableStateOf("") }
     var pendingRestartAction by remember { mutableStateOf<(() -> Unit)?>(null) }
     var showStopTcpDialog by remember { mutableStateOf(false) }
+    var showTcpPortDialog by remember { mutableStateOf(false) }
+    var tcpPortInput by remember { mutableStateOf("") }
     var showStartOnBootBugDialog by remember { mutableStateOf(false) }
 
     // Battery optimization state machine
@@ -224,6 +230,61 @@ fun MiuixSettingsScreen(
                     },
                     modifier = Modifier.fillMaxWidth()
                 )
+            }
+        }
+    }
+
+    if (showTcpPortDialog) {
+        val inputPort = tcpPortInput.ifBlank { null }?.toIntOrNull()
+        val isInputValid = inputPort == null || inputPort in 1..65535
+
+        WindowDialog(
+            show = true,
+            onDismissRequest = { showTcpPortDialog = false },
+            title = stringResource(R.string.settings_tcp_port),
+        ) {
+            Column {
+                TextField(
+                    value = tcpPortInput,
+                    onValueChange = { value ->
+                        tcpPortInput = value.filter { it in '0'..'9' }.take(5)
+                    },
+                    label = stringResource(R.string.settings_tcp_port_hint),
+                    useLabelAsPlaceholder = true,
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                if (!isInputValid) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = stringResource(R.string.dialog_adb_invalid_port),
+                        style = MiuixTheme.textStyles.body2,
+                        color = MiuixTheme.colorScheme.error,
+                    )
+                }
+                Spacer(modifier = Modifier.height(24.dp))
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    TextButton(
+                        text = stringResource(android.R.string.cancel),
+                        onClick = { showTcpPortDialog = false },
+                        modifier = Modifier.weight(1f),
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    TextButton(
+                        text = stringResource(android.R.string.ok),
+                        onClick = {
+                            val newPort = inputPort ?: 5555
+                            showTcpPortDialog = false
+                            applyWithRestartPrompt(ShizukuSettings.Keys.KEY_TCP_PORT, newPort) {
+                                ShizukuSettings.setTcpPort(inputPort)
+                                tcpPort = newPort
+                            }
+                        },
+                        modifier = Modifier.weight(1f),
+                        enabled = isInputValid,
+                        colors = ButtonDefaults.textButtonColorsPrimary(),
+                    )
+                }
             }
         }
     }
@@ -363,7 +424,8 @@ fun MiuixSettingsScreen(
                                 title = stringResource(R.string.settings_tcp_port),
                                 summary = portText,
                                 onClick = {
-                                    // TODO: Show port edit dialog
+                                    tcpPortInput = if (tcpPort == 5555) "" else tcpPort.toString()
+                                    showTcpPortDialog = true
                                 },
                             )
                         }
