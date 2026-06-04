@@ -7,8 +7,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.Settings
-import android.text.method.LinkMovementMethod
-import android.widget.TextView
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -42,7 +40,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.offset
-import androidx.compose.ui.viewinterop.AndroidView
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -61,7 +58,6 @@ import moe.shizuku.manager.adb.AdbKey
 import moe.shizuku.manager.adb.AdbMdns
 import moe.shizuku.manager.adb.AdbPairingClient
 import moe.shizuku.manager.adb.PreferenceAdbKeyStore
-import moe.shizuku.manager.ktx.toHtml
 import moe.shizuku.manager.model.ServiceStatus
 import moe.shizuku.manager.utils.CustomTabsHelper
 import moe.shizuku.manager.utils.EnvironmentUtils
@@ -69,9 +65,9 @@ import moe.shizuku.manager.utils.SettingsHelper
 import moe.shizuku.manager.utils.SettingsPage
 import moe.shizuku.manager.utils.ShizukuStateMachine
 import moe.shizuku.manager.utils.UserHandleCompat
-import rikka.html.text.HtmlCompat
 import rikka.shizuku.Shizuku
 import rikka.shizuku.ShizukuApiConstants
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.CircularProgressIndicator
@@ -84,6 +80,7 @@ import top.yukonga.miuix.kmp.basic.CardDefaults
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.Help
 import top.yukonga.miuix.kmp.icon.extended.Info
+import top.yukonga.miuix.kmp.icon.extended.Link
 import top.yukonga.miuix.kmp.icon.extended.Ok
 import top.yukonga.miuix.kmp.icon.extended.Refresh
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -480,58 +477,23 @@ private fun MiuixTerminalCard(onClick: () -> Unit) {
 
 @Composable
 private fun MiuixStartRootCard(isRestart: Boolean, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.defaultColors(
-            color = MiuixTheme.colorScheme.secondaryContainer,
-        ),
-    ) {
-        Column(modifier = Modifier.padding(24.dp)) {
-            Icon(
-                imageVector = MiuixIcons.Ok,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape),
-                tint = MiuixTheme.colorScheme.onSecondaryContainer,
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = stringResource(R.string.home_root_title),
-                style = MiuixTheme.textStyles.title2,
-                fontWeight = FontWeight.Bold,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            val context = LocalContext.current
-            AndroidView(
-                factory = { ctx ->
-                    TextView(ctx).apply {
-                        movementMethod = LinkMovementMethod.getInstance()
-                        text = ctx.getString(
-                            R.string.home_root_description,
-                            "<b><a href=\"${Helps.SUI.get()}\">Sui</a></b>",
-                            "Sui"
-                        ).toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
-                    }
-                },
-                update = { tv ->
-                    tv.text = tv.context.getString(
-                        R.string.home_root_description,
-                        "<b><a href=\"${Helps.SUI.get()}\">Sui</a></b>",
-                        "Sui"
-                    ).toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
-                },
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Button(onClick = onClick) {
-                Text(
-                    text = stringResource(
-                        if (isRestart) R.string.home_root_button_restart
-                        else R.string.home_root_button_start
-                    ),
+    Card(modifier = Modifier.fillMaxWidth()) {
+        BasicComponent(
+            title = stringResource(R.string.home_root_title),
+            summary = stringResource(
+                if (isRestart) R.string.home_root_button_restart
+                else R.string.home_root_button_start
+            ),
+            startAction = {
+                Icon(
+                    imageVector = MiuixIcons.Ok,
+                    modifier = Modifier.padding(end = 16.dp),
+                    contentDescription = null,
+                    tint = MiuixTheme.colorScheme.onBackground,
                 )
-            }
-        }
+            },
+            onClick = onClick,
+        )
     }
 }
 
@@ -540,245 +502,104 @@ private fun MiuixStartWirelessAdbCard(
     onStartWadb: () -> Unit,
     onPair: () -> Unit,
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.defaultColors(
-            color = MiuixTheme.colorScheme.tertiaryContainer,
-        ),
-    ) {
-        Column(modifier = Modifier.padding(24.dp)) {
-            Icon(
-                imageVector = MiuixIcons.Info,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape),
-                tint = MiuixTheme.colorScheme.onTertiaryContainer,
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = stringResource(R.string.home_wireless_adb_title),
-                style = MiuixTheme.textStyles.title2,
-                fontWeight = FontWeight.Bold,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = stringResource(R.string.home_wireless_adb_description),
-                style = MiuixTheme.textStyles.body2,
-                color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis,
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = onStartWadb) {
-                    Text(stringResource(R.string.start))
-                }
+    Card(modifier = Modifier.fillMaxWidth()) {
+        BasicComponent(
+            title = stringResource(R.string.home_wireless_adb_title),
+            summary = stringResource(R.string.home_wireless_adb_description),
+            startAction = {
+                Icon(
+                    imageVector = MiuixIcons.Info,
+                    modifier = Modifier.padding(end = 16.dp),
+                    contentDescription = null,
+                    tint = MiuixTheme.colorScheme.onBackground,
+                )
+            },
+            endActions = {
                 if (EnvironmentUtils.isTlsSupported()) {
                     TextButton(
                         text = stringResource(R.string.adb_pairing),
-                        onClick = onPair
+                        onClick = onPair,
                     )
                 }
-            }
-        }
+            },
+            onClick = onStartWadb,
+        )
     }
 }
 
 @Composable
 private fun MiuixStartAdbCard(onClick: () -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.defaultColors(
-            color = MiuixTheme.colorScheme.surfaceVariant,
-        ),
-    ) {
-        Column(modifier = Modifier.padding(24.dp)) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
+    Card(modifier = Modifier.fillMaxWidth()) {
+        BasicComponent(
+            title = stringResource(R.string.home_adb_title),
+            summary = stringResource(R.string.home_adb_button_view_command),
+            startAction = {
                 Icon(
                     imageVector = MiuixIcons.Help,
+                    modifier = Modifier.padding(end = 16.dp),
                     contentDescription = null,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape),
-                    tint = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+                    tint = MiuixTheme.colorScheme.onBackground,
                 )
-                Spacer(modifier = Modifier.width(16.dp))
-                Column {
-                    Text(
-                        text = stringResource(R.string.home_adb_title),
-                        style = MiuixTheme.textStyles.title2,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Text(
-                        text = stringResource(R.string.home_adb_button_view_command),
-                        style = MiuixTheme.textStyles.body2,
-                        color = MiuixTheme.colorScheme.primary,
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            val context = LocalContext.current
-            AndroidView(
-                factory = { ctx ->
-                    TextView(ctx).apply {
-                        movementMethod = LinkMovementMethod.getInstance()
-                        text = ctx.getString(R.string.home_adb_description, Helps.ADB.get())
-                            .toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
-                    }
-                },
-                update = { tv ->
-                    tv.text = tv.context.getString(R.string.home_adb_description, Helps.ADB.get())
-                        .toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
-                },
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Button(onClick = onClick) {
-                Text(stringResource(R.string.home_adb_button_view_command))
-            }
-        }
+            },
+            onClick = onClick,
+        )
     }
 }
 
 @Composable
 private fun MiuixAutomationCard(onClick: () -> Unit) {
-    val showDeviceRestriction = Build.VERSION.SDK_INT < Build.VERSION_CODES.R &&
-            !EnvironmentUtils.isTelevision() &&
-            !EnvironmentUtils.isRooted()
-
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.defaultColors(
-            color = MiuixTheme.colorScheme.surfaceVariant,
-        ),
-        onClick = onClick,
-        showIndication = true,
-        pressFeedbackType = PressFeedbackType.Tilt
-    ) {
-        Column(modifier = Modifier.padding(24.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+    Card(modifier = Modifier.fillMaxWidth()) {
+        BasicComponent(
+            title = stringResource(R.string.home_automation_title),
+            summary = stringResource(R.string.home_automation_description),
+            startAction = {
                 Icon(
                     imageVector = MiuixIcons.Help,
+                    modifier = Modifier.padding(end = 16.dp),
                     contentDescription = null,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape),
-                    tint = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+                    tint = MiuixTheme.colorScheme.onBackground,
                 )
-                Spacer(modifier = Modifier.width(16.dp))
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = stringResource(R.string.home_automation_title),
-                        style = MiuixTheme.textStyles.title2,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Text(
-                        text = stringResource(R.string.home_automation_description),
-                        style = MiuixTheme.textStyles.body2,
-                        color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
-            }
-            if (showDeviceRestriction) {
-                Spacer(modifier = Modifier.height(8.dp))
-                val context = LocalContext.current
-                AndroidView(
-                    factory = { ctx ->
-                        TextView(ctx).apply {
-                            movementMethod = LinkMovementMethod.getInstance()
-                            text = ctx.getString(
-                                R.string.home_automation_description_device_restriction,
-                                "<b><font face=\"monospace\">adb tcpip 5555</font></b>"
-                            ).toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
-                        }
-                    },
-                    update = { tv ->
-                        tv.text = tv.context.getString(
-                            R.string.home_automation_description_device_restriction,
-                            "<b><font face=\"monospace\">adb tcpip 5555</font></b>"
-                        ).toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
-                    },
-                )
-            }
-        }
+            },
+            onClick = onClick,
+        )
     }
 }
 
 @Composable
 private fun MiuixAdbPermissionLimitedCard() {
     val context = LocalContext.current
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.defaultColors(
-            color = MiuixTheme.colorScheme.errorContainer,
-        ),
-    ) {
-        Column(modifier = Modifier.padding(24.dp)) {
-            Text(
-                text = stringResource(R.string.home_adb_is_limited_title),
-                style = MiuixTheme.textStyles.title2,
-                fontWeight = FontWeight.Bold,
-                color = MiuixTheme.colorScheme.onErrorContainer,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = stringResource(R.string.home_adb_is_limited_description),
-                style = MiuixTheme.textStyles.body2,
-                color = MiuixTheme.colorScheme.onErrorContainer,
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            TextButton(
-                text = stringResource(R.string.home_adb_button_view_help),
-                onClick = { CustomTabsHelper.launchUrlOrCopy(context, Helps.ADB.get()) }
-            )
-        }
+    Card(modifier = Modifier.fillMaxWidth()) {
+        BasicComponent(
+            title = stringResource(R.string.home_adb_is_limited_title),
+            summary = stringResource(R.string.home_adb_is_limited_description),
+            endActions = {
+                Icon(
+                    imageVector = MiuixIcons.Link,
+                    tint = MiuixTheme.colorScheme.onSurface,
+                    contentDescription = null,
+                )
+            },
+            onClick = { CustomTabsHelper.launchUrlOrCopy(context, Helps.ADB.get()) },
+        )
     }
 }
 
 @Composable
 private fun MiuixLearnMoreCard() {
     val context = LocalContext.current
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.defaultColors(
-            color = MiuixTheme.colorScheme.surfaceVariant,
-        ),
-        onClick = {
-            CustomTabsHelper.launchUrlOrCopy(context, Helps.DEVELOPER.get())
-        },
-        showIndication = true,
-        pressFeedbackType = PressFeedbackType.Tilt
-    ) {
-        Row(
-            modifier = Modifier.padding(24.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                imageVector = MiuixIcons.Help,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape),
-                tint = MiuixTheme.colorScheme.onSurfaceVariantSummary,
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(
-                    text = stringResource(R.string.home_learn_more_title),
-                    style = MiuixTheme.textStyles.title2,
-                    fontWeight = FontWeight.Bold,
+    Card(modifier = Modifier.fillMaxWidth()) {
+        BasicComponent(
+            title = stringResource(R.string.home_learn_more_title),
+            summary = stringResource(R.string.home_learn_more_description),
+            endActions = {
+                Icon(
+                    imageVector = MiuixIcons.Link,
+                    tint = MiuixTheme.colorScheme.onSurface,
+                    contentDescription = null,
                 )
-                Text(
-                    text = stringResource(R.string.home_learn_more_description),
-                    style = MiuixTheme.textStyles.body2,
-                    color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
-                )
-            }
-        }
+            },
+            onClick = { CustomTabsHelper.launchUrlOrCopy(context, Helps.DEVELOPER.get()) },
+        )
     }
 }
 
