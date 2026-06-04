@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import moe.shizuku.manager.R
 import moe.shizuku.manager.compose.components.SearchBarFake
+import moe.shizuku.manager.compose.components.SearchPager
 import moe.shizuku.manager.compose.components.SearchStatus
 import moe.shizuku.manager.home.HomeViewModel
 import moe.shizuku.manager.management.AppsViewModel
