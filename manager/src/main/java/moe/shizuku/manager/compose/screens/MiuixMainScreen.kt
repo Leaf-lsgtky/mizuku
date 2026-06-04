@@ -162,8 +162,9 @@ fun MiuixMainScreen(
         stringResource(R.string.settings_title)
     )
 
-    Scaffold(
-        bottomBar = {
+    Scaffold {
+        Scaffold(
+            bottomBar = {
             BlurredBar(bottomBarBackdrop) {
                 NavigationBar(
                     color = bottomBarColor
@@ -329,8 +330,9 @@ fun MiuixMainScreen(
                                         contentDescription = null
                                     )
                                 }
-                            }
-                        }
+        }
+    }
+    }
                     },
                     bottomContent = {
                         Box(
@@ -380,6 +382,7 @@ fun MiuixMainScreen(
             }
             }
         }
+    }
     }
 
     if (mainPagerState.selectedPage == 1) {
