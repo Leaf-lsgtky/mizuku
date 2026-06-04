@@ -437,7 +437,7 @@ private fun MiuixMainPageWrapper(
                 )
             }
         },
-        containerColor = MiuixTheme.colorScheme.surface,
+        popupHost = { },
     ) {
         content()
     }
