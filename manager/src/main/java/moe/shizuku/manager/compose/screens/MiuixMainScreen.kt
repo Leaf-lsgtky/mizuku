@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -50,6 +52,7 @@ import top.yukonga.miuix.kmp.overlay.OverlayListPopup
 import top.yukonga.miuix.kmp.basic.DropdownImpl
 import top.yukonga.miuix.kmp.basic.ListPopupColumn
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.overScrollVertical
 import top.yukonga.miuix.kmp.window.WindowDialog
 
 @Composable
@@ -74,6 +77,7 @@ fun MiuixMainScreen(
     // 搜索状态
     val searchLabel = stringResource(R.string.search_apps)
     var searchStatus by remember { mutableStateOf(SearchStatus(searchLabel)) }
+    var searchResults by remember { mutableStateOf<List<android.content.pm.PackageInfo>>(emptyList()) }
     val dynamicTopPadding by remember {
         derivedStateOf { 12.dp * (1f - scrollBehavior.state.collapsedFraction) }
     }
@@ -286,9 +290,35 @@ fun MiuixMainScreen(
             if (selectedIndex == 1) {
                 searchStatus.SearchPager(
                     onSearchStatusChange = { searchStatus = it },
-                    defaultResult = { },
+                    defaultResult = {
+                        // 显示默认的应用列表
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize().overScrollVertical()
+                        ) {
+                            items(searchResults, key = { it.packageName }) { pi ->
+                                MiuixAppItem(
+                                    packageInfo = pi,
+                                    isGranted = false,
+                                    onToggle = { }
+                                )
+                            }
+                        }
+                    },
                     searchBarTopPadding = dynamicTopPadding,
-                ) { }
+                ) {
+                    // 显示搜索结果
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize().overScrollVertical()
+                    ) {
+                        items(searchResults, key = { it.packageName }) { pi ->
+                            MiuixAppItem(
+                                packageInfo = pi,
+                                isGranted = false,
+                                onToggle = { }
+                            )
+                        }
+                    }
+                }
             }
         },
         containerColor = MiuixTheme.colorScheme.surface,
@@ -313,7 +343,8 @@ fun MiuixMainScreen(
                     sortOption = sortOption,
                     showSystemApps = showSystemApps,
                     searchStatus = searchStatus,
-                    onSearchStatusChange = { searchStatus = it }
+                    onSearchStatusChange = { searchStatus = it },
+                    onSearchResults = { searchResults = it }
                 )
                 2 -> MiuixSettingsScreen(
                     scrollBehavior = scrollBehavior

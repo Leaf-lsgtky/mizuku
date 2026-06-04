@@ -73,6 +73,7 @@ fun MiuixAppManagementScreen(
     showSystemApps: Boolean = false,
     searchStatus: SearchStatus = SearchStatus(""),
     onSearchStatusChange: (SearchStatus) -> Unit = {},
+    onSearchResults: (List<PackageInfo>) -> Unit = {},
 ) {
     val packagesResource by viewModel.packages.observeAsState()
     val context = LocalContext.current
@@ -139,6 +140,11 @@ fun MiuixAppManagementScreen(
                 else -> searched
             }
         }
+    }
+
+    // 将搜索结果传递给父组件
+    LaunchedEffect(filteredAndSortedPackages) {
+        onSearchResults(filteredAndSortedPackages ?: emptyList())
     }
 
     searchStatus.SearchBox {
