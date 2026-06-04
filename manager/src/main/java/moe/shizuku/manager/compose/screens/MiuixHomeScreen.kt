@@ -21,9 +21,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CheckCircleOutline
 import androidx.compose.material.icons.rounded.ErrorOutline
@@ -41,7 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.offset
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -438,55 +435,13 @@ private fun MiuixStatCard(
 
 @Composable
 private fun MiuixTerminalCard(onClick: () -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = onClick,
-        showIndication = true,
-        pressFeedbackType = PressFeedbackType.Tilt
-    ) {
-        Row(
-            modifier = Modifier.padding(24.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                imageVector = MiuixIcons.Help,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape),
-                tint = MiuixTheme.colorScheme.onPrimaryContainer,
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(
-                    text = stringResource(R.string.home_terminal_title),
-                    style = MiuixTheme.textStyles.title2,
-                    fontWeight = FontWeight.Bold,
-                )
-                Text(
-                    text = stringResource(R.string.home_terminal_description),
-                    style = MiuixTheme.textStyles.body2,
-                    color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun MiuixStartRootCard(isRestart: Boolean, onClick: () -> Unit) {
     Card(modifier = Modifier.fillMaxWidth()) {
         BasicComponent(
-            title = stringResource(R.string.home_root_title),
-            summary = stringResource(
-                if (isRestart) R.string.home_root_button_restart
-                else R.string.home_root_button_start
-            ),
+            title = stringResource(R.string.home_terminal_title),
+            summary = stringResource(R.string.home_terminal_description),
             startAction = {
                 Icon(
-                    imageVector = MiuixIcons.Ok,
+                    imageVector = MiuixIcons.Help,
                     modifier = Modifier.padding(end = 16.dp),
                     contentDescription = null,
                     tint = MiuixTheme.colorScheme.onBackground,
@@ -498,32 +453,63 @@ private fun MiuixStartRootCard(isRestart: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
+private fun MiuixStartRootCard(isRestart: Boolean, onClick: () -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Card(modifier = Modifier.fillMaxWidth()) {
+            BasicComponent(
+                title = stringResource(R.string.home_root_title),
+                startAction = {
+                    Icon(
+                        imageVector = MiuixIcons.Ok,
+                        modifier = Modifier.padding(end = 16.dp),
+                        contentDescription = null,
+                        tint = MiuixTheme.colorScheme.onBackground,
+                    )
+                },
+            )
+        }
+        Button(onClick = onClick) {
+            Text(
+                text = stringResource(
+                    if (isRestart) R.string.home_root_button_restart
+                    else R.string.home_root_button_start
+                ),
+            )
+        }
+    }
+}
+
+@Composable
 private fun MiuixStartWirelessAdbCard(
     onStartWadb: () -> Unit,
     onPair: () -> Unit,
 ) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        BasicComponent(
-            title = stringResource(R.string.home_wireless_adb_title),
-            summary = stringResource(R.string.home_wireless_adb_description),
-            startAction = {
-                Icon(
-                    imageVector = MiuixIcons.Info,
-                    modifier = Modifier.padding(end = 16.dp),
-                    contentDescription = null,
-                    tint = MiuixTheme.colorScheme.onBackground,
-                )
-            },
-            endActions = {
-                if (EnvironmentUtils.isTlsSupported()) {
-                    TextButton(
-                        text = stringResource(R.string.adb_pairing),
-                        onClick = onPair,
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Card(modifier = Modifier.fillMaxWidth()) {
+            BasicComponent(
+                title = stringResource(R.string.home_wireless_adb_title),
+                summary = stringResource(R.string.home_wireless_adb_description),
+                startAction = {
+                    Icon(
+                        imageVector = MiuixIcons.Info,
+                        modifier = Modifier.padding(end = 16.dp),
+                        contentDescription = null,
+                        tint = MiuixTheme.colorScheme.onBackground,
                     )
-                }
-            },
-            onClick = onStartWadb,
-        )
+                },
+                endActions = {
+                    if (EnvironmentUtils.isTlsSupported()) {
+                        TextButton(
+                            text = stringResource(R.string.adb_pairing),
+                            onClick = onPair,
+                        )
+                    }
+                },
+            )
+        }
+        Button(onClick = onStartWadb) {
+            Text(stringResource(R.string.start))
+        }
     }
 }
 
@@ -572,6 +558,14 @@ private fun MiuixAdbPermissionLimitedCard() {
         BasicComponent(
             title = stringResource(R.string.home_adb_is_limited_title),
             summary = stringResource(R.string.home_adb_is_limited_description),
+            startAction = {
+                Icon(
+                    imageVector = MiuixIcons.Info,
+                    modifier = Modifier.padding(end = 16.dp),
+                    contentDescription = null,
+                    tint = MiuixTheme.colorScheme.onBackground,
+                )
+            },
             endActions = {
                 Icon(
                     imageVector = MiuixIcons.Link,
