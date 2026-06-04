@@ -89,7 +89,7 @@ jobs:
 
           [ "${{ inputs.prerelease }}" = "true" ] && CMD="$CMD -Pbeta"
 
-          eval $CMD
+          eval $CMD --stacktrace
           FILE=$(ls "$APK_DIR"/*.apk)
 
           VERSION=$(echo "$(basename "$FILE")" | sed -E 's/^shizuku-(.*)-(debug|release)\.apk/\1/')
