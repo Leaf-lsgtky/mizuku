@@ -246,6 +246,18 @@
     <string name="watchdog_shizuku_crashed_text">Watchdog restarted the service. Tap to learn about potential fixes to prevent future crashes.</string>
     <string name="watchdog_shizuku_crashed_action_turn_off_alerts">Turn Off Alerts</string>
 
+    <!-- Sort -->
+    <string name="sort_by_name">Sort by name</string>
+    <string name="sort_by_package_name">Sort by package name</string>
+    <string name="menu_sort">Sort</string>
+    <string name="show_system_apps">Show system apps</string>
+
+    <!-- Refresh -->
+    <string name="refresh_pulling">Pull to refresh</string>
+    <string name="refresh_release">Release to refresh</string>
+    <string name="refresh_refresh">Refreshing…</string>
+    <string name="refresh_complete">Refresh complete</string>
+
     <!-- Misc -->
     <string name="dialog_cannot_open_browser_title">Can\'t start browser</string>
     <string name="toast_copied_to_clipboard">Copied to clipboard</string>

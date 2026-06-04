@@ -242,6 +242,18 @@
     <string name="toast_copied_to_clipboard">已复制到剪贴板</string>
     <string name="accessibility_service_description">为无法使用通知或分屏功能的设备（例如，运行 Android 14
         及更高版本的电视）提供配对支持。\n\n使 Shizuku 能够从无线调试配对屏幕中提取配对码。找到配对码后，它将自动禁用。</string>
+    <!-- Sort -->
+    <string name="sort_by_name">按名称排序</string>
+    <string name="sort_by_package_name">按包名排序</string>
+    <string name="menu_sort">排序</string>
+    <string name="show_system_apps">显示系统应用</string>
+
+    <!-- Refresh -->
+    <string name="refresh_pulling">下拉刷新</string>
+    <string name="refresh_release">释放刷新</string>
+    <string name="refresh_refresh">刷新中…</string>
+    <string name="refresh_complete">刷新完成</string>
+
     <!-- Messages for legacy -->
     <string name="dialog_legacy_not_support_title">%1$s 不支持现代 Shizuku</string>
     <string name="dialog_legacy_not_support_message"><![CDATA[旧式 Shizuku 已于 2019 年 3 月被弃用。此外，旧式 Shizuku 无法在较新版本的 Android 系统上工作。<p>请要求 <b>%1$s</b> 的开发者进行更新。]]></string>
