@@ -160,8 +160,29 @@ fun MiuixAppManagementScreen(
                 .padding(vertical = 6.dp),
         ) {
             // 搜索结果可以在这里显示
+            filteredAndSortedPackages?.let { packages ->
+                LazyColumn {
+                    items(packages, key = { it.packageName }) { pi ->
+                        MiuixAppItem(
+                            packageInfo = pi,
+                            isGranted = grantedStates[pi.packageName] ?: AuthorizationManager.granted(pi.packageName, pi.applicationInfo?.uid ?: 0),
+                            onToggle = { granted ->
+                                val uid = pi.applicationInfo?.uid ?: return@MiuixAppItem
+                                if (granted) {
+                                    AuthorizationManager.grant(pi.packageName, uid)
+                                } else {
+                                    AuthorizationManager.revoke(pi.packageName, uid)
+                                }
+                                grantedStates[pi.packageName] = granted
+                            }
+                        )
+                    }
+                }
+            }
         }
 
+        // 搜索时隐藏下方内容
+        if (!searchExpanded) {
         if (isLoading && filteredAndSortedPackages.isNullOrEmpty() && !isRefreshing) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -278,6 +299,7 @@ fun MiuixAppManagementScreen(
                 }
             }
         }
+        } // end if (!searchExpanded)
     }
 }
 
