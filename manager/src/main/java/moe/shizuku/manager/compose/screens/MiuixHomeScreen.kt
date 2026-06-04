@@ -439,12 +439,11 @@ private fun MiuixTerminalCard(onClick: () -> Unit) {
         BasicComponent(
             title = stringResource(R.string.home_terminal_title),
             summary = stringResource(R.string.home_terminal_description),
-            startAction = {
+            endActions = {
                 Icon(
                     imageVector = MiuixIcons.Help,
-                    modifier = Modifier.padding(end = 16.dp),
+                    tint = MiuixTheme.colorScheme.onSurface,
                     contentDescription = null,
-                    tint = MiuixTheme.colorScheme.onBackground,
                 )
             },
             onClick = onClick,
@@ -458,12 +457,11 @@ private fun MiuixStartRootCard(isRestart: Boolean, onClick: () -> Unit) {
         Card(modifier = Modifier.fillMaxWidth()) {
             BasicComponent(
                 title = stringResource(R.string.home_root_title),
-                startAction = {
+                endActions = {
                     Icon(
                         imageVector = MiuixIcons.Ok,
-                        modifier = Modifier.padding(end = 16.dp),
+                        tint = MiuixTheme.colorScheme.onSurface,
                         contentDescription = null,
-                        tint = MiuixTheme.colorScheme.onBackground,
                     )
                 },
             )
@@ -489,26 +487,25 @@ private fun MiuixStartWirelessAdbCard(
             BasicComponent(
                 title = stringResource(R.string.home_wireless_adb_title),
                 summary = stringResource(R.string.home_wireless_adb_description),
-                startAction = {
+                endActions = {
                     Icon(
                         imageVector = MiuixIcons.Info,
-                        modifier = Modifier.padding(end = 16.dp),
+                        tint = MiuixTheme.colorScheme.onSurface,
                         contentDescription = null,
-                        tint = MiuixTheme.colorScheme.onBackground,
                     )
-                },
-                endActions = {
-                    if (EnvironmentUtils.isTlsSupported()) {
-                        TextButton(
-                            text = stringResource(R.string.adb_pairing),
-                            onClick = onPair,
-                        )
-                    }
                 },
             )
         }
-        Button(onClick = onStartWadb) {
-            Text(stringResource(R.string.start))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(onClick = onStartWadb) {
+                Text(stringResource(R.string.start))
+            }
+            if (EnvironmentUtils.isTlsSupported()) {
+                TextButton(
+                    text = stringResource(R.string.adb_pairing),
+                    onClick = onPair,
+                )
+            }
         }
     }
 }
@@ -519,12 +516,11 @@ private fun MiuixStartAdbCard(onClick: () -> Unit) {
         BasicComponent(
             title = stringResource(R.string.home_adb_title),
             summary = stringResource(R.string.home_adb_button_view_command),
-            startAction = {
+            endActions = {
                 Icon(
                     imageVector = MiuixIcons.Help,
-                    modifier = Modifier.padding(end = 16.dp),
+                    tint = MiuixTheme.colorScheme.onSurface,
                     contentDescription = null,
-                    tint = MiuixTheme.colorScheme.onBackground,
                 )
             },
             onClick = onClick,
@@ -538,12 +534,11 @@ private fun MiuixAutomationCard(onClick: () -> Unit) {
         BasicComponent(
             title = stringResource(R.string.home_automation_title),
             summary = stringResource(R.string.home_automation_description),
-            startAction = {
+            endActions = {
                 Icon(
                     imageVector = MiuixIcons.Help,
-                    modifier = Modifier.padding(end = 16.dp),
+                    tint = MiuixTheme.colorScheme.onSurface,
                     contentDescription = null,
-                    tint = MiuixTheme.colorScheme.onBackground,
                 )
             },
             onClick = onClick,
@@ -558,17 +553,9 @@ private fun MiuixAdbPermissionLimitedCard() {
         BasicComponent(
             title = stringResource(R.string.home_adb_is_limited_title),
             summary = stringResource(R.string.home_adb_is_limited_description),
-            startAction = {
-                Icon(
-                    imageVector = MiuixIcons.Info,
-                    modifier = Modifier.padding(end = 16.dp),
-                    contentDescription = null,
-                    tint = MiuixTheme.colorScheme.onBackground,
-                )
-            },
             endActions = {
                 Icon(
-                    imageVector = MiuixIcons.Link,
+                    imageVector = MiuixIcons.Info,
                     tint = MiuixTheme.colorScheme.onSurface,
                     contentDescription = null,
                 )
