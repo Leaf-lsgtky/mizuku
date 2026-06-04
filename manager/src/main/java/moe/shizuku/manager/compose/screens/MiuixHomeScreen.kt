@@ -99,6 +99,7 @@ fun MiuixHomeScreen(
     onNavigateToShellTutorial: () -> Unit,
     onNavigateToAdbPairingTutorial: () -> Unit,
     scrollBehavior: top.yukonga.miuix.kmp.basic.ScrollBehavior,
+    scaffoldPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -192,7 +193,12 @@ fun MiuixHomeScreen(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .scrollEndHaptic()
             .overScrollVertical(),
-        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+        contentPadding = PaddingValues(
+            start = 12.dp,
+            top = scaffoldPadding.calculateTopPadding() + 8.dp,
+            end = 12.dp,
+            bottom = scaffoldPadding.calculateBottomPadding() + 8.dp,
+        ),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         item {

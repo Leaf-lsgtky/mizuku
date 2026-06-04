@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -57,7 +58,8 @@ import java.util.Locale
 
 @Composable
 fun MiuixSettingsScreen(
-    scrollBehavior: top.yukonga.miuix.kmp.basic.ScrollBehavior
+    scrollBehavior: top.yukonga.miuix.kmp.basic.ScrollBehavior,
+    scaffoldPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -344,6 +346,10 @@ fun MiuixSettingsScreen(
             .scrollEndHaptic()
             .overScrollVertical()
             .nestedScroll(scrollBehavior.nestedScrollConnection),
+        contentPadding = PaddingValues(
+            top = scaffoldPadding.calculateTopPadding(),
+            bottom = scaffoldPadding.calculateBottomPadding(),
+        ),
         overscrollEffect = null,
     ) {
             // Behavior

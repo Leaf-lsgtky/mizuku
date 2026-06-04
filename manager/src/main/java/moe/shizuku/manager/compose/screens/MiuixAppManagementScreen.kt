@@ -78,6 +78,7 @@ fun MiuixAppManagementScreen(
     searchStatus: SearchStatus = SearchStatus(""),
     onSearchStatusChange: (SearchStatus) -> Unit = {},
     onSearchResults: (List<PackageInfo>) -> Unit = {},
+    scaffoldPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     val packagesResource by viewModel.packages.observeAsState()
     val context = LocalContext.current
@@ -151,18 +152,25 @@ fun MiuixAppManagementScreen(
         onSearchResults(filteredAndSortedPackages ?: emptyList())
     }
 
+    val topContentPadding = scaffoldPadding.calculateTopPadding()
+    val bottomContentPadding = scaffoldPadding.calculateBottomPadding()
+
     searchStatus.SearchBox {
         val lazyListState = rememberLazyListState()
         if (isLoading && filteredAndSortedPackages.isNullOrEmpty() && !isRefreshing) {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = topContentPadding, bottom = bottomContentPadding),
                 contentAlignment = Alignment.Center
             ) {
                 InfiniteProgressIndicator()
             }
         } else if (isError && filteredAndSortedPackages.isNullOrEmpty()) {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = topContentPadding, bottom = bottomContentPadding),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -185,7 +193,7 @@ fun MiuixAppManagementScreen(
                 pullToRefreshState = pullToRefreshState,
                 onRefresh = { isRefreshing = true },
                 refreshTexts = refreshTexts,
-                contentPadding = PaddingValues(top = 6.dp),
+                contentPadding = PaddingValues(top = topContentPadding + 6.dp),
             ) {
                 LazyColumn(
                     state = lazyListState,
@@ -194,7 +202,10 @@ fun MiuixAppManagementScreen(
                         .scrollEndHaptic()
                         .overScrollVertical()
                         .nestedScroll(scrollBehavior.nestedScrollConnection),
-                    contentPadding = PaddingValues(top = 6.dp),
+                    contentPadding = PaddingValues(
+                        top = topContentPadding + 6.dp,
+                        bottom = bottomContentPadding + 16.dp,
+                    ),
                     overscrollEffect = null,
                 ) {
                     // 全部切换按钮
