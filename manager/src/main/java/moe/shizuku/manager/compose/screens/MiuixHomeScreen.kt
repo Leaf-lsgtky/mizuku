@@ -530,32 +530,37 @@ private fun MiuixStartWirelessAdbCard(
                 )
             },
             bottomAction = {
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(
-                        onClick = onStartWadb,
-                        colors = ButtonDefaults.buttonColorsPrimary(),
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_server_start_24dp),
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp),
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.start))
-                    }
-                    if (EnvironmentUtils.isTlsSupported()) {
+                Column {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Button(
-                            onClick = onPair,
+                            onClick = onStartWadb,
                             colors = ButtonDefaults.buttonColorsPrimary(),
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.ic_baseline_link_24),
+                                painter = painterResource(R.drawable.ic_server_start_24dp),
                                 contentDescription = null,
                                 modifier = Modifier.size(18.dp),
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(stringResource(R.string.adb_pairing))
+                            Text(stringResource(R.string.start))
                         }
+                        if (EnvironmentUtils.isTlsSupported()) {
+                            Button(
+                                onClick = onPair,
+                                colors = ButtonDefaults.buttonColorsPrimary(),
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_baseline_link_24),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp),
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(stringResource(R.string.adb_pairing))
+                            }
+                        }
+                    }
+                    if (EnvironmentUtils.isTlsSupported()) {
+                        Spacer(modifier = Modifier.height(8.dp))
                         Button(onClick = onViewGuide) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_outline_open_in_new_24),
