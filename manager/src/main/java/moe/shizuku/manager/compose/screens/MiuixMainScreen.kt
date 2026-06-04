@@ -234,7 +234,8 @@ fun MiuixMainScreen(
                     label = stringResource(R.string.settings_title)
                 )
             }
-        }
+        },
+        containerColor = MiuixTheme.colorScheme.surface,
     ) { paddingValues ->
         Box(
             modifier = Modifier

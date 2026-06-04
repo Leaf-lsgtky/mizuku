@@ -157,7 +157,7 @@ fun MiuixAppManagementScreen(
             onExpandedChange = { searchExpanded = it },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 8.dp),
+                .padding(horizontal = 12.dp, vertical = 6.dp),
         ) {
             // 搜索结果可以在这里显示
         }
