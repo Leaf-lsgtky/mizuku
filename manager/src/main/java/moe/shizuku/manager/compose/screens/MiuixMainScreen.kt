@@ -34,6 +34,7 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.All
 import top.yukonga.miuix.kmp.icon.extended.MoreCircle
 import top.yukonga.miuix.kmp.icon.extended.Settings
+import top.yukonga.miuix.kmp.icon.extended.Sort
 import top.yukonga.miuix.kmp.icon.extended.VerticalSplit
 import top.yukonga.miuix.kmp.overlay.OverlayListPopup
 import top.yukonga.miuix.kmp.basic.DropdownImpl
@@ -131,6 +132,78 @@ fun MiuixMainScreen(
                                     }
                                 }
                             )
+                        }
+                    } else if (selectedIndex == 1) {
+                        // 应用管理页面的排序按钮
+                        Box {
+                            val showSortPopup = remember { mutableStateOf(false) }
+                            OverlayListPopup(
+                                show = showSortPopup.value,
+                                onDismissRequest = { showSortPopup.value = false },
+                                content = {
+                                    ListPopupColumn {
+                                        val sortOptions = listOf(
+                                            R.string.sort_by_name,
+                                            R.string.sort_by_package_name,
+                                        )
+                                        sortOptions.forEachIndexed { index, resId ->
+                                            DropdownImpl(
+                                                text = stringResource(resId),
+                                                optionSize = sortOptions.size,
+                                                isSelected = index == 0,
+                                                index = index,
+                                                onSelectedIndexChange = {
+                                                    // TODO: 实现排序逻辑
+                                                    showSortPopup.value = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            )
+                            IconButton(
+                                onClick = { showSortPopup.value = true },
+                                holdDownState = showSortPopup.value,
+                            ) {
+                                Icon(
+                                    imageVector = MiuixIcons.Sort,
+                                    tint = MiuixTheme.colorScheme.onSurface,
+                                    contentDescription = stringResource(R.string.menu_sort)
+                                )
+                            }
+                        }
+
+                        // 应用管理页面的更多选项按钮
+                        Box {
+                            val showMorePopup = remember { mutableStateOf(false) }
+                            OverlayListPopup(
+                                show = showMorePopup.value,
+                                onDismissRequest = { showMorePopup.value = false },
+                                content = {
+                                    ListPopupColumn {
+                                        DropdownImpl(
+                                            text = stringResource(R.string.show_system_apps),
+                                            optionSize = 1,
+                                            isSelected = false,
+                                            index = 0,
+                                            onSelectedIndexChange = {
+                                                // TODO: 实现显示系统应用切换
+                                                showMorePopup.value = false
+                                            }
+                                        )
+                                    }
+                                }
+                            )
+                            IconButton(
+                                onClick = { showMorePopup.value = true },
+                                holdDownState = showMorePopup.value,
+                            ) {
+                                Icon(
+                                    imageVector = MiuixIcons.MoreCircle,
+                                    tint = MiuixTheme.colorScheme.onSurface,
+                                    contentDescription = null
+                                )
+                            }
                         }
                     }
                 }
