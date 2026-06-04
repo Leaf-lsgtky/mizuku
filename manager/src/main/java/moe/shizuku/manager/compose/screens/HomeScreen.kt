@@ -86,6 +86,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -339,6 +340,9 @@ fun HomeScreen(
                                     onNavigateToAdbPairingTutorial()
                                 }
                             },
+                            onViewGuide = {
+                                CustomTabsHelper.launchUrlOrCopy(context, Helps.ADB_ANDROID11.get())
+                            },
                         )
                     }
                 }
@@ -458,10 +462,19 @@ private fun ServerStatusCard(status: ServiceStatus) {
                             "${status.apiVersion}.${status.patchVersion}",
                         )
                     }
-                    Text(
-                        text = versionText,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    val onSurfaceVariantColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    AndroidView(
+                        factory = { ctx ->
+                            TextView(ctx).apply {
+                                text = versionText.toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
+                                textSize = 14f
+                                setTextColor(onSurfaceVariantColor.toArgb())
+                            }
+                        },
+                        update = { tv ->
+                            tv.text = versionText.toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
+                            tv.setTextColor(onSurfaceVariantColor.toArgb())
+                        },
                     )
                 }
             }
@@ -605,6 +618,7 @@ private fun StartRootCard(isRestart: Boolean, onClick: () -> Unit) {
 private fun StartWirelessAdbCard(
     onStartWadb: () -> Unit,
     onPair: () -> Unit,
+    onViewGuide: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -628,14 +642,25 @@ private fun StartWirelessAdbCard(
                 fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = stringResource(R.string.home_wireless_adb_description),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis,
+            AndroidView(
+                factory = { ctx ->
+                    TextView(ctx).apply {
+                        text = ctx.getString(R.string.home_wireless_adb_description)
+                            .toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
+                    }
+                },
+                update = { tv ->
+                    tv.text = tv.context.getString(R.string.home_wireless_adb_description)
+                        .toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
+                },
             )
             Spacer(modifier = Modifier.height(12.dp))
+            if (EnvironmentUtils.isTlsSupported()) {
+                OutlinedButton(onClick = onViewGuide) {
+                    Text(stringResource(R.string.home_wireless_adb_view_guide_button))
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+            }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = onStartWadb) {
                     Text(stringResource(R.string.start))
@@ -858,9 +883,16 @@ private fun AboutDialog(onDismiss: () -> Unit) {
         title = { Text(stringResource(R.string.app_name)) },
         text = {
             Column {
-                Text(
-                    text = stringResource(R.string.about_view_source_code, "GitHub"),
-                    style = MaterialTheme.typography.bodyMedium,
+                AndroidView(
+                    factory = { ctx ->
+                        TextView(ctx).apply {
+                            movementMethod = LinkMovementMethod.getInstance()
+                            text = ctx.getString(
+                                R.string.about_view_source_code,
+                                "<b><a href=\"https://github.com/RikkaApps/Shizuku\">GitHub</a></b>"
+                            ).toHtml()
+                        }
+                    },
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -909,10 +941,17 @@ private fun AdbCommandDialog(onDismiss: () -> Unit) {
         title = { Text(stringResource(R.string.home_adb_button_view_command)) },
         text = {
             Column {
-                Text(
-                    text = stringResource(R.string.home_adb_dialog_view_command_message, command),
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontFamily = FontFamily.Monospace,
+                AndroidView(
+                    factory = { ctx ->
+                        TextView(ctx).apply {
+                            text = ctx.getString(R.string.home_adb_dialog_view_command_message, command)
+                                .toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
+                        }
+                    },
+                    update = { tv ->
+                        tv.text = tv.context.getString(R.string.home_adb_dialog_view_command_message, command)
+                            .toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
+                    },
                 )
             }
         },

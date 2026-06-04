@@ -7,6 +7,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.Settings
+import android.text.method.LinkMovementMethod
+import android.widget.TextView
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -46,6 +48,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import kotlinx.coroutines.launch
 import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.Helps
@@ -55,6 +58,7 @@ import moe.shizuku.manager.adb.AdbKey
 import moe.shizuku.manager.adb.AdbMdns
 import moe.shizuku.manager.adb.AdbPairingClient
 import moe.shizuku.manager.adb.PreferenceAdbKeyStore
+import moe.shizuku.manager.ktx.toHtml
 import moe.shizuku.manager.model.ServiceStatus
 import moe.shizuku.manager.utils.CustomTabsHelper
 import moe.shizuku.manager.utils.EnvironmentUtils
@@ -64,6 +68,7 @@ import moe.shizuku.manager.utils.ShizukuStateMachine
 import moe.shizuku.manager.utils.UserHandleCompat
 import rikka.shizuku.Shizuku
 import rikka.shizuku.ShizukuApiConstants
+import rikka.html.text.HtmlCompat
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Card
@@ -247,6 +252,9 @@ fun MiuixHomeScreen(
                                 onNavigateToAdbPairingTutorial()
                             }
                         },
+                        onViewGuide = {
+                            CustomTabsHelper.launchUrlOrCopy(context, Helps.ADB_ANDROID11.get())
+                        },
                     )
                 }
             }
@@ -364,7 +372,7 @@ private fun MiuixServerStatusCard(
                         }
                         Text(
                             modifier = Modifier.fillMaxWidth(),
-                            text = versionText,
+                            text = versionText.replace("<br>", "\n").replace(Regex("<[^>]*>"), ""),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
                             color = descTextColor,
@@ -455,16 +463,38 @@ private fun MiuixTerminalCard(onClick: () -> Unit) {
 private fun MiuixStartRootCard(isRestart: Boolean, onClick: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Card(modifier = Modifier.fillMaxWidth()) {
-            BasicComponent(
-                title = stringResource(R.string.home_root_title),
-                endActions = {
-                    Icon(
-                        imageVector = MiuixIcons.Ok,
-                        tint = MiuixTheme.colorScheme.onSurface,
-                        contentDescription = null,
-                    )
-                },
-            )
+            Column {
+                BasicComponent(
+                    title = stringResource(R.string.home_root_title),
+                    endActions = {
+                        Icon(
+                            imageVector = MiuixIcons.Ok,
+                            tint = MiuixTheme.colorScheme.onSurface,
+                            contentDescription = null,
+                        )
+                    },
+                )
+                AndroidView(
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    factory = { ctx ->
+                        TextView(ctx).apply {
+                            movementMethod = LinkMovementMethod.getInstance()
+                            text = ctx.getString(
+                                R.string.home_root_description,
+                                "<b><a href=\"${Helps.SUI.get()}\">Sui</a></b>",
+                                "Sui"
+                            ).toHtml(rikka.html.text.HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
+                        }
+                    },
+                    update = { tv ->
+                        tv.text = tv.context.getString(
+                            R.string.home_root_description,
+                            "<b><a href=\"${Helps.SUI.get()}\">Sui</a></b>",
+                            "Sui"
+                        ).toHtml(rikka.html.text.HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
+                    },
+                )
+            }
         }
         Button(onClick = onClick) {
             Text(
@@ -481,12 +511,14 @@ private fun MiuixStartRootCard(isRestart: Boolean, onClick: () -> Unit) {
 private fun MiuixStartWirelessAdbCard(
     onStartWadb: () -> Unit,
     onPair: () -> Unit,
+    onViewGuide: () -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Card(modifier = Modifier.fillMaxWidth()) {
             BasicComponent(
                 title = stringResource(R.string.home_wireless_adb_title),
-                summary = stringResource(R.string.home_wireless_adb_description),
+                summary = stringResource(R.string.home_wireless_adb_description)
+                    .replace("<p>", "\n").replace(Regex("<[^>]*>"), ""),
                 endActions = {
                     Icon(
                         imageVector = MiuixIcons.Info,
@@ -494,6 +526,12 @@ private fun MiuixStartWirelessAdbCard(
                         contentDescription = null,
                     )
                 },
+            )
+        }
+        if (EnvironmentUtils.isTlsSupported()) {
+            TextButton(
+                text = stringResource(R.string.home_wireless_adb_view_guide_button),
+                onClick = onViewGuide,
             )
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -513,18 +551,34 @@ private fun MiuixStartWirelessAdbCard(
 @Composable
 private fun MiuixStartAdbCard(onClick: () -> Unit) {
     Card(modifier = Modifier.fillMaxWidth()) {
-        BasicComponent(
-            title = stringResource(R.string.home_adb_title),
-            summary = stringResource(R.string.home_adb_button_view_command),
-            endActions = {
-                Icon(
-                    imageVector = MiuixIcons.Help,
-                    tint = MiuixTheme.colorScheme.onSurface,
-                    contentDescription = null,
-                )
-            },
-            onClick = onClick,
-        )
+        Column {
+            BasicComponent(
+                title = stringResource(R.string.home_adb_title),
+                summary = stringResource(R.string.home_adb_button_view_command),
+                endActions = {
+                    Icon(
+                        imageVector = MiuixIcons.Help,
+                        tint = MiuixTheme.colorScheme.onSurface,
+                        contentDescription = null,
+                    )
+                },
+                onClick = onClick,
+            )
+            AndroidView(
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                factory = { ctx ->
+                    TextView(ctx).apply {
+                        movementMethod = LinkMovementMethod.getInstance()
+                        text = ctx.getString(R.string.home_adb_description, Helps.ADB.get())
+                            .toHtml(rikka.html.text.HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
+                    }
+                },
+                update = { tv ->
+                    tv.text = tv.context.getString(R.string.home_adb_description, Helps.ADB.get())
+                        .toHtml(rikka.html.text.HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
+                },
+            )
+        }
     }
 }
 
@@ -597,9 +651,16 @@ private fun MiuixAboutDialog(onDismiss: () -> Unit) {
         title = stringResource(R.string.app_name),
     ) {
         Column {
-            Text(
-                text = stringResource(R.string.about_view_source_code, "GitHub"),
-                style = MiuixTheme.textStyles.body2,
+            AndroidView(
+                factory = { ctx ->
+                    TextView(ctx).apply {
+                        movementMethod = LinkMovementMethod.getInstance()
+                        text = ctx.getString(
+                            R.string.about_view_source_code,
+                            "<b><a href=\"https://github.com/RikkaApps/Shizuku\">GitHub</a></b>"
+                        ).toHtml()
+                    }
+                },
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -663,7 +724,8 @@ private fun MiuixAdbCommandDialog(onDismiss: () -> Unit) {
     ) {
         Column {
             Text(
-                text = stringResource(R.string.home_adb_dialog_view_command_message, command),
+                text = stringResource(R.string.home_adb_dialog_view_command_message, command)
+                    .replace(Regex("<[^>]*>"), ""),
                 style = MiuixTheme.textStyles.body2,
                 fontFamily = FontFamily.Monospace,
             )

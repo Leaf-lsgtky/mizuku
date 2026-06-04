@@ -147,7 +147,8 @@ fun MiuixSettingsScreen(
             val message = buildString {
                 append(context.getString(R.string.settings_restart_dialog_message))
                 if (setting == ShizukuSettings.Keys.KEY_TCP_MODE)
-                    append(context.getString(R.string.settings_restart_dialog_message_wifi_required))
+                    append(context.getString(R.string.settings_restart_dialog_message_wifi_required)
+                        .replace("<br>", "\n").replace(Regex("<[^>]*>"), ""))
             }
             restartDialogMessage = message
             pendingRestartAction = {

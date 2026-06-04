@@ -2,6 +2,7 @@ package moe.shizuku.manager.compose.screens
 
 import android.content.Intent
 import android.os.Build
+import android.widget.TextView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
@@ -37,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import kotlinx.coroutines.launch
 import moe.shizuku.manager.R
 import moe.shizuku.manager.ShizukuSettings
@@ -48,6 +50,7 @@ import moe.shizuku.manager.compose.components.PreferenceCategory
 import moe.shizuku.manager.compose.components.SimpleMenuPreference
 import moe.shizuku.manager.compose.components.SwitchPreference
 import moe.shizuku.manager.ktx.toHtml
+import rikka.html.text.HtmlCompat
 import moe.shizuku.manager.receiver.NotifCancelReceiver
 import moe.shizuku.manager.receiver.ShizukuReceiverStarter
 import moe.shizuku.manager.settings.BugReportDialogActivity
@@ -147,11 +150,10 @@ fun SettingsScreen(
             applyChange()
             context.sendBroadcast(Intent(context, NotifCancelReceiver::class.java))
         } else {
-            val message = buildString {
-                append(context.getString(R.string.settings_restart_dialog_message))
+            val message = context.getString(R.string.settings_restart_dialog_message) +
                 if (setting == ShizukuSettings.Keys.KEY_TCP_MODE)
-                    append(context.getString(R.string.settings_restart_dialog_message_wifi_required))
-            }
+                    context.getString(R.string.settings_restart_dialog_message_wifi_required)
+                else ""
             restartDialogMessage = message
             pendingRestartAction = {
                 applyChange()
@@ -187,9 +189,15 @@ fun SettingsScreen(
             onDismissRequest = { showRestartDialog = false },
             title = { Text(stringResource(R.string.settings_restart_dialog_title)) },
             text = {
-                Text(
-                    text = restartDialogMessage,
-                    style = MaterialTheme.typography.bodyMedium,
+                AndroidView(
+                    factory = { ctx ->
+                        TextView(ctx).apply {
+                            text = restartDialogMessage.toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
+                        }
+                    },
+                    update = { tv ->
+                        tv.text = restartDialogMessage.toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
+                    },
                 )
             },
             confirmButton = {

@@ -2,6 +2,8 @@ package moe.shizuku.manager.compose.screens
 
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
+import android.text.method.LinkMovementMethod
+import android.widget.TextView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import moe.shizuku.manager.Helps
@@ -420,12 +423,22 @@ private fun MiuixAdbLimitedDialog(onDismiss: () -> Unit) {
         title = stringResource(R.string.app_management_dialog_adb_is_limited_title),
     ) {
         Column {
-            Text(
-                text = stringResource(
-                    R.string.app_management_dialog_adb_is_limited_message,
-                    Helps.ADB.get()
-                ).toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE).toString(),
-                style = MiuixTheme.textStyles.body2,
+            AndroidView(
+                factory = { ctx ->
+                    TextView(ctx).apply {
+                        movementMethod = LinkMovementMethod.getInstance()
+                        text = ctx.getString(
+                            R.string.app_management_dialog_adb_is_limited_message,
+                            Helps.ADB.get()
+                        ).toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
+                    }
+                },
+                update = { tv ->
+                    tv.text = tv.context.getString(
+                        R.string.app_management_dialog_adb_is_limited_message,
+                        Helps.ADB.get()
+                    ).toHtml(HtmlCompat.FROM_HTML_OPTION_TRIM_WHITESPACE)
+                },
             )
             Spacer(modifier = Modifier.height(16.dp))
             TextButton(
