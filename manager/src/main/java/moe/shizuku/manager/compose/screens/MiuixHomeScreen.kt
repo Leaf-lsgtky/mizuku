@@ -547,13 +547,18 @@ private fun MiuixStartAdbCard(onClick: () -> Unit) {
                         contentDescription = null,
                     )
                 },
-                onClick = onClick,
             )
         }
-        TextButton(
-            text = stringResource(R.string.home_adb_button_view_help),
-            onClick = { CustomTabsHelper.launchUrlOrCopy(context, Helps.ADB.get()) },
-        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            TextButton(
+                text = stringResource(R.string.home_adb_button_view_command),
+                onClick = onClick,
+            )
+            TextButton(
+                text = stringResource(R.string.home_adb_button_view_help),
+                onClick = { CustomTabsHelper.launchUrlOrCopy(context, Helps.ADB.get()) },
+            )
+        }
     }
 }
 
