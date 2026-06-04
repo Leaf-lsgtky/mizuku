@@ -78,7 +78,6 @@ import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.InfiniteProgressIndicator
-import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.PullToRefresh
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.Switch
@@ -96,7 +95,7 @@ import top.yukonga.miuix.kmp.window.WindowDialog
 @Composable
 fun MiuixAppManagementScreen(
     viewModel: moe.shizuku.manager.management.AppsViewModel,
-    scrollBehavior: top.yukonga.miuix.kmp.basic.MiuixScrollBehavior,
+    scrollBehavior: top.yukonga.miuix.kmp.basic.ScrollBehavior,
     sortOption: Int = 0,
     showSystemApps: Boolean = false,
 ) {
@@ -107,9 +106,7 @@ fun MiuixAppManagementScreen(
     var isRefreshing by remember { mutableStateOf(false) }
     var searchStatus by remember { mutableStateOf(SearchStatus(stringResource(R.string.search_apps))) }
 
-    val dynamicTopPadding by remember {
-        derivedStateOf { 12.dp * (1f - scrollBehavior.state.collapsedFraction) }
-    }
+    val dynamicTopPadding = 12.dp
 
     LaunchedEffect(Unit) {
         if (!ShizukuStateMachine.isRunning()) {
