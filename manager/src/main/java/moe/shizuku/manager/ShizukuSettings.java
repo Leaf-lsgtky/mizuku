@@ -41,6 +41,7 @@ public class ShizukuSettings {
         public static final String KEY_LEGACY_PAIRING = "legacy_pairing";
         public static final String KEY_CATEGORY_ADVANCED = "category_advanced";
         public static final String KEY_THEME_MODE = "theme_mode";
+        public static final String KEY_ENABLE_BLUR = "enable_blur";
     }
 
     public static final int THEME_MATERIAL = 0;
@@ -208,5 +209,13 @@ public class ShizukuSettings {
             return Locale.getDefault();
         }
         return Locale.forLanguageTag(tag);
+    }
+
+    public static boolean getEnableBlur() {
+        return getPreferences().getBoolean(Keys.KEY_ENABLE_BLUR, true);
+    }
+
+    public static void setEnableBlur(boolean enable) {
+        getPreferences().edit().putBoolean(Keys.KEY_ENABLE_BLUR, enable).apply();
     }
 }

@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -20,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
@@ -27,12 +31,18 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import moe.shizuku.manager.R
+import moe.shizuku.manager.ShizukuSettings
+import moe.shizuku.manager.compose.MainPagerState
 import moe.shizuku.manager.compose.components.SearchBarFake
 import moe.shizuku.manager.compose.components.SearchPager
 import moe.shizuku.manager.compose.components.SearchStatus
+import moe.shizuku.manager.compose.rememberMainPagerState
+import moe.shizuku.manager.compose.utils.BlurredBar
+import moe.shizuku.manager.compose.utils.rememberBlurBackdrop
 import moe.shizuku.manager.home.HomeViewModel
 import moe.shizuku.manager.management.AppsViewModel
 import moe.shizuku.manager.utils.ShizukuStateMachine
+import top.yukonga.miuix.kmp.blur.layerBackdrop
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
@@ -66,9 +76,15 @@ fun MiuixMainScreen(
     onNavigateToShellTutorial: () -> Unit,
     onNavigateToAdbPairingTutorial: () -> Unit,
 ) {
-    var selectedIndex by remember { mutableIntStateOf(0) }
+    val pagerState = rememberPagerState(initialPage = 0, pageCount = { 3 })
+    val mainPagerState = rememberMainPagerState(pagerState)
     val scrollBehavior = MiuixScrollBehavior()
     val density = LocalDensity.current
+
+    // 同步页面状态
+    LaunchedEffect(pagerState.settledPage) {
+        mainPagerState.syncPage()
+    }
 
     var showStopDialog by remember { mutableStateOf(false) }
     val showTopPopup = remember { mutableStateOf(false) }
@@ -85,12 +101,22 @@ fun MiuixMainScreen(
         derivedStateOf { 12.dp * (1f - scrollBehavior.state.collapsedFraction) }
     }
 
-    // 返回按钮处理：取消搜索
-    BackHandler(enabled = !searchStatus.isCollapsed()) {
-        searchStatus = searchStatus.copy(
-            searchText = "",
-            current = SearchStatus.Status.COLLAPSING
-        )
+    // 模糊效果
+    val enableBlur = ShizukuSettings.getEnableBlur()
+    val blurBackdrop = rememberBlurBackdrop(enableBlur)
+    val blurActive = blurBackdrop != null
+    val barColor = if (blurActive) Color.Transparent else MiuixTheme.colorScheme.surface
+
+    // 返回按钮处理：取消搜索或返回首页
+    BackHandler(enabled = !searchStatus.isCollapsed() || mainPagerState.selectedPage != 0) {
+        if (!searchStatus.isCollapsed()) {
+            searchStatus = searchStatus.copy(
+                searchText = "",
+                current = SearchStatus.Status.COLLAPSING
+            )
+        } else if (mainPagerState.selectedPage != 0) {
+            mainPagerState.animateToPage(0)
+        }
     }
 
     if (showStopDialog) {
@@ -139,11 +165,13 @@ fun MiuixMainScreen(
     Scaffold(
         topBar = {
             searchStatus.TopAppBarAnim {
-                TopAppBar(
-                    title = pages[selectedIndex],
-                    scrollBehavior = scrollBehavior,
+                BlurredBar(blurBackdrop) {
+                    TopAppBar(
+                        title = pages[mainPagerState.selectedPage],
+                        color = barColor,
+                        scrollBehavior = scrollBehavior,
                     actions = {
-                        if (selectedIndex == 0) {
+                        if (mainPagerState.selectedPage == 0) {
                             Box {
                                 IconButton(
                                     onClick = { showTopPopup.value = true },
@@ -174,7 +202,7 @@ fun MiuixMainScreen(
                                     }
                                 )
                             }
-                        } else if (selectedIndex == 1 && searchStatus.isCollapsed()) {
+                        } else if (mainPagerState.selectedPage == 1 && searchStatus.isCollapsed()) {
                             // 应用管理页面的排序按钮
                             Box {
                                 val showSortPopup = remember { mutableStateOf(false) }
@@ -249,7 +277,7 @@ fun MiuixMainScreen(
                         }
                     },
                     bottomContent = {
-                        if (selectedIndex == 1) {
+                        if (mainPagerState.selectedPage == 1) {
                             Box(
                                 modifier = Modifier
                                     .alpha(if (searchStatus.isCollapsed()) 1f else 0f)
@@ -276,32 +304,37 @@ fun MiuixMainScreen(
                         }
                     }
                 )
+                }
             }
         },
         bottomBar = {
-            NavigationBar {
+            BlurredBar(blurBackdrop) {
+                NavigationBar(
+                    color = barColor
+                ) {
                 NavigationBarItem(
-                    selected = selectedIndex == 0,
-                    onClick = { selectedIndex = 0 },
+                    selected = mainPagerState.selectedPage == 0,
+                    onClick = { mainPagerState.animateToPage(0) },
                     icon = MiuixIcons.VerticalSplit,
                     label = stringResource(R.string.app_name)
                 )
                 NavigationBarItem(
-                    selected = selectedIndex == 1,
-                    onClick = { selectedIndex = 1 },
+                    selected = mainPagerState.selectedPage == 1,
+                    onClick = { mainPagerState.animateToPage(1) },
                     icon = MiuixIcons.All,
                     label = stringResource(R.string.home_app_management_title)
                 )
                 NavigationBarItem(
-                    selected = selectedIndex == 2,
-                    onClick = { selectedIndex = 2 },
+                    selected = mainPagerState.selectedPage == 2,
+                    onClick = { mainPagerState.animateToPage(2) },
                     icon = MiuixIcons.Settings,
                     label = stringResource(R.string.settings_title)
                 )
+                }
             }
         },
         popupHost = {
-            if (selectedIndex == 1) {
+            if (mainPagerState.selectedPage == 1) {
                 searchStatus.SearchPager(
                     onSearchStatusChange = { searchStatus = it },
                     defaultResult = {
@@ -337,12 +370,19 @@ fun MiuixMainScreen(
         },
         containerColor = MiuixTheme.colorScheme.surface,
     ) { paddingValues ->
-        Box(
+        HorizontalPager(
+            state = mainPagerState.pagerState,
+            userScrollEnabled = true,
+            beyondViewportPageCount = 1,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-        ) {
-            when (selectedIndex) {
+                .then(
+                    if (blurActive) Modifier.layerBackdrop(blurBackdrop)
+                    else Modifier
+                )
+        ) { page ->
+            when (page) {
                 0 -> MiuixHomeScreen(
                     homeViewModel = homeViewModel,
                     appsViewModel = appsViewModel,

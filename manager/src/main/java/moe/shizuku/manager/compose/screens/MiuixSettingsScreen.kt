@@ -81,6 +81,9 @@ fun MiuixSettingsScreen(
     var themeMode by remember {
         mutableStateOf(ShizukuSettings.getThemeMode())
     }
+    var enableBlur by remember {
+        mutableStateOf(ShizukuSettings.getEnableBlur())
+    }
 
     // Dialog states
     var showRestartDialog by remember { mutableStateOf(false) }
@@ -418,6 +421,16 @@ fun MiuixSettingsScreen(
                                 .putString(ShizukuSettings.Keys.KEY_LANGUAGE, newValue)
                                 .apply()
                         }
+                    )
+
+                    SwitchPreference(
+                        title = stringResource(R.string.settings_enable_blur),
+                        summary = stringResource(R.string.settings_enable_blur_summary),
+                        checked = enableBlur,
+                        onCheckedChange = { newValue ->
+                            ShizukuSettings.setEnableBlur(newValue)
+                            enableBlur = newValue
+                        },
                     )
                 }
             }
