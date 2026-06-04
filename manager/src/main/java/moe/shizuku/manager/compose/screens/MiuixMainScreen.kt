@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -200,8 +199,8 @@ fun MiuixMainScreen(
                     if (fbBackdrop != null) {
                         FloatingBottomBar(
                             modifier = Modifier
-                                .padding(bottom = 12.dp + WindowInsets.navigationBars
-                                    .asPaddingValues().calculateBottomPadding()),
+                                .navigationBarsPadding()
+                                .padding(bottom = 12.dp),
                             selectedIndex = { mainPagerState.selectedPage },
                             onSelected = { mainPagerState.animateToPage(it) },
                             backdrop = fbBackdrop,
