@@ -6,7 +6,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,7 +42,6 @@ import rikka.material.app.LocaleDelegate
 import rikka.shizuku.manager.ShizukuLocales
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
-import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
@@ -340,16 +338,14 @@ fun MiuixSettingsScreen(
         }
     }
 
-    Scaffold { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .scrollEndHaptic()
-                .overScrollVertical()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = PaddingValues(top = paddingValues.calculateTopPadding()),
-            overscrollEffect = null,
-        ) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .scrollEndHaptic()
+            .overScrollVertical()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        overscrollEffect = null,
+    ) {
             // Behavior
             item { Spacer(modifier = Modifier.height(12.dp)) }
             item { SmallTitle(text = stringResource(R.string.settings_behavior)) }
@@ -564,5 +560,4 @@ fun MiuixSettingsScreen(
 
             item { Spacer(Modifier.navigationBarsPadding()) }
         }
-    }
 }
