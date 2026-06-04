@@ -1,7 +1,9 @@
 package moe.shizuku.manager.compose.screens
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,6 +32,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
@@ -197,16 +200,25 @@ fun MiuixMainScreen(
                 if (enableFloatingBottomBar) {
                     val fbBackdrop = floatingBackdrop
                     if (fbBackdrop != null) {
-                        FloatingBottomBar(
-                            modifier = Modifier
-                                .navigationBarsPadding()
-                                .padding(bottom = 12.dp),
-                            selectedIndex = { mainPagerState.selectedPage },
-                            onSelected = { mainPagerState.animateToPage(it) },
-                            backdrop = fbBackdrop,
-                            tabsCount = 3,
-                            isBlurEnabled = enableFloatingBottomBarBlur,
+                        Box(
+                            modifier = Modifier.fillMaxWidth()
                         ) {
+                            FloatingBottomBar(
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .clickable(
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        indication = null,
+                                        onClick = {},
+                                    )
+                                    .navigationBarsPadding()
+                                    .padding(bottom = 12.dp),
+                                selectedIndex = { mainPagerState.selectedPage },
+                                onSelected = { mainPagerState.animateToPage(it) },
+                                backdrop = fbBackdrop,
+                                tabsCount = 3,
+                                isBlurEnabled = enableFloatingBottomBarBlur,
+                            ) {
                             FloatingBottomBarItem(
                                 onClick = { mainPagerState.animateToPage(0) },
                             ) {
@@ -261,6 +273,7 @@ fun MiuixMainScreen(
                                     overflow = TextOverflow.Visible
                                 )
                             }
+                        }
                         }
                     }
                 } else {
