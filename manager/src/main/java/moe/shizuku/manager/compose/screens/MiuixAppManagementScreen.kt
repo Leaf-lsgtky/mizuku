@@ -52,11 +52,12 @@ import rikka.shizuku.Shizuku
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.InfiniteProgressIndicator
+import top.yukonga.miuix.kmp.basic.InputField
 import top.yukonga.miuix.kmp.basic.PullToRefresh
+import top.yukonga.miuix.kmp.basic.SearchBar
 import top.yukonga.miuix.kmp.basic.Switch
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
-import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.basic.rememberPullToRefreshState
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.overScrollVertical
@@ -75,6 +76,7 @@ fun MiuixAppManagementScreen(
     val grantedStates = remember { mutableStateMapOf<String, Boolean>() }
     var isRefreshing by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
+    var searchExpanded by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         if (!ShizukuStateMachine.isRunning()) {
@@ -140,15 +142,25 @@ fun MiuixAppManagementScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         // 搜索框
-        top.yukonga.miuix.kmp.basic.TextField(
-            value = searchText,
-            onValueChange = { searchText = it },
+        SearchBar(
+            inputField = {
+                InputField(
+                    query = searchText,
+                    onQueryChange = { searchText = it },
+                    onSearch = { searchExpanded = false },
+                    expanded = searchExpanded,
+                    onExpandedChange = { searchExpanded = it },
+                    label = stringResource(R.string.search_apps),
+                )
+            },
+            expanded = searchExpanded,
+            onExpandedChange = { searchExpanded = it },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 8.dp),
-            label = stringResource(R.string.search_apps),
-            useLabelAsPlaceholder = true,
-        )
+        ) {
+            // 搜索结果可以在这里显示
+        }
 
         if (isLoading && filteredAndSortedPackages.isNullOrEmpty() && !isRefreshing) {
             Box(
