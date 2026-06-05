@@ -27,6 +27,11 @@
     <methods>;
 }
 
+# Optional AndroidX WindowManager device/OEM extension APIs.
+# R8 sees references from androidx.window but these classes are not packaged with the app.
+-dontwarn androidx.window.extensions.**
+-dontwarn androidx.window.sidecar.**
+
 # Entrance of Shizuku service
 -keep class rikka.shizuku.server.ShizukuService {
     public static void main(java.lang.String[]);
