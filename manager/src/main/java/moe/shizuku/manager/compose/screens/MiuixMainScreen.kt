@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -221,6 +222,7 @@ fun MiuixMainScreen(
                             ) {
                             FloatingBottomBarItem(
                                 onClick = { mainPagerState.animateToPage(0) },
+                                modifier = Modifier.defaultMinSize(minWidth = 76.dp),
                             ) {
                                 Icon(
                                     imageVector = MiuixIcons.VerticalSplit,
@@ -239,6 +241,7 @@ fun MiuixMainScreen(
                             }
                             FloatingBottomBarItem(
                                 onClick = { mainPagerState.animateToPage(1) },
+                                modifier = Modifier.defaultMinSize(minWidth = 76.dp),
                             ) {
                                 Icon(
                                     imageVector = MiuixIcons.All,
@@ -257,6 +260,7 @@ fun MiuixMainScreen(
                             }
                             FloatingBottomBarItem(
                                 onClick = { mainPagerState.animateToPage(2) },
+                                modifier = Modifier.defaultMinSize(minWidth = 76.dp),
                             ) {
                                 Icon(
                                     imageVector = MiuixIcons.Settings,
