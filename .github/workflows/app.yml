@@ -28,6 +28,9 @@ jobs:
 
     env:
       KEYSTORE: ${{ secrets.KEYSTORE }}
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
+      KEYSTORE_ALIAS_PASSWORD: ${{ secrets.KEYSTORE_ALIAS_PASSWORD }}
 
     outputs:
       versionName: ${{ steps.buildWithGradle.outputs.versionName }}
@@ -37,7 +40,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && (inputs.prerelease && 'beta' || 'master') || '' }}
           submodules: 'recursive'
           fetch-depth: 0
 
@@ -50,19 +52,25 @@ jobs:
       - name: Validate Signing Config
         if: ${{ github.event_name == 'workflow_dispatch' && !inputs.debug }}
         run: |
-          if [ "$KEYSTORE" = "" ]; then
-            echo "::error::Signing secrets not configured. Signing secrets are required for release builds."
-            exit 1
-          fi
+          missing=0
+          for name in KEYSTORE KEYSTORE_PASSWORD KEYSTORE_ALIAS KEYSTORE_ALIAS_PASSWORD; do
+            if [ -z "${!name}" ]; then
+              echo "::error::$name secret is not configured. Signing secrets are required for release builds."
+              missing=1
+            fi
+          done
+          exit "$missing"
 
       - name: Create signing.properties
         if: ${{ github.event_name == 'workflow_dispatch' && !inputs.debug && env.KEYSTORE != '' }}
         run: |
-          echo KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} > signing.properties
-          echo KEYSTORE_ALIAS=${{ secrets.KEYSTORE_ALIAS }} >> signing.properties
-          echo KEYSTORE_ALIAS_PASSWORD='${{ secrets.KEYSTORE_ALIAS_PASSWORD }}' >> signing.properties
-          echo KEYSTORE_FILE=../key.jks >> signing.properties
-          echo ${{ secrets.KEYSTORE }} | base64 --decode > key.jks
+          {
+            printf 'KEYSTORE_PASSWORD=%s\n' "$KEYSTORE_PASSWORD"
+            printf 'KEYSTORE_ALIAS=%s\n' "$KEYSTORE_ALIAS"
+            printf 'KEYSTORE_ALIAS_PASSWORD=%s\n' "$KEYSTORE_ALIAS_PASSWORD"
+            printf 'KEYSTORE_FILE=../key.jks\n'
+          } > signing.properties
+          printf '%s' "$KEYSTORE" | base64 --decode > key.jks
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
@@ -115,6 +123,14 @@ jobs:
         with:
           name: ${{ steps.buildWithGradle.outputs.artifactName }}
           path: ${{ steps.buildWithGradle.outputs.filePath }}
+
+      - name: Upload R8 Mapping
+        if: ${{ success() && github.event_name == 'workflow_dispatch' && !inputs.debug }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: mapping-${{ steps.buildWithGradle.outputs.versionName }}
+          path: out/mapping/*.txt
+          if-no-files-found: error
 
       - name: Attest Build Provenance
         if: ${{ success() && github.event_name == 'workflow_dispatch' && !inputs.debug }}
