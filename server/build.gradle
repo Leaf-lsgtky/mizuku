@@ -9,6 +9,9 @@ android {
     buildFeatures {
         buildConfig = false
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -25,4 +28,6 @@ dependencies {
     implementation project(":server-shared")
     implementation libs.hidden.compat
     compileOnly libs.hidden.stub
+
+    testImplementation "junit:junit:4.13.2"
 }
