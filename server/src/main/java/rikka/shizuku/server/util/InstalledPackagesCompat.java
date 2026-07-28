@@ -90,18 +90,17 @@ public final class InstalledPackagesCompat {
             return (List<PackageInfo>) result;
         }
 
-        String resultClassName = result.getClass().getName();
-        if (resultClassName.startsWith(PARCELED_LIST_SLICE) || resultClassName.contains("PackageInfoList")) {
-            try {
-                Object list = result.getClass().getMethod("getList").invoke(result);
-                return list == null ? Collections.emptyList() : (List<PackageInfo>) list;
-            } catch (Exception e) {
-                Log.w(TAG, "Failed to unwrap " + resultClassName, e);
-                return null;
-            }
+        // Check for getList() method (ParceledListSlice, PackageInfoList, etc.)
+        try {
+            Object list = result.getClass().getMethod("getList").invoke(result);
+            return list == null ? Collections.emptyList() : (List<PackageInfo>) list;
+        } catch (NoSuchMethodException ignored) {
+        } catch (Exception e) {
+            Log.w(TAG, "Failed to unwrap " + result.getClass().getName(), e);
+            return null;
         }
 
-        Log.w(TAG, "Unsupported getInstalledPackages return type: " + resultClassName);
+        Log.w(TAG, "Unsupported getInstalledPackages return type: " + result.getClass().getName());
         return null;
     }
 

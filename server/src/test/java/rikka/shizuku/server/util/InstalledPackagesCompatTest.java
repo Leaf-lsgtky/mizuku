@@ -69,7 +69,7 @@ public class InstalledPackagesCompatTest {
 
     @Test
     public void unwrapResult_unknownType_returnsNull() {
-        Object unknown = "not a list type";
+        Object unknown = new Object(); // no getList() method
 
         List<PackageInfo> result = InstalledPackagesCompat.unwrapResult(unknown);
         assertNull(result);
@@ -113,6 +113,27 @@ public class InstalledPackagesCompatTest {
         assertTrue(!matches);
     }
 
+    @Test
+    public void unwrapResult_objectWithGetList_returnsList() {
+        List<PackageInfo> inner = new ArrayList<>();
+        inner.add(new PackageInfo());
+        ObjectWithGetList fake = new ObjectWithGetList(inner);
+
+        List<PackageInfo> result = InstalledPackagesCompat.unwrapResult(fake);
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertTrue(result == inner);
+    }
+
+    @Test
+    public void unwrapResult_objectWithGetList_nullInner_returnsEmpty() {
+        ObjectWithGetList fake = new ObjectWithGetList(null);
+
+        List<PackageInfo> result = InstalledPackagesCompat.unwrapResult(fake);
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
     // Fake classes that mimic Android's ParceledListSlice and PackageInfoList
     // These have a getList() method like the real classes
 
@@ -125,6 +146,12 @@ public class InstalledPackagesCompatTest {
     public static class FakePackageInfoList {
         private final List<PackageInfo> list;
         public FakePackageInfoList(List<PackageInfo> list) { this.list = list; }
+        public List<PackageInfo> getList() { return list; }
+    }
+
+    public static class ObjectWithGetList {
+        private final List<PackageInfo> list;
+        public ObjectWithGetList(List<PackageInfo> list) { this.list = list; }
         public List<PackageInfo> getList() { return list; }
     }
 }
