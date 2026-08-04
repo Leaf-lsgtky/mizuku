@@ -1,8 +1,9 @@
 package rikka.shizuku.server.util;
 
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.IBinder;
+import android.os.ServiceManager;
 import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
@@ -10,6 +11,15 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Reads the installed-package list across platform versions.
+ *
+ * <p>Android 17 changed {@code IPackageManager.getInstalledPackages} to return the new
+ * {@code PackageInfoList} instead of {@code ParceledListSlice}. The return type is part of the
+ * JVM method descriptor, so code linked against the old stub fails with {@link NoSuchMethodError}
+ * (or {@link ClassCastException}) rather than a checked exception. Everything here is resolved by
+ * name and parameter types only, and unwrapped by capability, so both shapes work.
+ */
 public final class InstalledPackagesCompat {
 
     private static final String TAG = "InstalledPackagesCompat";
@@ -29,57 +39,90 @@ public final class InstalledPackagesCompat {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public static List<PackageInfo> getInstalledPackages(long flags, int userId) throws ReflectiveOperationException {
-        // Path 1: try getInstalledPackagesAsUser via context PackageManager
+        // Path 1: privileged IPackageManager. This is the only path that can enumerate packages
+        // for an arbitrary user, so it must be tried first -- the context PackageManager below
+        // silently ignores userId and would return the wrong user's list.
         try {
-            Object packageManager = getContextPackageManager();
-            Method method = packageManager.getClass().getMethod("getInstalledPackagesAsUser", int.class, int.class);
-            Object result = invoke(method, packageManager, (int) flags, userId);
-            List<PackageInfo> unwrapped = unwrapResult(result);
-            if (unwrapped != null) return unwrapped;
-        } catch (NoSuchMethodException ignored) {
-        } catch (Exception e) {
-            Log.d(TAG, "getInstalledPackagesAsUser failed, falling back to hidden API", e);
-        }
-
-        // Path 2: try hidden IPackageManager.getInstalledPackages
-        try {
-            Object packageManager = getPackageManager();
-            Method method;
-            Object result;
-
-            if (Build.VERSION.SDK_INT >= ANDROID_13) {
-                method = packageManager.getClass().getMethod("getInstalledPackages", long.class, int.class);
-                result = invoke(method, packageManager, flags, userId);
-            } else {
-                method = packageManager.getClass().getMethod("getInstalledPackages", int.class, int.class);
-                result = invoke(method, packageManager, (int) flags, userId);
+            Object pm = getPackageManager();
+            Method method = findGetInstalledPackages(pm);
+            if (method != null) {
+                Object result = method.getParameterTypes()[0] == long.class
+                        ? invoke(method, pm, flags, userId)
+                        : invoke(method, pm, (int) flags, userId);
+                List<PackageInfo> unwrapped = unwrapResult(result);
+                if (unwrapped != null) return unwrapped;
             }
-
-            List<PackageInfo> unwrapped = unwrapResult(result);
-            if (unwrapped != null) return unwrapped;
-            return Collections.emptyList();
-        } catch (NoSuchMethodException e) {
-            Log.d(TAG, "Hidden IPackageManager.getInstalledPackages not found, falling back to public API", e);
-        } catch (Exception e) {
-            Log.d(TAG, "Hidden IPackageManager.getInstalledPackages failed, falling back to public API", e);
+        } catch (Throwable e) {
+            // NoSuchMethodError / ClassCastException land here on signature drift.
+            Log.d(TAG, "Hidden IPackageManager.getInstalledPackages failed, trying context PackageManager", e);
         }
 
-        // Path 3: public PackageManager.getInstalledPackages(int) as last resort
+        // Path 2: context PackageManager.getInstalledPackagesAsUser.
         try {
-            Object contextPm = getContextPackageManager();
-            Method method = contextPm.getClass().getMethod("getInstalledPackages", int.class);
-            Object result = invoke(method, contextPm, (int) flags);
-            List<PackageInfo> unwrapped = unwrapResult(result);
-            if (unwrapped != null) return unwrapped;
-            return Collections.emptyList();
-        } catch (Exception e) {
-            Log.e(TAG, "Public getInstalledPackages(int) also failed", e);
-            return Collections.emptyList();
+            Object pm = getContextPackageManager();
+            Method method = findMethod(pm, "getInstalledPackagesAsUser");
+            if (method != null) {
+                Object result = method.getParameterTypes()[0] == long.class
+                        ? invoke(method, pm, flags, userId)
+                        : invoke(method, pm, (int) flags, userId);
+                List<PackageInfo> unwrapped = unwrapResult(result);
+                if (unwrapped != null) return unwrapped;
+            }
+        } catch (Throwable e) {
+            Log.d(TAG, "getInstalledPackagesAsUser failed, trying public API", e);
         }
+
+        // Path 3: public PackageManager.getInstalledPackages as a last resort. Current user only.
+        try {
+            Object pm = getContextPackageManager();
+            Method method = findMethod(pm, "getInstalledPackages");
+            if (method != null) {
+                Object result = method.getParameterTypes()[0] == long.class
+                        ? invoke(method, pm, flags)
+                        : invoke(method, pm, (int) flags);
+                List<PackageInfo> unwrapped = unwrapResult(result);
+                if (unwrapped != null) return unwrapped;
+            }
+        } catch (Throwable e) {
+            Log.e(TAG, "Public getInstalledPackages also failed", e);
+        }
+
+        return Collections.emptyList();
     }
 
+    /**
+     * Finds {@code getInstalledPackages(flags, userId)}, preferring the long-flags overload on
+     * Android 13+ where the extra flag bits live above the int range.
+     */
+    private static Method findGetInstalledPackages(Object pm) {
+        Method intFlags = null;
+        for (Method method : pm.getClass().getMethods()) {
+            if (!"getInstalledPackages".equals(method.getName())) continue;
+            Class<?>[] types = method.getParameterTypes();
+            if (types.length != 2 || types[1] != int.class) continue;
+            if (types[0] == long.class && Build.VERSION.SDK_INT >= ANDROID_13) return method;
+            if (types[0] == int.class) intFlags = method;
+        }
+        return intFlags;
+    }
+
+    private static Method findMethod(Object receiver, String name) {
+        Method intFlags = null;
+        for (Method method : receiver.getClass().getMethods()) {
+            if (!name.equals(method.getName())) continue;
+            Class<?>[] types = method.getParameterTypes();
+            if (types.length == 0) continue;
+            if (types[0] == long.class && Build.VERSION.SDK_INT >= ANDROID_13) return method;
+            if (types[0] == int.class) intFlags = method;
+        }
+        return intFlags;
+    }
+
+    /**
+     * @return the contained list, or null if {@code result} is a shape we don't understand
+     * (the caller then falls through to the next path).
+     */
     @SuppressWarnings("unchecked")
     static List<PackageInfo> unwrapResult(Object result) {
         if (result == null) {
@@ -90,7 +133,7 @@ public final class InstalledPackagesCompat {
             return (List<PackageInfo>) result;
         }
 
-        // Check for getList() method (ParceledListSlice, PackageInfoList, etc.)
+        // ParceledListSlice, and its Android 17 subclass PackageInfoList, both expose getList().
         try {
             Object list = result.getClass().getMethod("getList").invoke(result);
             return list == null ? Collections.emptyList() : (List<PackageInfo>) list;
@@ -104,12 +147,34 @@ public final class InstalledPackagesCompat {
         return null;
     }
 
+    /**
+     * Resolves IPackageManager.
+     *
+     * <p>Prefers rikka.hidden.compat.Services, whose binder is wrapped by ShizukuBinderWrapper in
+     * the manager process -- going straight to ServiceManager there would yield an unprivileged
+     * binder that cannot enumerate other users. Falls back to ServiceManager for the server
+     * process and for release builds where R8 may have renamed Services away.
+     */
     private static Object getPackageManager() throws ReflectiveOperationException {
-        Class<?> servicesClass = Class.forName("rikka.hidden.compat.Services");
-        var field = servicesClass.getDeclaredField("packageManager");
-        field.setAccessible(true);
-        Object service = field.get(null);
-        return service.getClass().getMethod("get").invoke(service);
+        try {
+            Class<?> servicesClass = Class.forName("rikka.hidden.compat.Services");
+            java.lang.reflect.Field field = servicesClass.getDeclaredField("packageManager");
+            field.setAccessible(true);
+            Object binder = field.get(null);
+            if (binder != null) {
+                Object pm = binder.getClass().getMethod("get").invoke(binder);
+                if (pm != null) return pm;
+            }
+        } catch (Throwable e) {
+            Log.d(TAG, "rikka.hidden.compat.Services unavailable, using ServiceManager", e);
+        }
+
+        IBinder binder = ServiceManager.getService("package");
+        if (binder == null) {
+            throw new IllegalStateException("package service is not available");
+        }
+        Class<?> stub = Class.forName("android.content.pm.IPackageManager$Stub");
+        return stub.getMethod("asInterface", IBinder.class).invoke(null, binder);
     }
 
     private static Object getContextPackageManager() throws ReflectiveOperationException {
@@ -129,6 +194,7 @@ public final class InstalledPackagesCompat {
 
     private static Object invoke(Method method, Object receiver, Object... args) throws ReflectiveOperationException {
         try {
+            method.setAccessible(true);
             return method.invoke(receiver, args);
         } catch (InvocationTargetException e) {
             Throwable cause = e.getCause();

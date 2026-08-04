@@ -134,6 +134,29 @@ public class InstalledPackagesCompatTest {
         assertTrue(result.isEmpty());
     }
 
+    /**
+     * Android 17 returns PackageInfoList, which extends ParceledListSlice. Unwrapping must key off
+     * getList() being present rather than an exact class, or the subclass reads as unknown.
+     */
+    @Test
+    public void unwrapResult_subclassOfParceledListSlice_unwraps() {
+        List<PackageInfo> inner = new ArrayList<>();
+        inner.add(new PackageInfo());
+        FakePackageInfoListSubclass fake = new FakePackageInfoListSubclass(inner);
+
+        List<PackageInfo> result = InstalledPackagesCompat.unwrapResult(fake);
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertTrue(result == inner);
+    }
+
+    /** An unknown shape must return null so the caller falls through to the next path. */
+    @Test
+    public void unwrapResult_unknownType_returnsNullSoCallerFallsThrough() {
+        assertNull(InstalledPackagesCompat.unwrapResult(new Object()));
+        assertNull(InstalledPackagesCompat.unwrapResult("not a package list"));
+    }
+
     // Fake classes that mimic Android's ParceledListSlice and PackageInfoList
     // These have a getList() method like the real classes
 
@@ -153,5 +176,10 @@ public class InstalledPackagesCompatTest {
         private final List<PackageInfo> list;
         public ObjectWithGetList(List<PackageInfo> list) { this.list = list; }
         public List<PackageInfo> getList() { return list; }
+    }
+
+    /** Mirrors Android 17's PackageInfoList, which extends ParceledListSlice. */
+    public static class FakePackageInfoListSubclass extends FakeParceledListSlice {
+        public FakePackageInfoListSubclass(List<PackageInfo> list) { super(list); }
     }
 }

@@ -32,6 +32,15 @@
 -dontwarn androidx.window.extensions.**
 -dontwarn androidx.window.sidecar.**
 
+# Reached only by reflection from InstalledPackagesCompat (Android 17 package-list compat).
+# Without these, R8 renames the field/class and the app list silently comes back empty.
+-keep class rikka.hidden.compat.Services {
+    <fields>;
+}
+-keep class rikka.hidden.compat.util.SystemServiceBinder {
+    public *** get();
+}
+
 # Entrance of Shizuku service
 -keep class rikka.shizuku.server.ShizukuService {
     public static void main(java.lang.String[]);
