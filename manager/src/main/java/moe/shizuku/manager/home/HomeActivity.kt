@@ -19,6 +19,7 @@ import moe.shizuku.manager.compose.theme.LocalIsMiuix
 import moe.shizuku.manager.compose.theme.ShizukuAppTheme
 import moe.shizuku.manager.management.AppsViewModel
 import moe.shizuku.manager.receiver.NotifCancelReceiver
+import moe.shizuku.manager.settings.AppearanceActivity
 import moe.shizuku.manager.settings.SettingsActivity
 import moe.shizuku.manager.starter.StarterActivity
 import moe.shizuku.manager.utils.EnvironmentUtils
@@ -70,6 +71,9 @@ open class HomeActivity : AppActivity() {
                         },
                         onNavigateToAdbPairingTutorial = {
                             startActivity(Intent(this, moe.shizuku.manager.adb.AdbPairingTutorialActivity::class.java))
+                        },
+                        onNavigateToAppearance = {
+                            startActivity(Intent(this, AppearanceActivity::class.java))
                         },
                     )
                 } else {

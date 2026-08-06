@@ -8,10 +8,11 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.topjohnwu.superuser.Shell
 import moe.shizuku.manager.ktx.logd
 import moe.shizuku.manager.service.WatchdogService
+import moe.shizuku.manager.theme.LocaleStore
+import moe.shizuku.manager.theme.ThemeStore
 import moe.shizuku.manager.utils.ShizukuStateMachine
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import rikka.core.util.BuildUtils.atLeast30
-import rikka.material.app.LocaleDelegate
 import rikka.shizuku.Shizuku
 
 lateinit var application: ShizukuApplication
@@ -39,8 +40,11 @@ class ShizukuApplication : Application() {
 
     private fun init(context: Context) {
         ShizukuSettings.initialize(context)
-        LocaleDelegate.defaultLocale = ShizukuSettings.getLocale()
-        AppCompatDelegate.setDefaultNightMode(ShizukuSettings.getNightMode())
+        ThemeStore.initialize()
+        LocaleStore.initialize()
+        // Dark mode is handled entirely in Compose by ThemeStore, so AppCompat must not also
+        // apply a night mode — it would recreate activities and fight the Compose theme.
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
 
         if(ShizukuSettings.getWatchdog()) WatchdogService.start(context)
     }

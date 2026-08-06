@@ -1,5 +1,6 @@
 package moe.shizuku.manager.settings
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import moe.shizuku.manager.app.AppActivity
@@ -15,6 +16,9 @@ class SettingsActivity : AppActivity() {
             ShizukuAppTheme {
                 SettingsScreen(
                     onNavigateBack = { finish() },
+                    onNavigateToAppearance = {
+                        startActivity(Intent(this, AppearanceActivity::class.java))
+                    },
                 )
             }
         }

@@ -5,7 +5,6 @@ import android.os.Build
 import android.widget.TextView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,11 +42,9 @@ import kotlinx.coroutines.launch
 import moe.shizuku.manager.R
 import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.adb.AdbStarter
-import moe.shizuku.manager.app.ThemeHelper
 import moe.shizuku.manager.compose.components.EditTextPreference
 import moe.shizuku.manager.compose.components.Preference
 import moe.shizuku.manager.compose.components.PreferenceCategory
-import moe.shizuku.manager.compose.components.SimpleMenuPreference
 import moe.shizuku.manager.compose.components.SwitchPreference
 import moe.shizuku.manager.ktx.toHtml
 import rikka.html.text.HtmlCompat
@@ -58,14 +55,12 @@ import moe.shizuku.manager.utils.CustomTabsHelper
 import moe.shizuku.manager.utils.EnvironmentUtils
 import moe.shizuku.manager.utils.SettingsHelper
 import moe.shizuku.manager.utils.ShizukuStateMachine
-import rikka.material.app.LocaleDelegate
-import rikka.shizuku.manager.ShizukuLocales
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     onNavigateBack: () -> Unit,
+    onNavigateToAppearance: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -82,15 +77,6 @@ fun SettingsScreen(
     }
     var tcpPort by remember {
         mutableStateOf(ShizukuSettings.getTcpPort())
-    }
-    var nightMode by remember {
-        mutableStateOf(ShizukuSettings.getNightMode())
-    }
-    var blackNightTheme by remember {
-        mutableStateOf(ThemeHelper.isBlackNightTheme(context))
-    }
-    var useSystemColor by remember {
-        mutableStateOf(ThemeHelper.isUsingSystemColor())
     }
     var legacyPairing by remember {
         mutableStateOf(ShizukuSettings.getLegacyPairing())
@@ -402,107 +388,12 @@ fun SettingsScreen(
                 }
             }
 
-            // Appearance
+            // Appearance — every option lives on its own screen now.
             PreferenceCategory(title = stringResource(R.string.settings_user_interface)) {
-                val themeEntries = arrayOf("Material", "Miuix")
-                val themeMode = remember { mutableStateOf(ShizukuSettings.getThemeMode()) }
-                SimpleMenuPreference(
-                    title = "UI Theme",
-                    entries = themeEntries,
-                    entryValues = arrayOf("0", "1"),
-                    value = themeMode.value.toString(),
-                    onValueChange = { newValue ->
-                        val mode = newValue.toInt()
-                        if (themeMode.value != mode) {
-                            ShizukuSettings.setThemeMode(mode)
-                            themeMode.value = mode
-                        }
-                    },
-                )
-
-                val nightModeEntries = arrayOf(
-                    stringResource(R.string.follow_system),
-                    stringResource(R.string.dark_theme_off),
-                    stringResource(R.string.dark_theme_on),
-                )
-                val nightModeValues = arrayOf(
-                    AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM.toString(),
-                    AppCompatDelegate.MODE_NIGHT_NO.toString(),
-                    AppCompatDelegate.MODE_NIGHT_YES.toString(),
-                )
-                SimpleMenuPreference(
-                    title = stringResource(R.string.dark_theme),
-                    entries = nightModeEntries,
-                    entryValues = nightModeValues,
-                    value = nightMode.toString(),
-                    onValueChange = { newValue ->
-                        val mode = newValue.toInt()
-                        if (nightMode != mode) {
-                            AppCompatDelegate.setDefaultNightMode(mode)
-                            nightMode = mode
-                        }
-                    },
-                )
-
-                if (nightMode != AppCompatDelegate.MODE_NIGHT_NO) {
-                    SwitchPreference(
-                        title = stringResource(R.string.settings_black_night_theme),
-                        summary = stringResource(R.string.settings_black_night_theme_summary),
-                        checked = blackNightTheme,
-                        onCheckedChange = { newValue ->
-                            ShizukuSettings.getPreferences().edit()
-                                .putBoolean(ShizukuSettings.Keys.KEY_BLACK_NIGHT_THEME, newValue)
-                                .apply()
-                            blackNightTheme = newValue
-                        },
-                    )
-                }
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    SwitchPreference(
-                        title = stringResource(R.string.settings_use_system_color),
-                        checked = useSystemColor,
-                        onCheckedChange = { newValue ->
-                            ShizukuSettings.getPreferences().edit()
-                                .putBoolean(ShizukuSettings.Keys.KEY_USE_SYSTEM_COLOR, newValue)
-                                .apply()
-                            useSystemColor = newValue
-                        },
-                    )
-                }
-
-                // Language
-                val localeTags = ShizukuLocales.LOCALES
-                val displayLocaleTags = ShizukuLocales.DISPLAY_LOCALES
-                val currentLocale = ShizukuSettings.getLocale()
-                val currentLocaleTag = if (currentLocale == LocaleDelegate.systemLocale) "SYSTEM"
-                else currentLocale.toLanguageTag()
-                val currentLocaleIndex = localeTags.indexOf(currentLocaleTag).coerceAtLeast(0)
-                val localeEntries = displayLocaleTags.mapIndexed { index, tag ->
-                    if (index == 0) stringResource(R.string.follow_system)
-                    else {
-                        val locale = Locale.forLanguageTag(tag)
-                        locale.getDisplayName(locale)
-                    }
-                }.toTypedArray()
-
-                SimpleMenuPreference(
-                    title = stringResource(R.string.settings_language),
-                    summary = localeEntries[currentLocaleIndex],
-                    entries = localeEntries,
-                    entryValues = localeTags,
-                    value = currentLocaleTag,
-                    onValueChange = { newValue ->
-                        val locale: Locale = if ("SYSTEM" == newValue) {
-                            LocaleDelegate.systemLocale
-                        } else {
-                            Locale.forLanguageTag(newValue)
-                        }
-                        LocaleDelegate.defaultLocale = locale
-                        ShizukuSettings.getPreferences().edit()
-                            .putString(ShizukuSettings.Keys.KEY_LANGUAGE, newValue)
-                            .apply()
-                    },
+                Preference(
+                    title = stringResource(R.string.settings_user_interface),
+                    summary = stringResource(R.string.settings_user_interface_summary),
+                    onClick = onNavigateToAppearance,
                 )
             }
 

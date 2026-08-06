@@ -32,29 +32,11 @@ public class ShizukuSettings {
         public static final String KEY_LANGUAGE = "language";
         public static final String KEY_TRANSLATION = "translation";
         public static final String KEY_TRANSLATION_CONTRIBUTORS = "translation_contributors";
-        public static final String KEY_LIGHT_THEME = "light_theme";
-        public static final String KEY_NIGHT_MODE = "night_mode";
-        public static final String KEY_BLACK_NIGHT_THEME = "black_night_theme";
-        public static final String KEY_USE_SYSTEM_COLOR = "use_system_color";
         public static final String KEY_HELP = "help";
         public static final String KEY_REPORT_BUG = "report_bug";
         public static final String KEY_LEGACY_PAIRING = "legacy_pairing";
         public static final String KEY_CATEGORY_ADVANCED = "category_advanced";
         public static final String KEY_THEME_MODE = "theme_mode";
-        public static final String KEY_ENABLE_BLUR = "enable_blur";
-        public static final String KEY_ENABLE_FLOATING_BOTTOM_BAR = "enable_floating_bottom_bar";
-        public static final String KEY_ENABLE_FLOATING_BOTTOM_BAR_BLUR = "enable_floating_bottom_bar_blur";
-    }
-
-    public static final int THEME_MATERIAL = 0;
-    public static final int THEME_MIUIX = 1;
-
-    public static int getThemeMode() {
-        return getPreferences().getInt(Keys.KEY_THEME_MODE, THEME_MIUIX);
-    }
-
-    public static void setThemeMode(int mode) {
-        getPreferences().edit().putInt(Keys.KEY_THEME_MODE, mode).apply();
     }
 
     private static SharedPreferences sPreferences;
@@ -196,44 +178,11 @@ public class ShizukuSettings {
         return getPreferences().getBoolean(Keys.KEY_LEGACY_PAIRING, false);
     }
 
-    @AppCompatDelegate.NightMode
-    public static int getNightMode() {
-        int defValue = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
-        if (EnvironmentUtils.isWatch()) {
-            defValue = AppCompatDelegate.MODE_NIGHT_YES;
-        }
-        return getPreferences().getInt(Keys.KEY_NIGHT_MODE, defValue);
-    }
-
     public static Locale getLocale() {
         String tag = getPreferences().getString(Keys.KEY_LANGUAGE, null);
         if (TextUtils.isEmpty(tag) || "SYSTEM".equals(tag)) {
             return Locale.getDefault();
         }
         return Locale.forLanguageTag(tag);
-    }
-
-    public static boolean getEnableBlur() {
-        return getPreferences().getBoolean(Keys.KEY_ENABLE_BLUR, true);
-    }
-
-    public static void setEnableBlur(boolean enable) {
-        getPreferences().edit().putBoolean(Keys.KEY_ENABLE_BLUR, enable).apply();
-    }
-
-    public static boolean getEnableFloatingBottomBar() {
-        return getPreferences().getBoolean(Keys.KEY_ENABLE_FLOATING_BOTTOM_BAR, false);
-    }
-
-    public static void setEnableFloatingBottomBar(boolean enable) {
-        getPreferences().edit().putBoolean(Keys.KEY_ENABLE_FLOATING_BOTTOM_BAR, enable).apply();
-    }
-
-    public static boolean getEnableFloatingBottomBarBlur() {
-        return getPreferences().getBoolean(Keys.KEY_ENABLE_FLOATING_BOTTOM_BAR_BLUR, false);
-    }
-
-    public static void setEnableFloatingBottomBarBlur(boolean enable) {
-        getPreferences().edit().putBoolean(Keys.KEY_ENABLE_FLOATING_BOTTOM_BAR_BLUR, enable).apply();
     }
 }

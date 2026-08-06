@@ -55,6 +55,7 @@ import moe.shizuku.manager.compose.components.SearchBarFake
 import moe.shizuku.manager.compose.components.SearchPager
 import moe.shizuku.manager.compose.components.SearchStatus
 import moe.shizuku.manager.compose.rememberMainPagerState
+import moe.shizuku.manager.compose.theme.LocalThemeState
 import moe.shizuku.manager.compose.utils.BlurredBar
 import moe.shizuku.manager.compose.utils.rememberBlurBackdrop
 import moe.shizuku.manager.home.HomeViewModel
@@ -95,6 +96,7 @@ fun MiuixMainScreen(
     onNavigateToStarter: (isRoot: Boolean, port: Int) -> Unit,
     onNavigateToShellTutorial: () -> Unit,
     onNavigateToAdbPairingTutorial: () -> Unit,
+    onNavigateToAppearance: () -> Unit,
 ) {
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { 3 })
     val mainPagerState = rememberMainPagerState(pagerState)
@@ -122,14 +124,16 @@ fun MiuixMainScreen(
     }
 
     // 模糊效果
-    val enableBlur = ShizukuSettings.getEnableBlur()
+    val themeState = LocalThemeState.current
+    val enableBlur = themeState.enableBlur
     val bottomBarBackdrop = rememberBlurBackdrop(enableBlur)
     val bottomBarBlurActive = bottomBarBackdrop != null
     val bottomBarColor = if (bottomBarBlurActive) Color.Transparent else MiuixTheme.colorScheme.surface
 
     // 悬浮底栏
-    val enableFloatingBottomBar = ShizukuSettings.getEnableFloatingBottomBar()
+    val enableFloatingBottomBar = themeState.enableFloatingBottomBar
     val enableFloatingBottomBarBlur = enableFloatingBottomBar
+        && themeState.enableFloatingBottomBarBlur
         && enableBlur
         && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
     val floatingBackdrop = if (enableFloatingBottomBar && enableFloatingBottomBarBlur) {
@@ -501,7 +505,8 @@ fun MiuixMainScreen(
                         ) { contentPadding ->
                             MiuixSettingsScreen(
                                 scrollBehavior = scrollBehavior,
-                                scaffoldPadding = contentPadding
+                                scaffoldPadding = contentPadding,
+                                onNavigateToAppearance = onNavigateToAppearance,
                             )
                         }
                     }

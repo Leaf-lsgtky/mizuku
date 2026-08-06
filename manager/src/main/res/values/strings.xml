@@ -156,6 +156,7 @@ Wi-Fi is required. Shizuku will continue running and wait for a Wi-Fi connection
     <string name="settings_translation">Participate in translation</string>
     <string name="settings_translation_summary">Help us translate %s into your language</string>
     <string name="settings_user_interface">Appearance</string>
+    <string name="settings_user_interface_summary">Theme, colors, effects and language</string>
     <string name="settings_enable_blur">Enable blur effects</string>
     <string name="settings_enable_blur_summary">Apply blur to top and bottom bars (requires Android 12+)</string>
     <string name="settings_floating_bottom_bar">Floating bottom bar</string>
@@ -201,6 +202,21 @@ Wi-Fi is required. Shizuku will continue running and wait for a Wi-Fi connection
     <string name="dark_theme_on">Always dark</string>
     <string name="follow_system">Follow system</string>
     <string name="settings_theme_mode">UI Theme</string>
+
+    <!-- Appearance -->
+    <string name="appearance_style">Style</string>
+    <string name="appearance_colors">Colors</string>
+    <string name="appearance_effects">Effects</string>
+    <string name="appearance_language">Language</string>
+    <string name="ui_style_material">Material</string>
+    <string name="ui_style_miuix">Miuix</string>
+    <string name="color_source">Accent color</string>
+    <string name="color_source_default">Default</string>
+    <string name="color_source_wallpaper">Wallpaper colors</string>
+    <string name="color_source_custom">Custom</string>
+    <string name="palette_style">Palette style</string>
+    <string name="color_spec">Color spec</string>
+    <string name="color_spec_2021_only">This palette style only supports the 2021 spec</string>
 
     <!-- About -->
     <string name="action_about">About</string>

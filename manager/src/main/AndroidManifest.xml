@@ -98,6 +98,10 @@
             android:name=".shell.ShellTutorialActivity"
             android:label="@string/home_terminal_title" />
         <activity
+            android:name=".settings.AppearanceActivity"
+            android:exported="false"
+            android:label="@string/settings_user_interface" />
+        <activity
             android:name=".settings.SettingsActivity"
             android:exported="false"
             android:label="@string/settings_title">

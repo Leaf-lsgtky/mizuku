@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,8 +38,6 @@ import moe.shizuku.manager.utils.CustomTabsHelper
 import moe.shizuku.manager.utils.EnvironmentUtils
 import moe.shizuku.manager.utils.SettingsHelper
 import moe.shizuku.manager.utils.ShizukuStateMachine
-import rikka.material.app.LocaleDelegate
-import rikka.shizuku.manager.ShizukuLocales
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.SmallTitle
@@ -49,18 +45,17 @@ import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.preference.ArrowPreference
-import top.yukonga.miuix.kmp.preference.OverlayDropdownPreference
 import top.yukonga.miuix.kmp.preference.SwitchPreference
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 import top.yukonga.miuix.kmp.window.WindowDialog
-import java.util.Locale
 
 @Composable
 fun MiuixSettingsScreen(
     scrollBehavior: top.yukonga.miuix.kmp.basic.ScrollBehavior,
     scaffoldPadding: PaddingValues = PaddingValues(0.dp),
+    onNavigateToAppearance: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -77,23 +72,8 @@ fun MiuixSettingsScreen(
     var tcpPort by remember {
         mutableStateOf(ShizukuSettings.getTcpPort())
     }
-    var nightMode by remember {
-        mutableStateOf(ShizukuSettings.getNightMode())
-    }
     var legacyPairing by remember {
         mutableStateOf(ShizukuSettings.getLegacyPairing())
-    }
-    var themeMode by remember {
-        mutableStateOf(ShizukuSettings.getThemeMode())
-    }
-    var enableBlur by remember {
-        mutableStateOf(ShizukuSettings.getEnableBlur())
-    }
-    var enableFloatingBottomBar by remember {
-        mutableStateOf(ShizukuSettings.getEnableFloatingBottomBar())
-    }
-    var enableFloatingBottomBarBlur by remember {
-        mutableStateOf(ShizukuSettings.getEnableFloatingBottomBarBlur())
     }
 
     // Dialog states
@@ -321,32 +301,6 @@ fun MiuixSettingsScreen(
         }
     }
 
-    val nightModeEntries = listOf(
-        stringResource(R.string.follow_system),
-        stringResource(R.string.dark_theme_off),
-        stringResource(R.string.dark_theme_on),
-    )
-    val nightModeValues = listOf(
-        AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
-        AppCompatDelegate.MODE_NIGHT_NO,
-        AppCompatDelegate.MODE_NIGHT_YES,
-    )
-    val nightModeIndex = nightModeValues.indexOf(nightMode).coerceAtLeast(0)
-
-    val localeTags = ShizukuLocales.LOCALES
-    val displayLocaleTags = ShizukuLocales.DISPLAY_LOCALES
-    val currentLocale = ShizukuSettings.getLocale()
-    val currentLocaleTag = if (currentLocale == LocaleDelegate.systemLocale) "SYSTEM"
-    else currentLocale.toLanguageTag()
-    val currentLocaleIndex = localeTags.indexOf(currentLocaleTag).coerceAtLeast(0)
-    val localeEntries = displayLocaleTags.mapIndexed { index, tag ->
-        if (index == 0) stringResource(R.string.follow_system)
-        else {
-            val locale = Locale.forLanguageTag(tag)
-            locale.getDisplayName(locale)
-        }
-    }
-
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -442,7 +396,7 @@ fun MiuixSettingsScreen(
                 }
             }
 
-            // Appearance
+            // Appearance — every option lives on its own screen now.
             item { SmallTitle(text = stringResource(R.string.settings_user_interface)) }
             item {
                 Card(
@@ -450,84 +404,11 @@ fun MiuixSettingsScreen(
                         .padding(horizontal = 12.dp)
                         .padding(bottom = 12.dp)
                 ) {
-                    val themeEntries = listOf("Material", "Miuix")
-                    OverlayDropdownPreference(
-                        title = stringResource(R.string.settings_theme_mode),
-                        items = themeEntries,
-                        selectedIndex = themeMode,
-                        onSelectedIndexChange = { index ->
-                            if (themeMode != index) {
-                                ShizukuSettings.setThemeMode(index)
-                                themeMode = index
-                            }
-                        }
+                    ArrowPreference(
+                        title = stringResource(R.string.settings_user_interface),
+                        summary = stringResource(R.string.settings_user_interface_summary),
+                        onClick = onNavigateToAppearance,
                     )
-
-                    OverlayDropdownPreference(
-                        title = stringResource(R.string.dark_theme),
-                        items = nightModeEntries,
-                        selectedIndex = nightModeIndex,
-                        onSelectedIndexChange = { index ->
-                            val mode = nightModeValues[index]
-                            if (nightMode != mode) {
-                                AppCompatDelegate.setDefaultNightMode(mode)
-                                nightMode = mode
-                            }
-                        }
-                    )
-
-                    OverlayDropdownPreference(
-                        title = stringResource(R.string.settings_language),
-                        items = localeEntries,
-                        selectedIndex = currentLocaleIndex,
-                        onSelectedIndexChange = { index ->
-                            val newValue = localeTags[index]
-                            val locale: Locale = if ("SYSTEM" == newValue) {
-                                LocaleDelegate.systemLocale
-                            } else {
-                                Locale.forLanguageTag(newValue)
-                            }
-                            LocaleDelegate.defaultLocale = locale
-                            ShizukuSettings.getPreferences().edit()
-                                .putString(ShizukuSettings.Keys.KEY_LANGUAGE, newValue)
-                                .apply()
-                        }
-                    )
-
-                    SwitchPreference(
-                        title = stringResource(R.string.settings_enable_blur),
-                        summary = stringResource(R.string.settings_enable_blur_summary),
-                        checked = enableBlur,
-                        onCheckedChange = { newValue ->
-                            ShizukuSettings.setEnableBlur(newValue)
-                            enableBlur = newValue
-                        },
-                    )
-
-                    SwitchPreference(
-                        title = stringResource(R.string.settings_floating_bottom_bar),
-                        summary = stringResource(R.string.settings_floating_bottom_bar_summary),
-                        checked = enableFloatingBottomBar,
-                        onCheckedChange = { newValue ->
-                            ShizukuSettings.setEnableFloatingBottomBar(newValue)
-                            enableFloatingBottomBar = newValue
-                        },
-                    )
-
-                    AnimatedVisibility(
-                        visible = enableFloatingBottomBar
-                            && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-                    ) {
-                        SwitchPreference(
-                            title = stringResource(R.string.settings_floating_bottom_bar_blur),
-                            summary = stringResource(R.string.settings_floating_bottom_bar_blur_summary),
-                            checked = enableFloatingBottomBarBlur,
-                            onCheckedChange = { newValue ->
-                                ShizukuSettings.setEnableFloatingBottomBarBlur(newValue)
-                                enableFloatingBottomBarBlur = newValue
-                            },
-                        )
-                    }
                 }
             }
 
