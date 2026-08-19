@@ -10,6 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.adb.AdbPairingService
 import moe.shizuku.manager.adb.AdbStarter
 import moe.shizuku.manager.app.AppActivity
@@ -24,6 +25,7 @@ import moe.shizuku.manager.settings.SettingsActivity
 import moe.shizuku.manager.starter.StarterActivity
 import moe.shizuku.manager.utils.EnvironmentUtils
 import moe.shizuku.manager.utils.ShizukuStateMachine
+import rikka.lifecycle.Status
 
 open class HomeActivity : AppActivity() {
 
@@ -53,6 +55,17 @@ open class HomeActivity : AppActivity() {
             ),
         )
         window.isNavigationBarContrastEnforced = false
+
+        homeModel.serviceStatus.observe(this) {
+            if (it.status == Status.SUCCESS) {
+                val status = it.data ?: return@observe
+                if (status.uid == -1) return@observe // service not running, keep last known launch mode
+                ShizukuSettings.setLastLaunchMode(
+                    if (status.uid == 0) ShizukuSettings.LaunchMethod.ROOT
+                    else ShizukuSettings.LaunchMethod.ADB
+                )
+            }
+        }
 
         setContent {
             ShizukuAppTheme {
