@@ -41,6 +41,13 @@
     public *** get();
 }
 
+# Room instantiates each generated *_Impl database reflectively through getDeclaredConstructor().
+# Room only keeps the class name, so R8 may still strip the default constructor; WorkManager then
+# fails in InitializationProvider with NoSuchMethodException: WorkDatabase_Impl.<init>.
+-keep class * extends androidx.room.RoomDatabase {
+    <init>();
+}
+
 # Entrance of Shizuku service
 -keep class rikka.shizuku.server.ShizukuService {
     public static void main(java.lang.String[]);
