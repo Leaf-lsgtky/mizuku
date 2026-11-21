@@ -6,6 +6,7 @@ import android.os.Build
 import android.provider.Settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,14 +35,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import moe.shizuku.manager.R
 import moe.shizuku.manager.adb.AdbPairingService
+import moe.shizuku.manager.compose.components.miuix.Os4Scaffold
+import moe.shizuku.manager.compose.theme.LocalIsMiuix
 import moe.shizuku.manager.utils.SettingsHelper
 import moe.shizuku.manager.utils.SettingsPage
 import rikka.compatibility.DeviceCompatibility
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.overScrollVertical
+import top.yukonga.miuix.kmp.basic.Card as MiuixCard
+import top.yukonga.miuix.kmp.basic.Text as MiuixText
+import top.yukonga.miuix.kmp.basic.TextButton as MiuixTextButton
+import top.yukonga.miuix.kmp.basic.ButtonDefaults as MiuixButtonDefaults
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,11 +61,39 @@ fun AdbPairingTutorialScreen(
     val context = LocalContext.current
     var notificationEnabled by remember {
         val nm = context.getSystemService(NotificationManager::class.java)
-        val channel = nm.getNotificationChannel(AdbPairingService.NOTIFICATION_CHANNEL)
+        val channel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            nm.getNotificationChannel(AdbPairingService.NOTIFICATION_CHANNEL)
+        } else null
         mutableStateOf(
             nm.areNotificationsEnabled() &&
-                    (channel == null || channel.importance != NotificationManager.IMPORTANCE_NONE)
+                    (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || channel == null || channel.importance != NotificationManager.IMPORTANCE_NONE)
         )
+    }
+
+    if (LocalIsMiuix.current) {
+        Os4Scaffold(
+            title = stringResource(R.string.adb_pairing_tutorial_title),
+            onBack = onNavigateBack,
+        ) { paddingValues, scrollBehavior, contentModifier ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(contentModifier)
+                    .overScrollVertical(onOffsetChanged = { scrollBehavior.state.overscrollOffset = it })
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
+                    .verticalScroll(rememberScrollState())
+                    .padding(
+                        start = 12.dp,
+                        end = 12.dp,
+                        top = paddingValues.calculateTopPadding() + 12.dp,
+                        bottom = paddingValues.calculateBottomPadding() + 16.dp,
+                    ),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                MiuixPairingTutorialContent(notificationEnabled)
+            }
+        }
+        return
     }
 
     Scaffold(
@@ -233,5 +271,104 @@ fun AdbPairingTutorialScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun MiuixPairingTutorialContent(notificationEnabled: Boolean) {
+    val context = LocalContext.current
+
+    if (notificationEnabled) {
+        MiuixPairingInstructionCard {
+            MiuixText(
+                text = stringResource(R.string.adb_pairing_tutorial_content_notification),
+                style = MiuixTheme.textStyles.body1,
+            )
+        }
+        MiuixPairingInstructionCard {
+            MiuixText(
+                text = stringResource(R.string.adb_pairing_tutorial_content_network),
+                style = MiuixTheme.textStyles.body1,
+            )
+            Spacer(Modifier.height(8.dp))
+            MiuixText(
+                text = stringResource(R.string.adb_pairing_tutorial_content_network_limation_not_foreground),
+                style = MiuixTheme.textStyles.body2,
+                color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+            )
+        }
+        if (DeviceCompatibility.isMiui()) {
+            MiuixPairingInstructionCard {
+                MiuixText(
+                    text = stringResource(R.string.adb_pairing_tutorial_content_miui),
+                    style = MiuixTheme.textStyles.body1,
+                    color = MiuixTheme.colorScheme.error,
+                )
+                Spacer(Modifier.height(8.dp))
+                MiuixText(
+                    text = stringResource(R.string.adb_pairing_tutorial_content_miui_2),
+                    style = MiuixTheme.textStyles.body2,
+                    color = MiuixTheme.colorScheme.error,
+                )
+            }
+        }
+        MiuixPairingInstructionCard {
+            MiuixText(
+                text = stringResource(R.string.adb_pairing_tutorial_content_steps),
+                style = MiuixTheme.textStyles.body1,
+            )
+            Spacer(Modifier.height(12.dp))
+            MiuixTextButton(
+                text = stringResource(R.string.development_settings),
+                onClick = { SettingsHelper.launchOrHighlightWirelessDebugging(context) },
+                colors = MiuixButtonDefaults.textButtonColorsPrimary(),
+            )
+        }
+        MiuixPairingInstructionCard {
+            MiuixText(
+                text = stringResource(R.string.adb_pairing_tutorial_content_enter_pairing_code),
+                style = MiuixTheme.textStyles.body1,
+            )
+        }
+        MiuixPairingInstructionCard {
+            MiuixText(
+                text = stringResource(R.string.adb_pairing_tutorial_content_finish),
+                style = MiuixTheme.textStyles.body1,
+            )
+        }
+        MiuixTextButton(
+            text = stringResource(R.string.notification_settings),
+            onClick = { SettingsPage.Notifications.NotificationSettings.launch(context) },
+        )
+    } else {
+        MiuixPairingInstructionCard {
+            MiuixText(
+                text = stringResource(R.string.adb_pairing_tutorial_content_notification_blocked),
+                style = MiuixTheme.textStyles.body1,
+                color = MiuixTheme.colorScheme.error,
+            )
+            Spacer(Modifier.height(12.dp))
+            MiuixTextButton(
+                text = stringResource(R.string.notification_settings),
+                onClick = {
+                    context.startActivity(
+                        Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                            putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                        }
+                    )
+                },
+                colors = MiuixButtonDefaults.textButtonColorsPrimary(),
+            )
+        }
+    }
+}
+
+@Composable
+private fun MiuixPairingInstructionCard(content: @Composable () -> Unit) {
+    MiuixCard(
+        modifier = Modifier.fillMaxWidth(),
+        insideMargin = PaddingValues(16.dp),
+    ) {
+        content()
     }
 }

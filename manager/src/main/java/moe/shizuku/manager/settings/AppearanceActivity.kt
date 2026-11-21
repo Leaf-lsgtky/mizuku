@@ -1,5 +1,6 @@
 package moe.shizuku.manager.settings
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -21,12 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import moe.shizuku.manager.R
 import moe.shizuku.manager.app.AppActivity
+import moe.shizuku.manager.compose.components.miuix.Os4Scaffold
 import moe.shizuku.manager.compose.screens.AppearanceScreen
 import moe.shizuku.manager.compose.theme.LocalIsMiuix
 import moe.shizuku.manager.compose.theme.ProvideMiuixTheme
 import moe.shizuku.manager.compose.theme.ShizukuAppTheme
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
-import top.yukonga.miuix.kmp.basic.SmallTopAppBar
 import top.yukonga.miuix.kmp.basic.Scaffold as MiuixScaffold
 
 /**
@@ -47,7 +48,9 @@ class AppearanceActivity : AppActivity() {
                 android.graphics.Color.TRANSPARENT
             ),
         )
-        window.isNavigationBarContrastEnforced = false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+        }
 
         setContent {
             ShizukuAppTheme {
@@ -63,27 +66,14 @@ class AppearanceActivity : AppActivity() {
 
 @Composable
 private fun MiuixAppearance(onBack: () -> Unit) {
-    val scrollBehavior = MiuixScrollBehavior()
-
-    MiuixScaffold(
-        topBar = {
-            SmallTopAppBar(
-                title = stringResource(R.string.settings_user_interface),
-                scrollBehavior = scrollBehavior,
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null,
-                        )
-                    }
-                },
-            )
-        },
-    ) { padding ->
+    Os4Scaffold(
+        title = stringResource(R.string.settings_user_interface),
+        onBack = onBack,
+    ) { padding, scrollBehavior, contentModifier ->
         AppearanceScreen(
             scrollBehavior = scrollBehavior,
             scaffoldPadding = padding,
+            modifier = contentModifier,
         )
     }
 }

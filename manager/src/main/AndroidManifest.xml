@@ -2,9 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-sdk
-        android:minSdkVersion="24"
-        tools:overrideLibrary="top.yukonga.miuix.kmp.blur" />
+    <uses-sdk tools:overrideLibrary="top.yukonga.miuix.kmp.blur" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -75,6 +73,7 @@
 
         <activity
             android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize"
             android:banner="@mipmap/banner"
             android:exported="true">
             <intent-filter>
@@ -90,6 +89,7 @@
         </activity>
         <activity
             android:name=".management.ApplicationManagementActivity"
+            android:windowSoftInputMode="adjustResize"
             android:label="@string/home_app_management_title" />
         <activity
             android:name=".adb.AdbPairingTutorialActivity"

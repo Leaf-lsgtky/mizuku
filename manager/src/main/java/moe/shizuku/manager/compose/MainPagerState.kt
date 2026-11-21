@@ -23,9 +23,11 @@ class MainPagerState(
     var isNavigating by mutableStateOf(false)
 
     private var navJob: Job? = null
+    private var navGeneration = 0L
 
     fun animateToPage(targetIndex: Int) {
         if (targetIndex == selectedPage) return
+        val generation = ++navGeneration
         navJob?.cancel()
         selectedPage = targetIndex
         isNavigating = true
@@ -34,11 +36,17 @@ class MainPagerState(
         val duration = 100 * distance + 100
 
         navJob = coroutineScope.launch {
-            pagerState.animateScrollToPage(
-                page = targetIndex,
-                animationSpec = tween(easing = EaseInOut, durationMillis = duration)
-            )
-            isNavigating = false
+            try {
+                pagerState.animateScrollToPage(
+                    page = targetIndex,
+                    animationSpec = tween(easing = EaseInOut, durationMillis = duration)
+                )
+            } finally {
+                if (generation == navGeneration) {
+                    isNavigating = false
+                    navJob = null
+                }
+            }
         }
     }
 

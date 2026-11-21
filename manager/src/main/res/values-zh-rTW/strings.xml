@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- To translators: you can leave your here -->
+    <string name="home_status_choose_start_method">選擇下方的啟動方式</string>
+    <string name="home_status_stopping">正在停止 Shizuku…</string>
+    <string name="navigation_apps">應用程式</string>
+
     <!-- Home - Status -->
     <string name="home_status_service_is_running">%1$s 正在執行</string>
     <string name="home_status_service_not_running">%1$s 未在執行</string>
@@ -153,6 +157,9 @@
     <string name="settings_translation">參與翻譯</string>
     <string name="settings_translation_summary">協助我們將 %s 翻譯至您的語言</string>
     <string name="settings_user_interface">外觀</string>
+    <string name="search_apps_no_results">找不到符合條件的應用程式</string>
+    <string name="settings_enable_blur">啟用模糊效果</string>
+    <string name="settings_enable_blur_summary">為頂部列與底部導覽啟用模糊效果（需要 Android 13 以上版本）</string>
     <string name="settings_black_night_theme">黑色夜間主題</string>
     <string name="settings_black_night_theme_summary">夜間模式啟用時使用純黑色主題</string>
     <string name="settings_support">支援</string>
@@ -189,6 +196,7 @@
     <!-- About -->
     <string name="action_about">關於</string>
     <string name="about_dialog_button_close">關閉</string>
+    <string name="navigation_back">返回</string>
     <string name="about_view_source_code"><![CDATA[在 %s 檢視原始碼]]></string>
     <!-- Start -->
     <string name="action_start">開始 Shizuku</string>

@@ -6,12 +6,12 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import androidx.annotation.RequiresApi
 import android.provider.Settings
 import android.text.method.LinkMovementMethod
 import android.widget.TextView
 import android.widget.Toast
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,13 +21,21 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CheckCircleOutline
 import androidx.compose.material.icons.rounded.ErrorOutline
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,6 +47,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.foundation.layout.offset
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import androidx.compose.ui.platform.LocalContext
@@ -46,6 +55,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,6 +65,8 @@ import moe.shizuku.manager.BuildConfig
 import moe.shizuku.manager.Helps
 import moe.shizuku.manager.R
 import moe.shizuku.manager.ShizukuSettings
+import moe.shizuku.manager.compose.components.miuix.LocalPageBackdrop
+import moe.shizuku.manager.compose.theme.serviceStatusPalette
 import moe.shizuku.manager.adb.AdbKey
 import moe.shizuku.manager.adb.AdbMdns
 import moe.shizuku.manager.adb.AdbPairingClient
@@ -83,9 +95,12 @@ import top.yukonga.miuix.kmp.basic.CardDefaults
 import androidx.compose.foundation.layout.width
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.Refresh
+import top.yukonga.miuix.kmp.glass.GlassBottomSheet
+import top.yukonga.miuix.kmp.glass.GlassDialog
+import top.yukonga.miuix.kmp.glass.GlassDialogButton
+import top.yukonga.miuix.kmp.glass.GlassDialogButtonRole
+import top.yukonga.miuix.kmp.glass.GlassTextField
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.window.WindowDialog
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 import top.yukonga.miuix.kmp.utils.overScrollVertical
@@ -98,6 +113,7 @@ fun MiuixHomeScreen(
     onNavigateToStarter: (isRoot: Boolean, port: Int) -> Unit,
     onNavigateToShellTutorial: () -> Unit,
     onNavigateToAdbPairingTutorial: () -> Unit,
+    onNavigateToApps: () -> Unit = {},
     scrollBehavior: top.yukonga.miuix.kmp.basic.ScrollBehavior,
     scaffoldPadding: PaddingValues = PaddingValues(0.dp),
 ) {
@@ -108,6 +124,7 @@ fun MiuixHomeScreen(
     val grantedCountResource by appsViewModel.grantedCount.observeAsState()
     val shouldShowBatteryOpt by homeViewModel.shouldShowBatteryOptimizationSnackbar.observeAsState(false)
 
+    val runState by remember { ShizukuStateMachine.asFlow() }.collectAsStateWithLifecycle(initialValue = ShizukuStateMachine.get())
     val status = serviceStatusResource?.data ?: ServiceStatus()
     val grantedCount = grantedCountResource?.data ?: 0
     val isRunning = status.isRunning
@@ -124,6 +141,9 @@ fun MiuixHomeScreen(
     var showWadbNotEnabledDialog by remember { mutableStateOf(false) }
     var showUsbDebuggingNotEnabledDialog by remember { mutableStateOf(false) }
     var showAccessibilityDialog by remember { mutableStateOf(false) }
+    val onOverscrollChanged: (Float) -> Unit = remember(scrollBehavior.state) {
+        { scrollBehavior.state.overscrollOffset = it }
+    }
 
     LaunchedEffect(Unit) {
         homeViewModel.checkBatteryOptimization()
@@ -135,35 +155,34 @@ fun MiuixHomeScreen(
         }
     }
 
-    if (showAboutDialog) {
-        MiuixAboutDialog(onDismiss = { showAboutDialog = false })
-    }
-    if (showStopDialog) {
-        MiuixStopShizukuDialog(
-            onDismiss = { showStopDialog = false },
-            onConfirm = {
-                ShizukuStateMachine.set(ShizukuStateMachine.State.STOPPING)
-                runCatching { Shizuku.exit() }
-            },
-        )
-    }
-    if (showAutomationSheet) {
-        MiuixAutomationBottomSheet(onDismiss = { showAutomationSheet = false })
-    }
-    if (showAdbCommandDialog) {
-        MiuixAdbCommandDialog(onDismiss = { showAdbCommandDialog = false })
-    }
-    if (showAdbDiscoveryDialog) {
+    MiuixAboutDialog(show = showAboutDialog, onDismiss = { showAboutDialog = false })
+    MiuixStopShizukuDialog(
+        show = showStopDialog,
+        onDismiss = { showStopDialog = false },
+        onConfirm = {
+            ShizukuStateMachine.set(ShizukuStateMachine.State.STOPPING)
+            runCatching { Shizuku.exit() }
+        },
+    )
+    MiuixAutomationBottomSheet(
+        show = showAutomationSheet,
+        onDismiss = {
+            showAutomationSheet = false
+        },
+        onReopen = { showAutomationSheet = true },
+    )
+    MiuixAdbCommandDialog(show = showAdbCommandDialog, onDismiss = { showAdbCommandDialog = false })
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         MiuixAdbDiscoveryDialog(
+            show = showAdbDiscoveryDialog,
             onDismiss = { showAdbDiscoveryDialog = false },
             onPortDiscovered = { port ->
                 showAdbDiscoveryDialog = false
                 onNavigateToStarter(false, port)
             },
         )
-    }
-    if (showAdbPairDialog) {
         MiuixAdbPairDialog(
+            show = showAdbPairDialog,
             onDismiss = { showAdbPairDialog = false },
             onPairSuccess = {
                 showAdbPairDialog = false
@@ -171,41 +190,38 @@ fun MiuixHomeScreen(
             },
         )
     }
-    if (showWadbNotEnabledDialog) {
-        MiuixWadbNotEnabledDialog(onDismiss = { showWadbNotEnabledDialog = false })
-    }
-    if (showUsbDebuggingNotEnabledDialog) {
-        MiuixUsbDebuggingNotEnabledDialog(onDismiss = { showUsbDebuggingNotEnabledDialog = false })
-    }
-    if (showAccessibilityDialog) {
-        MiuixAccessibilityDialog(
-            onDismiss = { showAccessibilityDialog = false },
-            onNavigateToSettings = { page ->
-                showAccessibilityDialog = false
-                page.launch(context)
-            },
-        )
-    }
+    MiuixWadbNotEnabledDialog(show = showWadbNotEnabledDialog, onDismiss = { showWadbNotEnabledDialog = false })
+    MiuixUsbDebuggingNotEnabledDialog(show = showUsbDebuggingNotEnabledDialog, onDismiss = { showUsbDebuggingNotEnabledDialog = false })
+    MiuixAccessibilityDialog(
+        show = showAccessibilityDialog,
+        onDismiss = { showAccessibilityDialog = false },
+        onNavigateToSettings = { page ->
+            showAccessibilityDialog = false
+            page.launch(context)
+        },
+    )
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
             .scrollEndHaptic()
-            .overScrollVertical(),
+            .overScrollVertical(onOffsetChanged = onOverscrollChanged)
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         contentPadding = PaddingValues(
             start = 12.dp,
             top = scaffoldPadding.calculateTopPadding() + 8.dp,
             end = 12.dp,
             bottom = scaffoldPadding.calculateBottomPadding() + 8.dp,
         ),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        overscrollEffect = null,
     ) {
         item {
             MiuixServerStatusCard(
                 status = status,
+                runState = runState,
                 grantedCount = grantedCount,
-                onGrantedClick = { /* navigate to apps tab */ }
+                onGrantedClick = onNavigateToApps
             )
         }
 
@@ -283,6 +299,7 @@ fun MiuixHomeScreen(
 @Composable
 private fun MiuixServerStatusCard(
     status: ServiceStatus,
+    runState: ShizukuStateMachine.State,
     grantedCount: Int,
     onGrantedClick: () -> Unit,
 ) {
@@ -294,27 +311,8 @@ private fun MiuixServerStatusCard(
     val latestPatchVersion = ShizukuApiConstants.SERVER_PATCH_VERSION
     val hasUpdate = isRunning && (status.apiVersion != latestApiVersion || status.patchVersion != latestPatchVersion)
 
-    val containerColor = if (isRunning) {
-        when {
-            MiuixTheme.isDynamicColor -> MiuixTheme.colorScheme.secondaryContainer
-            isSystemInDarkTheme() -> Color(0xFF1A3825)
-            else -> Color(0xFFDFFAE4)
-        }
-    } else {
-        when {
-            MiuixTheme.isDynamicColor -> MiuixTheme.colorScheme.errorContainer
-            isSystemInDarkTheme() -> Color(0xFF381A1A)
-            else -> Color(0xFFFAEEEE)
-        }
-    }
-
-    val textContentColor = if (isRunning) {
-        if (MiuixTheme.isDynamicColor) MiuixTheme.colorScheme.onSecondaryContainer else MiuixTheme.colorScheme.onSurface
-    } else {
-        if (MiuixTheme.isDynamicColor) MiuixTheme.colorScheme.onErrorContainer else MiuixTheme.colorScheme.onSurface
-    }
-
-    val descTextColor = textContentColor.copy(alpha = 0.8f)
+    val pending = runState == ShizukuStateMachine.State.STARTING || runState == ShizukuStateMachine.State.STOPPING
+    val palette = serviceStatusPalette(running = isRunning, pending = pending)
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -322,9 +320,10 @@ private fun MiuixServerStatusCard(
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.defaultColors(color = containerColor),
+            colors = CardDefaults.defaultColors(color = palette.container),
+            insideMargin = PaddingValues(0.dp),
         ) {
-            Box(modifier = Modifier.fillMaxWidth()) {
+            Box(modifier = Modifier.fillMaxWidth().heightIn(min = 148.dp)) {
                 Box(
                     modifier = Modifier
                         .matchParentSize()
@@ -334,11 +333,7 @@ private fun MiuixServerStatusCard(
                     Icon(
                         modifier = Modifier.size(170.dp),
                         imageVector = if (isRunning) Icons.Rounded.CheckCircleOutline else Icons.Rounded.ErrorOutline,
-                        tint = if (isRunning) {
-                            if (MiuixTheme.isDynamicColor) MiuixTheme.colorScheme.primary.copy(alpha = 0.8f) else Color(0xFF36D167)
-                        } else {
-                            if (MiuixTheme.isDynamicColor) MiuixTheme.colorScheme.error.copy(alpha = 0.8f) else Color(0xFFD13636)
-                        },
+                        tint = palette.symbol,
                         contentDescription = null
                     )
                 }
@@ -349,14 +344,17 @@ private fun MiuixServerStatusCard(
                 ) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = if (isRunning) {
-                            stringResource(R.string.home_status_service_is_running, stringResource(R.string.app_name))
-                        } else {
-                            stringResource(R.string.home_status_service_not_running, stringResource(R.string.app_name))
+                        text = when (runState) {
+                            ShizukuStateMachine.State.STARTING -> stringResource(R.string.notification_service_starting)
+                            ShizukuStateMachine.State.STOPPING -> stringResource(R.string.home_status_stopping)
+                            else -> stringResource(
+                                if (isRunning) R.string.home_status_service_is_running else R.string.home_status_service_not_running,
+                                stringResource(R.string.app_name),
+                            )
                         },
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = textContentColor
+                        color = palette.content
                     )
                     Spacer(Modifier.height(2.dp))
                     if (isRunning) {
@@ -379,7 +377,13 @@ private fun MiuixServerStatusCard(
                             text = versionText,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
-                            color = descTextColor,
+                            color = palette.content.copy(alpha = 0.8f),
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(R.string.home_status_choose_start_method),
+                            style = MiuixTheme.textStyles.body2,
+                            color = palette.content.copy(alpha = 0.8f),
                         )
                     }
                     Spacer(Modifier.height(36.dp))
@@ -403,7 +407,7 @@ private fun MiuixServerStatusCard(
                     modifier = Modifier.weight(1f),
                     title = "API",
                     value = "${status.apiVersion}.${status.patchVersion}",
-                    onClick = {}
+                    onClick = null
                 )
             }
         }
@@ -415,14 +419,14 @@ private fun MiuixStatCard(
     modifier: Modifier = Modifier,
     title: String,
     value: String,
-    onClick: () -> Unit
+    onClick: (() -> Unit)?
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
         insideMargin = PaddingValues(16.dp),
         onClick = onClick,
-        showIndication = true,
-        pressFeedbackType = PressFeedbackType.Tilt
+        showIndication = onClick != null,
+        pressFeedbackType = if (onClick != null) PressFeedbackType.Tilt else PressFeedbackType.None
     ) {
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
             Text(
@@ -683,12 +687,15 @@ private fun MiuixLearnMoreCard() {
 // --- Dialogs ---
 
 @Composable
-private fun MiuixAboutDialog(onDismiss: () -> Unit) {
+private fun MiuixAboutDialog(show: Boolean, onDismiss: () -> Unit) {
     val context = LocalContext.current
     val versionName = remember { context.packageManager.getPackageInfo(context.packageName, 0).versionName }
+    val textColor = MiuixTheme.colorScheme.onSurface.toArgb()
 
-    WindowDialog(
-        show = true,
+    GlassDialog(
+        show = show,
+        backdrop = LocalPageBackdrop.current,
+        renderInRootScaffold = true,
         onDismissRequest = onDismiss,
         title = stringResource(R.string.app_name),
     ) {
@@ -697,12 +704,14 @@ private fun MiuixAboutDialog(onDismiss: () -> Unit) {
                 factory = { ctx ->
                     TextView(ctx).apply {
                         movementMethod = LinkMovementMethod.getInstance()
+                        setTextColor(textColor)
                         text = ctx.getString(
                             R.string.about_view_source_code,
                             "<b><a href=\"https://github.com/RikkaApps/Shizuku\">GitHub</a></b>"
                         ).toHtml()
                     }
                 },
+                update = { textView -> textView.setTextColor(textColor) },
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -711,19 +720,20 @@ private fun MiuixAboutDialog(onDismiss: () -> Unit) {
                 color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
             )
             Spacer(modifier = Modifier.height(16.dp))
-            TextButton(
-                text = stringResource(R.string.about_dialog_button_close),
+            GlassDialogButton(
                 onClick = onDismiss,
                 modifier = Modifier.fillMaxWidth()
-            )
+            ) { Text(stringResource(R.string.about_dialog_button_close), style = MiuixTheme.textStyles.button) }
         }
     }
 }
 
 @Composable
-private fun MiuixStopShizukuDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
-    WindowDialog(
-        show = true,
+private fun MiuixStopShizukuDialog(show: Boolean, onDismiss: () -> Unit, onConfirm: () -> Unit) {
+    GlassDialog(
+        show = show,
+        backdrop = LocalPageBackdrop.current,
+        renderInRootScaffold = true,
         onDismissRequest = onDismiss,
         title = stringResource(R.string.app_name),
     ) {
@@ -737,33 +747,33 @@ private fun MiuixStopShizukuDialog(onDismiss: () -> Unit, onConfirm: () -> Unit)
             Row(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                TextButton(
-                    text = stringResource(android.R.string.cancel),
+                GlassDialogButton(
                     onClick = onDismiss,
                     modifier = Modifier.weight(1f)
-                )
+                ) { Text(stringResource(android.R.string.cancel), style = MiuixTheme.textStyles.button) }
                 Spacer(modifier = Modifier.width(20.dp))
-                TextButton(
-                    text = stringResource(android.R.string.ok),
+                GlassDialogButton(
                     onClick = {
                         onConfirm()
                         onDismiss()
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.textButtonColorsPrimary(),
-                )
+                    role = GlassDialogButtonRole.Primary,
+                ) { Text(stringResource(android.R.string.ok), style = MiuixTheme.textStyles.button) }
             }
         }
     }
 }
 
 @Composable
-private fun MiuixAdbCommandDialog(onDismiss: () -> Unit) {
+private fun MiuixAdbCommandDialog(show: Boolean, onDismiss: () -> Unit) {
     val context = LocalContext.current
     val command = "adb shell sh /sdcard/Android/data/moe.shizuku.privileged.api/start.sh"
 
-    WindowDialog(
-        show = true,
+    GlassDialog(
+        show = show,
+        backdrop = LocalPageBackdrop.current,
+        renderInRootScaffold = true,
         onDismissRequest = onDismiss,
         title = stringResource(R.string.home_adb_button_view_command),
     ) {
@@ -778,14 +788,12 @@ private fun MiuixAdbCommandDialog(onDismiss: () -> Unit) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                TextButton(
-                    text = stringResource(android.R.string.cancel),
+                GlassDialogButton(
                     onClick = onDismiss,
                     modifier = Modifier.weight(1f)
-                )
+                ) { Text(stringResource(android.R.string.cancel), style = MiuixTheme.textStyles.button) }
                 Spacer(modifier = Modifier.width(20.dp))
-                TextButton(
-                    text = stringResource(R.string.home_adb_dialog_view_command_copy_button),
+                GlassDialogButton(
                     onClick = {
                         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                         clipboard.setPrimaryClip(ClipData.newPlainText("shizuku_command", command))
@@ -795,29 +803,45 @@ private fun MiuixAdbCommandDialog(onDismiss: () -> Unit) {
                         onDismiss()
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.textButtonColorsPrimary(),
-                )
+                    role = GlassDialogButtonRole.Primary,
+                ) { Text(stringResource(R.string.home_adb_dialog_view_command_copy_button), style = MiuixTheme.textStyles.button) }
             }
         }
     }
 }
 
 @Composable
-private fun MiuixAutomationBottomSheet(onDismiss: () -> Unit) {
+private fun MiuixAutomationBottomSheet(
+    show: Boolean,
+    onDismiss: () -> Unit,
+    onReopen: () -> Unit,
+) {
     val context = LocalContext.current
     var authToken by remember { mutableStateOf(ShizukuSettings.getAuthToken()) }
     var selectedAction by remember { mutableIntStateOf(0) }
     var showRegenerateDialog by remember { mutableStateOf(false) }
+    var reopenSheetAfterDialog by remember { mutableStateOf(false) }
     val startAction = "${BuildConfig.APPLICATION_ID}.START"
     val stopAction = "${BuildConfig.APPLICATION_ID}.STOP"
     val currentAction = if (selectedAction == 0) startAction else stopAction
 
-    WindowDialog(
-        show = true,
+    GlassBottomSheet(
+        show = show,
         onDismissRequest = onDismiss,
+        onDismissFinished = {
+            if (reopenSheetAfterDialog) {
+                reopenSheetAfterDialog = false
+                showRegenerateDialog = true
+            }
+        },
+        backdrop = LocalPageBackdrop.current,
+        renderInRootScaffold = true,
         title = stringResource(R.string.home_automation_bottom_sheet_intents),
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        Column(
+            modifier = Modifier.verticalScroll(rememberScrollState()).navigationBarsPadding(),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
             Column {
                 Text(
                     text = stringResource(R.string.home_automation_bottom_sheet_label_action),
@@ -903,7 +927,8 @@ private fun MiuixAutomationBottomSheet(onDismiss: () -> Unit) {
                     )
                     IconButton(
                         onClick = {
-                            showRegenerateDialog = true
+                            reopenSheetAfterDialog = true
+                            onDismiss()
                         },
                     ) {
                         Icon(
@@ -914,46 +939,42 @@ private fun MiuixAutomationBottomSheet(onDismiss: () -> Unit) {
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
-            TextButton(
-                text = stringResource(android.R.string.ok),
+            GlassDialogButton(
                 onClick = onDismiss,
                 modifier = Modifier.fillMaxWidth()
-            )
+            ) { Text(stringResource(android.R.string.ok), style = MiuixTheme.textStyles.button) }
         }
     }
 
-    if (showRegenerateDialog) {
-        WindowDialog(
-            show = true,
-            onDismissRequest = { showRegenerateDialog = false },
-            title = stringResource(R.string.home_automation_regenerate_token),
-        ) {
-            Column {
-                Text(
-                    text = stringResource(R.string.home_automation_regenerate_token_message),
-                    style = MiuixTheme.textStyles.body2,
-                    color = MiuixTheme.colorScheme.onSurface,
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    TextButton(
-                        text = stringResource(android.R.string.cancel),
-                        onClick = { showRegenerateDialog = false },
-                        modifier = Modifier.weight(1f)
-                    )
-                    Spacer(modifier = Modifier.width(20.dp))
-                    TextButton(
-                        text = stringResource(android.R.string.ok),
-                        onClick = {
-                            authToken = ShizukuSettings.generateAuthToken()
-                            showRegenerateDialog = false
-                        },
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.textButtonColorsPrimary(),
-                    )
-                }
+    GlassDialog(
+        show = showRegenerateDialog,
+        onDismissRequest = { showRegenerateDialog = false },
+        onDismissFinished = onReopen,
+        backdrop = LocalPageBackdrop.current,
+        renderInRootScaffold = true,
+        title = stringResource(R.string.home_automation_regenerate_token),
+    ) {
+        Column {
+            Text(
+                text = stringResource(R.string.home_automation_regenerate_token_message),
+                style = MiuixTheme.textStyles.body2,
+                color = MiuixTheme.colorScheme.onSurface,
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Row(modifier = Modifier.fillMaxWidth()) {
+                GlassDialogButton(
+                    onClick = { showRegenerateDialog = false },
+                    modifier = Modifier.weight(1f),
+                ) { Text(stringResource(android.R.string.cancel), style = MiuixTheme.textStyles.button) }
+                Spacer(modifier = Modifier.width(20.dp))
+                GlassDialogButton(
+                    onClick = {
+                        authToken = ShizukuSettings.generateAuthToken()
+                        showRegenerateDialog = false
+                    },
+                    modifier = Modifier.weight(1f),
+                    role = GlassDialogButtonRole.Primary,
+                ) { Text(stringResource(android.R.string.ok), style = MiuixTheme.textStyles.button) }
             }
         }
     }
@@ -990,8 +1011,10 @@ private fun MiuixAutomationIntentRow(label: String, value: String) {
 
 // --- ADB Discovery Dialog (mDNS) ---
 
+@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 private fun MiuixAdbDiscoveryDialog(
+    show: Boolean,
     onDismiss: () -> Unit,
     onPortDiscovered: (Int) -> Unit,
 ) {
@@ -1003,24 +1026,29 @@ private fun MiuixAdbDiscoveryDialog(
         }
     }
 
-    DisposableEffect(Unit) {
-        adbMdns.start()
-        if (context.checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
-            Settings.Global.putInt(context.contentResolver, "adb_wifi_enabled", 1)
+    DisposableEffect(show) {
+        if (show) {
+            port = -1
+            adbMdns.start()
+            if (context.checkSelfPermission(WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
+                Settings.Global.putInt(context.contentResolver, "adb_wifi_enabled", 1)
+            }
         }
         onDispose {
             adbMdns.stop()
         }
     }
 
-    LaunchedEffect(port) {
-        if (port in 1..65535) {
+    LaunchedEffect(show, port) {
+        if (show && port in 1..65535) {
             onPortDiscovered(port)
         }
     }
 
-    WindowDialog(
-        show = true,
+    GlassDialog(
+        show = show,
+        backdrop = LocalPageBackdrop.current,
+        renderInRootScaffold = true,
         onDismissRequest = {
             adbMdns.stop()
             onDismiss()
@@ -1047,25 +1075,23 @@ private fun MiuixAdbDiscoveryDialog(
             Row(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                TextButton(
-                    text = stringResource(android.R.string.cancel),
+                GlassDialogButton(
                     onClick = {
                         adbMdns.stop()
                         onDismiss()
                     },
                     modifier = Modifier.weight(1f)
-                )
+                ) { Text(stringResource(android.R.string.cancel), style = MiuixTheme.textStyles.button) }
                 Spacer(modifier = Modifier.width(20.dp))
-                TextButton(
-                    text = stringResource(R.string.development_settings),
+                GlassDialogButton(
                     onClick = {
                         adbMdns.stop()
                         onDismiss()
                         SettingsPage.Developer.HighlightWirelessDebugging.launch(context)
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.textButtonColorsPrimary(),
-                )
+                    role = GlassDialogButtonRole.Primary,
+                ) { Text(stringResource(R.string.development_settings), style = MiuixTheme.textStyles.button) }
             }
         }
     }
@@ -1073,15 +1099,17 @@ private fun MiuixAdbDiscoveryDialog(
 
 // --- ADB Pair Dialog ---
 
+@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 private fun MiuixAdbPairDialog(
+    show: Boolean,
     onDismiss: () -> Unit,
     onPairSuccess: () -> Unit,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var port by remember { mutableStateOf("") }
-    var pairingCode by remember { mutableStateOf("") }
+    val portInput = rememberTextFieldState()
+    val pairingCodeInput = rememberTextFieldState()
     var isDiscovering by remember { mutableStateOf(true) }
     var portError by remember { mutableStateOf<String?>(null) }
     var codeError by remember { mutableStateOf<String?>(null) }
@@ -1094,19 +1122,33 @@ private fun MiuixAdbPairDialog(
         }
     }
 
-    DisposableEffect(Unit) {
-        adbMdns.start()
+    DisposableEffect(show) {
+        if (show) adbMdns.start()
         onDispose {
             adbMdns.stop()
         }
     }
 
-    LaunchedEffect(discoveredPort) {
-        if (discoveredPort > 0) {
-            port = discoveredPort.toString()
+    LaunchedEffect(show) {
+        if (show) {
+            portInput.setTextAndPlaceCursorAtEnd("")
+            pairingCodeInput.setTextAndPlaceCursorAtEnd("")
+            isDiscovering = true
+            portError = null
+            codeError = null
+            isPairing = false
+            discoveredPort = -1
+        }
+    }
+
+    LaunchedEffect(show, discoveredPort) {
+        if (show && discoveredPort > 0) {
+            portInput.setTextAndPlaceCursorAtEnd(discoveredPort.toString())
             isDiscovering = false
         }
     }
+    LaunchedEffect(portInput.text.toString()) { portError = null }
+    LaunchedEffect(pairingCodeInput.text.toString()) { codeError = null }
 
     val inMultiScreenOrDisplay = remember {
         val activity = context as? android.app.Activity
@@ -1114,8 +1156,10 @@ private fun MiuixAdbPairDialog(
             (activity?.window?.decorView?.display?.displayId ?: -1) > 0
     }
 
-    WindowDialog(
-        show = true,
+    GlassDialog(
+        show = show,
+        backdrop = LocalPageBackdrop.current,
+        renderInRootScaffold = true,
         onDismissRequest = {
             adbMdns.stop()
             onDismiss()
@@ -1149,12 +1193,9 @@ private fun MiuixAdbPairDialog(
                     style = MiuixTheme.textStyles.body2,
                     color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
                 )
-                top.yukonga.miuix.kmp.basic.TextField(
-                    value = port,
-                    onValueChange = {
-                        port = it
-                        portError = null
-                    },
+                GlassTextField(
+                    state = portInput,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth(),
                 )
                 if (portError != null) {
@@ -1171,12 +1212,9 @@ private fun MiuixAdbPairDialog(
                     style = MiuixTheme.textStyles.body2,
                     color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
                 )
-                top.yukonga.miuix.kmp.basic.TextField(
-                    value = pairingCode,
-                    onValueChange = {
-                        pairingCode = it
-                        codeError = null
-                    },
+                GlassTextField(
+                    state = pairingCodeInput,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                     modifier = Modifier.fillMaxWidth(),
                 )
                 if (codeError != null) {
@@ -1191,27 +1229,26 @@ private fun MiuixAdbPairDialog(
             Row(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                TextButton(
-                    text = stringResource(android.R.string.cancel),
+                GlassDialogButton(
                     onClick = {
                         adbMdns.stop()
                         onDismiss()
                     },
                     modifier = Modifier.weight(1f)
-                )
+                ) { Text(stringResource(android.R.string.cancel), style = MiuixTheme.textStyles.button) }
                 if (!isDiscovering || !inMultiScreenOrDisplay) {
                     Spacer(modifier = Modifier.width(20.dp))
-                    TextButton(
-                        text = if (isPairing) "" else stringResource(android.R.string.ok),
+                    GlassDialogButton(
                         onClick = {
-                            val portNum = port.toIntOrNull()
+                            val portNum = portInput.text.toString().toIntOrNull()
                             if (portNum == null || portNum !in 1..65535) {
                                 portError = context.getString(R.string.dialog_adb_invalid_port)
-                                return@TextButton
+                                return@GlassDialogButton
                             }
+                            val pairingCode = pairingCodeInput.text.toString()
                             if (pairingCode.isBlank()) {
                                 codeError = context.getString(R.string.paring_code_is_wrong)
-                                return@TextButton
+                                return@GlassDialogButton
                             }
 
                             isPairing = true
@@ -1251,8 +1288,13 @@ private fun MiuixAdbPairDialog(
                         },
                         enabled = !isPairing,
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.textButtonColorsPrimary(),
-                    )
+                        role = GlassDialogButtonRole.Primary,
+                    ) {
+                        Text(
+                            text = if (isPairing) "" else stringResource(android.R.string.ok),
+                            style = MiuixTheme.textStyles.button,
+                        )
+                    }
                 }
             }
         }
@@ -1262,9 +1304,11 @@ private fun MiuixAdbPairDialog(
 // --- Wadb Not Enabled Dialog ---
 
 @Composable
-private fun MiuixWadbNotEnabledDialog(onDismiss: () -> Unit) {
-    WindowDialog(
-        show = true,
+private fun MiuixWadbNotEnabledDialog(show: Boolean, onDismiss: () -> Unit) {
+    GlassDialog(
+        show = show,
+        backdrop = LocalPageBackdrop.current,
+        renderInRootScaffold = true,
         onDismissRequest = onDismiss,
         title = stringResource(R.string.app_name),
     ) {
@@ -1275,12 +1319,11 @@ private fun MiuixWadbNotEnabledDialog(onDismiss: () -> Unit) {
                 color = MiuixTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.height(24.dp))
-            TextButton(
-                text = stringResource(android.R.string.ok),
+            GlassDialogButton(
                 onClick = onDismiss,
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.textButtonColorsPrimary(),
-            )
+                role = GlassDialogButtonRole.Primary,
+            ) { Text(stringResource(android.R.string.ok), style = MiuixTheme.textStyles.button) }
         }
     }
 }
@@ -1288,11 +1331,13 @@ private fun MiuixWadbNotEnabledDialog(onDismiss: () -> Unit) {
 // --- USB Debugging Not Enabled Dialog ---
 
 @Composable
-private fun MiuixUsbDebuggingNotEnabledDialog(onDismiss: () -> Unit) {
+private fun MiuixUsbDebuggingNotEnabledDialog(show: Boolean, onDismiss: () -> Unit) {
     val context = LocalContext.current
 
-    WindowDialog(
-        show = true,
+    GlassDialog(
+        show = show,
+        backdrop = LocalPageBackdrop.current,
+        renderInRootScaffold = true,
         onDismissRequest = onDismiss,
         title = stringResource(R.string.app_name),
     ) {
@@ -1306,21 +1351,19 @@ private fun MiuixUsbDebuggingNotEnabledDialog(onDismiss: () -> Unit) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                TextButton(
-                    text = stringResource(android.R.string.cancel),
+                GlassDialogButton(
                     onClick = onDismiss,
                     modifier = Modifier.weight(1f)
-                )
+                ) { Text(stringResource(android.R.string.cancel), style = MiuixTheme.textStyles.button) }
                 Spacer(modifier = Modifier.width(20.dp))
-                TextButton(
-                    text = stringResource(R.string.development_settings),
+                GlassDialogButton(
                     onClick = {
                         onDismiss()
                         SettingsPage.Developer.HighlightUsbDebugging.launch(context)
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.textButtonColorsPrimary(),
-                )
+                    role = GlassDialogButtonRole.Primary,
+                ) { Text(stringResource(R.string.development_settings), style = MiuixTheme.textStyles.button) }
             }
         }
     }
@@ -1330,6 +1373,7 @@ private fun MiuixUsbDebuggingNotEnabledDialog(onDismiss: () -> Unit) {
 
 @Composable
 private fun MiuixAccessibilityDialog(
+    show: Boolean,
     onDismiss: () -> Unit,
     onNavigateToSettings: (SettingsPage) -> Unit,
 ) {
@@ -1343,14 +1387,34 @@ private fun MiuixAccessibilityDialog(
         isInstalledByPlayOrAdb || Build.VERSION.SDK_INT > Build.VERSION_CODES.UPSIDE_DOWN_CAKE
     }
     val isAccessibilityEnabled = remember { isAccessibilityEnabled(context) }
+    var dialogKind by remember { mutableIntStateOf(-1) }
+    val permissionName = "ACCESS_RESTRICTED_SETTINGS"
+    val permissionCommand = "adb shell cmd appops set ${context.packageName} $permissionName allow"
 
-    when {
-        isAccessibilityEnabled -> {
-            WindowDialog(
-                show = true,
-                onDismissRequest = onDismiss,
-                title = stringResource(R.string.dialog_adb_pairing_title),
-            ) {
+    LaunchedEffect(show) {
+        if (show) {
+            dialogKind = when {
+                isAccessibilityEnabled -> 0
+                hasWriteSecureSettings -> if (enableAccessibilityService(context)) 0 else 1
+                !hasAccessRestrictedSettings -> 1
+                else -> 2
+            }
+        }
+    }
+
+    // Keep one host and its closing content composed across dialog-kind changes and dismissal.
+    GlassDialog(
+        show = show && dialogKind >= 0,
+        backdrop = LocalPageBackdrop.current,
+        renderInRootScaffold = true,
+        onDismissRequest = onDismiss,
+        title = stringResource(
+            if (dialogKind == 1) android.R.string.dialog_alert_title
+            else R.string.dialog_adb_pairing_title
+        ),
+    ) {
+        when (dialogKind) {
+            0 -> {
                 Column {
                     Text(
                         text = stringResource(R.string.dialog_adb_pairing_accessibility_navigate),
@@ -1358,81 +1422,53 @@ private fun MiuixAccessibilityDialog(
                         color = MiuixTheme.colorScheme.onSurface,
                     )
                     Spacer(modifier = Modifier.height(24.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        TextButton(
-                            text = stringResource(android.R.string.cancel),
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        GlassDialogButton(
                             onClick = onDismiss,
-                            modifier = Modifier.weight(1f)
-                        )
+                            modifier = Modifier.weight(1f),
+                        ) { Text(stringResource(android.R.string.cancel), style = MiuixTheme.textStyles.button) }
                         Spacer(modifier = Modifier.width(20.dp))
-                        TextButton(
-                            text = stringResource(R.string.development_settings),
+                        GlassDialogButton(
                             onClick = {
                                 onDismiss()
                                 SettingsPage.Developer.HighlightWirelessDebugging.launch(context)
                             },
                             modifier = Modifier.weight(1f),
-                            colors = ButtonDefaults.textButtonColorsPrimary(),
-                        )
+                            role = GlassDialogButtonRole.Primary,
+                        ) { Text(stringResource(R.string.development_settings), style = MiuixTheme.textStyles.button) }
                     }
                 }
             }
-        }
-        hasWriteSecureSettings -> {
-            val enabled = remember { enableAccessibilityService(context) }
-            if (enabled) {
-                WindowDialog(
-                    show = true,
-                    onDismissRequest = onDismiss,
-                    title = stringResource(R.string.dialog_adb_pairing_title),
-                ) {
-                    Column {
-                        Text(
-                            text = stringResource(R.string.dialog_adb_pairing_accessibility_navigate),
-                            style = MiuixTheme.textStyles.body2,
-                            color = MiuixTheme.colorScheme.onSurface,
-                        )
-                        Spacer(modifier = Modifier.height(24.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            TextButton(
-                                text = stringResource(android.R.string.cancel),
-                                onClick = onDismiss,
-                                modifier = Modifier.weight(1f)
-                            )
-                            Spacer(modifier = Modifier.width(20.dp))
-                            TextButton(
-                                text = stringResource(R.string.development_settings),
-                                onClick = {
-                                    onDismiss()
-                                    SettingsPage.Developer.HighlightWirelessDebugging.launch(context)
-                                },
-                                modifier = Modifier.weight(1f),
-                                colors = ButtonDefaults.textButtonColorsPrimary(),
-                            )
-                        }
+            1 -> {
+                Column {
+                    Text(
+                        text = stringResource(
+                            R.string.dialog_adb_pairing_accessibility_permission,
+                            permissionName,
+                            permissionCommand,
+                        ),
+                        style = MiuixTheme.textStyles.body2,
+                        color = MiuixTheme.colorScheme.onSurface,
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        GlassDialogButton(
+                            onClick = onDismiss,
+                            modifier = Modifier.weight(1f),
+                        ) { Text(stringResource(android.R.string.cancel), style = MiuixTheme.textStyles.button) }
+                        Spacer(modifier = Modifier.width(20.dp))
+                        GlassDialogButton(
+                            onClick = {
+                                onDismiss()
+                                onNavigateToSettings(SettingsPage.Accessibility)
+                            },
+                            modifier = Modifier.weight(1f),
+                            role = GlassDialogButtonRole.Primary,
+                        ) { Text(stringResource(R.string.enable), style = MiuixTheme.textStyles.button) }
                     }
                 }
-            } else {
-                MiuixShowPermissionDialog(onDismiss = onDismiss, onContinue = {
-                    onNavigateToSettings(SettingsPage.Accessibility)
-                })
             }
-        }
-        !hasAccessRestrictedSettings -> {
-            MiuixShowPermissionDialog(onDismiss = onDismiss, onContinue = {
-                onNavigateToSettings(SettingsPage.Accessibility)
-            })
-        }
-        else -> {
-            WindowDialog(
-                show = true,
-                onDismissRequest = onDismiss,
-                title = stringResource(R.string.dialog_adb_pairing_title),
-            ) {
+            2 -> {
                 Column {
                     Text(
                         text = stringResource(R.string.dialog_adb_pairing_accessibility_enable),
@@ -1440,71 +1476,24 @@ private fun MiuixAccessibilityDialog(
                         color = MiuixTheme.colorScheme.onSurface,
                     )
                     Spacer(modifier = Modifier.height(24.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        TextButton(
-                            text = stringResource(android.R.string.cancel),
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        GlassDialogButton(
                             onClick = onDismiss,
-                            modifier = Modifier.weight(1f)
-                        )
+                            modifier = Modifier.weight(1f),
+                        ) { Text(stringResource(android.R.string.cancel), style = MiuixTheme.textStyles.button) }
                         Spacer(modifier = Modifier.width(20.dp))
-                        TextButton(
-                            text = stringResource(R.string.enable),
+                        GlassDialogButton(
                             onClick = {
                                 onDismiss()
                                 SettingsPage.Accessibility.launch(context)
                             },
                             modifier = Modifier.weight(1f),
-                            colors = ButtonDefaults.textButtonColorsPrimary(),
-                        )
+                            role = GlassDialogButtonRole.Primary,
+                        ) { Text(stringResource(R.string.enable), style = MiuixTheme.textStyles.button) }
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun MiuixShowPermissionDialog(
-    onDismiss: () -> Unit,
-    onContinue: () -> Unit,
-) {
-    val context = LocalContext.current
-    val permissionName = "ACCESS_RESTRICTED_SETTINGS"
-    val permissionCommand = "adb shell cmd appops set ${context.packageName} $permissionName allow"
-
-    WindowDialog(
-        show = true,
-        onDismissRequest = onDismiss,
-        title = stringResource(android.R.string.dialog_alert_title),
-    ) {
-        Column {
-            Text(
-                text = stringResource(R.string.dialog_adb_pairing_accessibility_permission, permissionName, permissionCommand),
-                style = MiuixTheme.textStyles.body2,
-                color = MiuixTheme.colorScheme.onSurface,
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                TextButton(
-                    text = stringResource(android.R.string.cancel),
-                    onClick = onDismiss,
-                    modifier = Modifier.weight(1f)
-                )
-                Spacer(modifier = Modifier.width(20.dp))
-                TextButton(
-                    text = stringResource(R.string.enable),
-                    onClick = {
-                        onDismiss()
-                        onContinue()
-                    },
-                    modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.textButtonColorsPrimary(),
-                )
-            }
+            else -> Unit
         }
     }
 }

@@ -1,7 +1,7 @@
 package moe.shizuku.manager.compose.screens
 
 import android.os.Build
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.CapturedAnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -32,6 +32,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import moe.shizuku.manager.R
+import moe.shizuku.manager.compose.components.miuix.LocalPageBackdrop
 import moe.shizuku.manager.theme.ColorSource
 import moe.shizuku.manager.theme.ColorSpec
 import moe.shizuku.manager.theme.DarkMode
@@ -45,7 +46,8 @@ import rikka.shizuku.manager.ShizukuLocales
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
-import top.yukonga.miuix.kmp.preference.OverlayDropdownPreference
+import top.yukonga.miuix.kmp.glass.GlassDropdownPreference
+import top.yukonga.miuix.kmp.preference.WindowDropdownPreference
 import top.yukonga.miuix.kmp.preference.SwitchPreference
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.overScrollVertical
@@ -62,14 +64,16 @@ import java.util.Locale
 fun AppearanceScreen(
     scrollBehavior: ScrollBehavior,
     scaffoldPadding: PaddingValues = PaddingValues(0.dp),
+    modifier: Modifier = Modifier,
 ) {
     val state = ThemeStore.state
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
+            .then(modifier)
             .scrollEndHaptic()
-            .overScrollVertical()
+            .overScrollVertical(onOffsetChanged = { scrollBehavior.state.overscrollOffset = it })
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         contentPadding = PaddingValues(
             top = scaffoldPadding.calculateTopPadding(),
@@ -77,13 +81,11 @@ fun AppearanceScreen(
         ),
         overscrollEffect = null,
     ) {
-        item { Spacer(Modifier.height(12.dp)) }
-
         // ---- Style: which design system, and light/dark ----
         item { SmallTitle(text = stringResource(R.string.appearance_style)) }
         item {
             SettingsCard {
-                OverlayDropdownPreference(
+                AppearanceDropdownPreference(
                     title = stringResource(R.string.settings_theme_mode),
                     items = listOf(
                         stringResource(R.string.ui_style_material),
@@ -93,7 +95,7 @@ fun AppearanceScreen(
                     onSelectedIndexChange = { ThemeStore.setUiStyle(UiStyle.fromValue(it)) },
                 )
 
-                OverlayDropdownPreference(
+                AppearanceDropdownPreference(
                     title = stringResource(R.string.dark_theme),
                     items = listOf(
                         stringResource(R.string.follow_system),
@@ -104,7 +106,7 @@ fun AppearanceScreen(
                     onSelectedIndexChange = { ThemeStore.setDarkMode(DarkMode.fromValue(it)) },
                 )
 
-                AnimatedVisibility(visible = state.darkMode != DarkMode.Light) {
+                CapturedAnimatedVisibility(visible = state.darkMode != DarkMode.Light) {
                     SwitchPreference(
                         title = stringResource(R.string.settings_black_night_theme),
                         summary = stringResource(R.string.settings_black_night_theme_summary),
@@ -129,14 +131,14 @@ fun AppearanceScreen(
                 val selected = sources.indexOfFirst { it.first == state.colorSource }
                     .coerceAtLeast(0)
 
-                OverlayDropdownPreference(
+                AppearanceDropdownPreference(
                     title = stringResource(R.string.color_source),
                     items = sources.map { it.second },
                     selectedIndex = selected,
                     onSelectedIndexChange = { ThemeStore.setColorSource(sources[it].first) },
                 )
 
-                AnimatedVisibility(visible = state.colorSource == ColorSource.Custom) {
+                CapturedAnimatedVisibility(visible = state.colorSource == ColorSource.Custom) {
                     SeedColorGrid(
                         selected = state.seedColor,
                         onSelect = { ThemeStore.setSeedColor(it) },
@@ -144,9 +146,9 @@ fun AppearanceScreen(
                 }
 
                 // Palette style and spec only affect generated palettes.
-                AnimatedVisibility(visible = state.isSeeded) {
+                CapturedAnimatedVisibility(visible = state.isSeeded) {
                     Column {
-                        OverlayDropdownPreference(
+                        AppearanceDropdownPreference(
                             title = stringResource(R.string.palette_style),
                             items = PaletteStyle.entries.map { it.name },
                             selectedIndex = state.paletteStyle.value,
@@ -156,7 +158,7 @@ fun AppearanceScreen(
                         )
 
                         val spec2025Supported = state.paletteStyle.supportsSpec2025
-                        OverlayDropdownPreference(
+                        AppearanceDropdownPreference(
                             title = stringResource(R.string.color_spec),
                             // Show the spec actually in effect, not the stored one, so the
                             // fallback for styles without 2025 mappings isn't confusing.
@@ -193,7 +195,7 @@ fun AppearanceScreen(
                         onCheckedChange = { ThemeStore.setEnableFloatingBottomBar(it) },
                     )
 
-                    AnimatedVisibility(
+                    CapturedAnimatedVisibility(
                         visible = state.enableFloatingBottomBar &&
                             state.enableBlur &&
                             Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
@@ -221,7 +223,7 @@ fun AppearanceScreen(
                 }
                 val index = tags.indexOf(LocaleStore.currentTag).coerceAtLeast(0)
 
-                OverlayDropdownPreference(
+                AppearanceDropdownPreference(
                     title = stringResource(R.string.settings_language),
                     items = entries,
                     selectedIndex = index,
@@ -231,6 +233,39 @@ fun AppearanceScreen(
         }
 
         item { Spacer(Modifier.navigationBarsPadding()) }
+    }
+}
+
+/** The Material host has no Miuix popup host; only the OS4 branch uses page-hosted Glass. */
+@Composable
+private fun AppearanceDropdownPreference(
+    title: String,
+    items: List<String>,
+    selectedIndex: Int,
+    summary: String? = null,
+    enabled: Boolean = true,
+    onSelectedIndexChange: (Int) -> Unit,
+) {
+    if (ThemeStore.state.isMiuix) {
+        GlassDropdownPreference(
+            title = title,
+            summary = summary,
+            items = items,
+            selectedIndex = selectedIndex,
+            enabled = enabled,
+            backdrop = LocalPageBackdrop.current,
+            renderInRootScaffold = true,
+            onSelectedIndexChange = onSelectedIndexChange,
+        )
+    } else {
+        WindowDropdownPreference(
+            title = title,
+            summary = summary,
+            items = items,
+            selectedIndex = selectedIndex,
+            enabled = enabled,
+            onSelectedIndexChange = onSelectedIndexChange,
+        )
     }
 }
 

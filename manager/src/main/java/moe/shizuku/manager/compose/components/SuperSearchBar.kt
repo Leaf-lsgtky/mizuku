@@ -1,6 +1,6 @@
 package moe.shizuku.manager.compose.components
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.CapturedAnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
@@ -134,7 +134,7 @@ fun SearchStatus.SearchPager(
                     expandBar(searchStatus, onSearchStatusChange, searchBarTopPadding)
                 }
             }
-            AnimatedVisibility(
+            CapturedAnimatedVisibility(
                 visible = searchStatus.isExpand() || searchStatus.isAnimatingExpand(),
                 enter = expandHorizontally() + slideInHorizontally(initialOffsetX = { it }),
                 exit = shrinkHorizontally() + slideOutHorizontally(targetOffsetX = { it })
@@ -160,7 +160,7 @@ fun SearchStatus.SearchPager(
                 )
             }
         }
-        AnimatedVisibility(
+        CapturedAnimatedVisibility(
             visible = searchStatus.isExpand(),
             modifier = Modifier
                 .fillMaxSize()
@@ -230,7 +230,7 @@ fun SearchBar(
                 Box(modifier = Modifier.weight(1f)) {
                     innerTextField()
                 }
-                AnimatedVisibility(
+                CapturedAnimatedVisibility(
                     searchStatus.searchText.isNotEmpty(),
                     enter = fadeIn() + scaleIn(),
                     exit = fadeOut() + scaleOut(),

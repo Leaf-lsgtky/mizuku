@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,15 +30,24 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import moe.shizuku.manager.R
+import moe.shizuku.manager.compose.components.miuix.Os4Scaffold
+import moe.shizuku.manager.compose.theme.LocalIsMiuix
 import moe.shizuku.manager.starter.Starter
 import moe.shizuku.manager.utils.CustomTabsHelper
 import java.io.File
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.overScrollVertical
+import top.yukonga.miuix.kmp.basic.Card as MiuixCard
+import top.yukonga.miuix.kmp.basic.Text as MiuixText
+import top.yukonga.miuix.kmp.basic.TextButton as MiuixTextButton
+import top.yukonga.miuix.kmp.basic.ButtonDefaults as MiuixButtonDefaults
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,6 +72,32 @@ fun ShellTutorialScreen(
             val rish = Starter.copyAssetToUri(context, uri, "rish", "rish")
             val dex = Starter.copyAssetToUri(context, uri, "rish_shizuku.dex", "rish_shizuku.dex")
         }
+    }
+
+    if (LocalIsMiuix.current) {
+        Os4Scaffold(
+            title = stringResource(R.string.home_terminal_title),
+            onBack = onNavigateBack,
+        ) { paddingValues, scrollBehavior, contentModifier ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(contentModifier)
+                    .overScrollVertical(onOffsetChanged = { scrollBehavior.state.overscrollOffset = it })
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
+                    .verticalScroll(rememberScrollState())
+                    .padding(
+                        start = 12.dp,
+                        end = 12.dp,
+                        top = paddingValues.calculateTopPadding() + 12.dp,
+                        bottom = paddingValues.calculateBottomPadding() + 16.dp,
+                    ),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                MiuixShellTutorialContent(onExport = { directoryLauncher.launch(null) })
+            }
+        }
+        return
     }
 
     Scaffold(
@@ -162,5 +198,73 @@ fun ShellTutorialScreen(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun MiuixShellTutorialContent(onExport: () -> Unit) {
+    val context = LocalContext.current
+
+    MiuixText(
+        text = stringResource(R.string.home_terminal_description),
+        style = MiuixTheme.textStyles.body1,
+    )
+    MiuixTerminalInstructionCard {
+        MiuixText(
+            text = stringResource(R.string.terminal_tutorial_1),
+            style = MiuixTheme.textStyles.subtitle,
+        )
+        Spacer(Modifier.height(4.dp))
+        MiuixText(
+            text = stringResource(R.string.terminal_tutorial_1_description, "rish", "rish_shizuku.dex"),
+            style = MiuixTheme.textStyles.body2,
+            color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+        )
+        Spacer(Modifier.height(12.dp))
+        MiuixTextButton(
+            text = stringResource(R.string.terminal_export_files),
+            onClick = onExport,
+            colors = MiuixButtonDefaults.textButtonColorsPrimary(),
+        )
+    }
+    MiuixTerminalInstructionCard {
+        MiuixText(
+            text = stringResource(R.string.terminal_tutorial_2),
+            style = MiuixTheme.textStyles.subtitle,
+        )
+        Spacer(Modifier.height(4.dp))
+        MiuixText(
+            text = stringResource(R.string.terminal_tutorial_2_description, "rish", "rish", ".bashrc or .zshrc"),
+            style = MiuixTheme.textStyles.body2,
+            color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+        )
+    }
+    MiuixTerminalInstructionCard {
+        MiuixText(
+            text = stringResource(R.string.terminal_tutorial_3),
+            style = MiuixTheme.textStyles.subtitle,
+        )
+        Spacer(Modifier.height(4.dp))
+        MiuixText(
+            text = "sh rish",
+            style = MiuixTheme.textStyles.body2.copy(fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace),
+        )
+    }
+    if (context.packageManager.hasSystemFeature("android.hardware.touchscreen")) {
+        MiuixText(
+            text = stringResource(R.string.terminal_tutorial_miui),
+            style = MiuixTheme.textStyles.footnote1,
+            color = MiuixTheme.colorScheme.error,
+        )
+    }
+}
+
+@Composable
+private fun MiuixTerminalInstructionCard(content: @Composable () -> Unit) {
+    MiuixCard(
+        modifier = Modifier.fillMaxWidth(),
+        insideMargin = PaddingValues(16.dp),
+    ) {
+        content()
     }
 }

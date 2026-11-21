@@ -15,21 +15,31 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import moe.shizuku.manager.R
 import moe.shizuku.manager.ShizukuSettings
 import moe.shizuku.manager.adb.AdbStarter
+import moe.shizuku.manager.compose.components.miuix.LocalPageBackdrop
 import moe.shizuku.manager.ktx.toHtml
 import moe.shizuku.manager.receiver.NotifCancelReceiver
 import moe.shizuku.manager.receiver.ShizukuReceiverStarter
@@ -38,18 +48,22 @@ import moe.shizuku.manager.utils.CustomTabsHelper
 import moe.shizuku.manager.utils.EnvironmentUtils
 import moe.shizuku.manager.utils.SettingsHelper
 import moe.shizuku.manager.utils.ShizukuStateMachine
-import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
-import top.yukonga.miuix.kmp.basic.TextButton
-import top.yukonga.miuix.kmp.basic.TextField
+import top.yukonga.miuix.kmp.glass.GlassDialog
+import top.yukonga.miuix.kmp.glass.GlassDialogButton
+import top.yukonga.miuix.kmp.glass.GlassDialogButtonRole
+import top.yukonga.miuix.kmp.glass.GlassTextField
 import top.yukonga.miuix.kmp.preference.ArrowPreference
 import top.yukonga.miuix.kmp.preference.SwitchPreference
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 import top.yukonga.miuix.kmp.utils.scrollEndHaptic
-import top.yukonga.miuix.kmp.window.WindowDialog
+
+private val TcpPortInputTransformation = InputTransformation {
+    if (length > 5 || asCharSequence().any { it !in '0'..'9' }) revertAllChanges()
+}
 
 @Composable
 fun MiuixSettingsScreen(
@@ -82,7 +96,9 @@ fun MiuixSettingsScreen(
     var pendingRestartAction by remember { mutableStateOf<(() -> Unit)?>(null) }
     var showStopTcpDialog by remember { mutableStateOf(false) }
     var showTcpPortDialog by remember { mutableStateOf(false) }
-    var tcpPortInput by remember { mutableStateOf("") }
+    val tcpPortInput = rememberTextFieldState()
+    val tcpPortFocusRequester = remember { FocusRequester() }
+    var pendingTcpPortApply by remember { mutableStateOf<(() -> Unit)?>(null) }
     var showStartOnBootBugDialog by remember { mutableStateOf(false) }
 
     // Battery optimization state machine
@@ -165,139 +181,146 @@ fun MiuixSettingsScreen(
         SettingsHelper.requestIgnoreBatteryOptimizations(context, batteryOptLauncher)
     }
 
-    // Restart dialog
-    if (showRestartDialog) {
-        WindowDialog(
-            show = true,
-            onDismissRequest = { showRestartDialog = false },
-            title = stringResource(R.string.settings_restart_dialog_title),
-        ) {
-            Column {
-                Text(
-                    text = restartDialogMessage,
-                    style = MiuixTheme.textStyles.body2,
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                TextButton(
-                    text = stringResource(android.R.string.ok),
-                    onClick = {
-                        showRestartDialog = false
-                        pendingRestartAction?.invoke()
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+    // Keep the dialogs composed through their exit animation. The Scaffold owns their host.
+    GlassDialog(
+        show = showRestartDialog,
+        backdrop = LocalPageBackdrop.current,
+        renderInRootScaffold = true,
+        onDismissRequest = { showRestartDialog = false },
+        title = stringResource(R.string.settings_restart_dialog_title),
+    ) {
+        Column {
+            Text(
+                text = restartDialogMessage,
+                style = MiuixTheme.textStyles.body2,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            GlassDialogButton(
+                role = GlassDialogButtonRole.Primary,
+                onClick = {
+                    showRestartDialog = false
+                    pendingRestartAction?.invoke()
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) { Text(stringResource(android.R.string.ok), style = MiuixTheme.textStyles.button) }
         }
     }
 
     // Stop TCP dialog
-    if (showStopTcpDialog) {
-        WindowDialog(
-            show = true,
-            onDismissRequest = { showStopTcpDialog = false },
-            title = stringResource(android.R.string.dialog_alert_title),
-        ) {
-            Column {
-                Text(
-                    text = stringResource(R.string.settings_tcp_mode_dialog_close_port),
-                    style = MiuixTheme.textStyles.body2,
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                TextButton(
-                    text = stringResource(android.R.string.ok),
-                    onClick = {
-                        showStopTcpDialog = false
-                        scope.launch {
-                            AdbStarter.stopTcp(context, EnvironmentUtils.getAdbTcpPort())
-                            if (EnvironmentUtils.getAdbTcpPort() <= 0) {
-                                ShizukuSettings.setTcpMode(false)
-                                tcpMode = false
-                            }
+    GlassDialog(
+        show = showStopTcpDialog,
+        backdrop = LocalPageBackdrop.current,
+        renderInRootScaffold = true,
+        onDismissRequest = { showStopTcpDialog = false },
+        title = stringResource(android.R.string.dialog_alert_title),
+    ) {
+        Column {
+            Text(
+                text = stringResource(R.string.settings_tcp_mode_dialog_close_port),
+                style = MiuixTheme.textStyles.body2,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            GlassDialogButton(
+                role = GlassDialogButtonRole.Primary,
+                onClick = {
+                    showStopTcpDialog = false
+                    scope.launch {
+                        AdbStarter.stopTcp(context, EnvironmentUtils.getAdbTcpPort())
+                        if (EnvironmentUtils.getAdbTcpPort() <= 0) {
+                            ShizukuSettings.setTcpMode(false)
+                            tcpMode = false
                         }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) { Text(stringResource(android.R.string.ok), style = MiuixTheme.textStyles.button) }
         }
     }
 
-    if (showTcpPortDialog) {
-        val inputPort = tcpPortInput.ifBlank { null }?.toIntOrNull()
-        val isInputValid = inputPort == null || inputPort in 1..65535
+    val inputPort = tcpPortInput.text.toString().ifBlank { null }?.toIntOrNull()
+    val isInputValid = inputPort == null || inputPort in 1..65535
 
-        WindowDialog(
-            show = true,
-            onDismissRequest = { showTcpPortDialog = false },
-            title = stringResource(R.string.settings_tcp_port),
-        ) {
-            Column {
-                TextField(
-                    value = tcpPortInput,
-                    onValueChange = { value ->
-                        tcpPortInput = value.filter { it in '0'..'9' }.take(5)
-                    },
-                    label = stringResource(R.string.settings_tcp_port_hint),
-                    useLabelAsPlaceholder = true,
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
+    GlassDialog(
+        show = showTcpPortDialog,
+        backdrop = LocalPageBackdrop.current,
+        renderInRootScaffold = true,
+        onDismissRequest = { showTcpPortDialog = false },
+        onDismissFinished = {
+            val applyChange = pendingTcpPortApply
+            pendingTcpPortApply = null
+            applyChange?.invoke()
+        },
+        title = stringResource(R.string.settings_tcp_port),
+    ) {
+        Column {
+            GlassTextField(
+                state = tcpPortInput,
+                inputTransformation = TcpPortInputTransformation,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                label = stringResource(R.string.settings_tcp_port_hint),
+                useLabelAsPlaceholder = true,
+                lineLimits = TextFieldLineLimits.SingleLine,
+                modifier = Modifier.fillMaxWidth().focusRequester(tcpPortFocusRequester),
+            )
+            LaunchedEffect(showTcpPortDialog) {
+                if (showTcpPortDialog) tcpPortFocusRequester.requestFocus()
+            }
+            if (!isInputValid) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(R.string.dialog_adb_invalid_port),
+                    style = MiuixTheme.textStyles.body2,
+                    color = MiuixTheme.colorScheme.error,
                 )
-                if (!isInputValid) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = stringResource(R.string.dialog_adb_invalid_port),
-                        style = MiuixTheme.textStyles.body2,
-                        color = MiuixTheme.colorScheme.error,
-                    )
-                }
-                Spacer(modifier = Modifier.height(24.dp))
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    TextButton(
-                        text = stringResource(android.R.string.cancel),
-                        onClick = { showTcpPortDialog = false },
-                        modifier = Modifier.weight(1f),
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                    TextButton(
-                        text = stringResource(android.R.string.ok),
-                        onClick = {
-                            val newPort = inputPort ?: 5555
-                            showTcpPortDialog = false
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(modifier = Modifier.fillMaxWidth()) {
+                GlassDialogButton(
+                    onClick = { showTcpPortDialog = false },
+                    modifier = Modifier.weight(1f),
+                ) { Text(stringResource(android.R.string.cancel), style = MiuixTheme.textStyles.button) }
+                Spacer(modifier = Modifier.width(20.dp))
+                GlassDialogButton(
+                    onClick = {
+                        val newPort = inputPort ?: 5555
+                        pendingTcpPortApply = {
                             applyWithRestartPrompt(ShizukuSettings.Keys.KEY_TCP_PORT, newPort) {
                                 ShizukuSettings.setTcpPort(inputPort)
                                 tcpPort = newPort
                             }
-                        },
-                        modifier = Modifier.weight(1f),
-                        enabled = isInputValid,
-                        colors = ButtonDefaults.textButtonColorsPrimary(),
-                    )
-                }
+                        }
+                        showTcpPortDialog = false
+                    },
+                    modifier = Modifier.weight(1f),
+                    enabled = isInputValid,
+                    role = GlassDialogButtonRole.Primary,
+                ) { Text(stringResource(android.R.string.ok), style = MiuixTheme.textStyles.button) }
             }
         }
     }
 
     // Start-on-boot bug dialog (Android 11-12)
-    if (showStartOnBootBugDialog) {
-        WindowDialog(
-            show = true,
-            onDismissRequest = { showStartOnBootBugDialog = false },
-            title = stringResource(android.R.string.dialog_alert_title),
-        ) {
-            Column {
-                Text(
-                    text = stringResource(R.string.settings_start_on_boot_bug),
-                    style = MiuixTheme.textStyles.body2,
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                TextButton(
-                    text = stringResource(android.R.string.ok),
-                    onClick = {
-                        showStartOnBootBugDialog = false
-                        requestBatteryOptimization("startOnBoot", true)
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+    GlassDialog(
+        show = showStartOnBootBugDialog,
+        backdrop = LocalPageBackdrop.current,
+        renderInRootScaffold = true,
+        onDismissRequest = { showStartOnBootBugDialog = false },
+        title = stringResource(android.R.string.dialog_alert_title),
+    ) {
+        Column {
+            Text(
+                text = stringResource(R.string.settings_start_on_boot_bug),
+                style = MiuixTheme.textStyles.body2,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            GlassDialogButton(
+                role = GlassDialogButtonRole.Primary,
+                onClick = {
+                    showStartOnBootBugDialog = false
+                    requestBatteryOptimization("startOnBoot", true)
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) { Text(stringResource(android.R.string.ok), style = MiuixTheme.textStyles.button) }
         }
     }
 
@@ -305,7 +328,7 @@ fun MiuixSettingsScreen(
         modifier = Modifier
             .fillMaxSize()
             .scrollEndHaptic()
-            .overScrollVertical()
+            .overScrollVertical(onOffsetChanged = { scrollBehavior.state.overscrollOffset = it })
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         contentPadding = PaddingValues(
             top = scaffoldPadding.calculateTopPadding(),
@@ -314,7 +337,6 @@ fun MiuixSettingsScreen(
         overscrollEffect = null,
     ) {
             // Behavior
-            item { Spacer(modifier = Modifier.height(12.dp)) }
             item { SmallTitle(text = stringResource(R.string.settings_behavior)) }
             item {
                 Card(
@@ -387,7 +409,9 @@ fun MiuixSettingsScreen(
                                 title = stringResource(R.string.settings_tcp_port),
                                 summary = portText,
                                 onClick = {
-                                    tcpPortInput = if (tcpPort == 5555) "" else tcpPort.toString()
+                                    tcpPortInput.setTextAndPlaceCursorAtEnd(
+                                        if (tcpPort == 5555) "" else tcpPort.toString()
+                                    )
                                     showTcpPortDialog = true
                                 },
                             )

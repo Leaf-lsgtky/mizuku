@@ -12,6 +12,7 @@ subprojects { subproject ->
     plugins.withId("com.android.base") {
         android {
             compileSdk = 37
+            compileSdkMinor = 2
             ndkVersion = "29.0.13113456"
             defaultConfig {
                 minSdk = 24
